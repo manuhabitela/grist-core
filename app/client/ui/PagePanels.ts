@@ -3,7 +3,7 @@
  */
 import {makeT} from 'app/client/lib/localization';
 import * as commands from 'app/client/components/commands';
-import {watchElementForBlur} from 'app/client/lib/FocusLayer';
+import {FocusLayer, watchElementForBlur} from 'app/client/lib/FocusLayer';
 import {urlState} from "app/client/models/gristUrlState";
 import {resizeFlexVHandle} from 'app/client/ui/resizeHandle';
 import {hoverTooltip} from 'app/client/ui/tooltips';
@@ -18,6 +18,8 @@ import noop from 'lodash/noop';
 import once from 'lodash/once';
 import {SessionObs} from 'app/client/lib/sessionObs';
 import debounce from 'lodash/debounce';
+import { G } from 'grainjs/dist/cjs/lib/browserGlobals';
+import focusLock from 'dom-focus-lock';
 
 const t = makeT('PagePanels');
 
@@ -94,7 +96,85 @@ export function pagePanels(page: PageContents) {
     (left.panelOpen as SessionObs<boolean>)?.pauseSaving?.(yesNo);
   };
 
+  const focusableRegions = ['test-left-panel', 'test-top-header'];
+
+  const focusedRegion = {
+    current: Observable.create<string | null>(null, null),
+    domElement: null
+  };
+
+  let focusLayer: FocusLayer | null = null;
+
+  const regionListener = focusedRegion.current.addListener((current, prev) => {
+    if (focusLayer && !focusLayer.isDisposed()) {
+      console.log('dispose previous');
+      focusLayer.dispose();
+      focusLock.off(document.querySelector<HTMLDivElement>(`.${prev}`)!);
+    }
+    if (current) {
+      console.log('create new layer', current);
+      G.window.manuisKbBrowserMode(true);
+      focusLayer = FocusLayer.create(null, {
+        defaultFocusElem: document.querySelector<HTMLDivElement>(`.${current}`)!,
+      });
+      focusLock.on(document.querySelector<HTMLDivElement>(`.${current}`)!);
+    } else {
+      G.window.manuisKbBrowserMode(false);
+    }
+  });
+
+  const goToNextRegion = () => {
+    let newIndex = null;
+    if (focusedRegion.current.get() === null) {
+      newIndex = 0;
+    } else {
+      const index = focusableRegions.indexOf(focusedRegion.current.get()!);
+      newIndex = index + 1;
+    }
+    if (newIndex === focusableRegions.length) {
+      console.log('wrap end');
+      focusedRegion.current.set(null);
+    } else {
+      focusedRegion.current.set(focusableRegions[newIndex]);
+    }
+  };
+
+  const goToPrevRegion = () => {
+    let newIndex = null;
+    if (focusedRegion.current.get() === null) {
+      newIndex = focusableRegions.length - 1;
+    } else {
+      const index = focusableRegions.indexOf(focusedRegion.current.get()!);
+      newIndex = index - 1;
+    }
+    if (newIndex === -1) {
+      console.log('wrap beginning');
+
+      focusedRegion.current.set(null);
+    } else {
+      focusedRegion.current.set(focusableRegions[newIndex]);
+    }
+  };
+
+  let prev = null;
+  const toggleCreatorPanelFocus = () => {
+    if (!right?.panelOpen.get()) {
+      right?.panelOpen.set(true);
+    }
+    if (focusedRegion.current.get() !== 'test-right-panel') {
+      prev = focusedRegion.current.get();
+      focusedRegion.current.set('test-right-panel');
+    } else {
+      console.log('focus prev');
+
+      focusedRegion.current.set(prev);
+    }
+  };
+
   const commandsGroup = commands.createGroup({
+    nextRegion: goToNextRegion,
+    prevRegion: goToPrevRegion,
+    creatorPanel: toggleCreatorPanelFocus,
     leftPanelOpen: () => new Promise((resolve) => {
       const watcher = new TransitionWatcher(leftPaneDom);
       watcher.onDispose(() => resolve(undefined));
@@ -136,6 +216,10 @@ export function pagePanels(page: PageContents) {
     cssContentMain(
       leftPaneDom = cssLeftPane(
         testId('left-panel'),
+        dom.attr('tabindex', '-1'),
+        dom.attr('role', 'region'),
+        dom.attr('aria-label', 'Main navigation and document settings'),
+        dom.cls('panel--is-focused', use => use(focusedRegion.current) === 'test-left-panel'),
         cssOverflowContainer(
           contentWrapper = cssLeftPanelContainer(
             cssLeftPaneHeader(
@@ -272,6 +356,10 @@ export function pagePanels(page: PageContents) {
       cssMainPane(
         mainHeaderDom = cssTopHeader(
           testId('top-header'),
+          dom.attr('tabindex', '-1'),
+          dom.attr('role', 'banner'),
+          dom.attr('aria-label', 'Document header'),
+          dom.cls('panel--is-focused', use => use(focusedRegion.current) === 'test-top-header'),
           (left.hideOpener ? null :
             cssPanelOpener('PanelRight', cssPanelOpener.cls('-open', left.panelOpen),
               testId('left-opener'),
@@ -306,6 +394,10 @@ export function pagePanels(page: PageContents) {
 
         rightPaneDom = cssRightPane(
           testId('right-panel'),
+          dom.attr('tabindex', '-1'),
+          dom.attr('role', 'region'),
+          dom.attr('aria-label', 'Current widget configuration'),
+          dom.cls('panel--is-focused', use => use(focusedRegion.current) === 'test-right-panel'),
           cssRightPaneHeader(
             right.header,
             dom.style('margin-bottom', use => use(bannerHeight) + 'px')

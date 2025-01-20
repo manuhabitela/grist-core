@@ -76,6 +76,7 @@ export function init(optCommandGroups?: CommendGroupDef[]) {
       } else {
         allCommands[c.name] = new Command(c.name, c.desc, c.keys, {
           bindKeys: c.bindKeys,
+          alwaysOn: c.alwaysOn,
           deprecated: c.deprecated,
         });
       }
@@ -123,6 +124,7 @@ export function getHumanKey(key: string, mac: boolean): string {
 
 export interface CommandOptions {
   bindKeys?: boolean;
+  alwaysOn?: boolean;
   deprecated?: boolean;
 }
 
@@ -140,6 +142,7 @@ export class Command implements CommandDef {
   public humanKeys: string[];
   public keys: string[];
   public bindKeys: boolean;
+  public alwaysOn: boolean;
   public isActive: ko.Observable<boolean>;
   public deprecated: boolean;
   public run: (...args: any[]) => any;
@@ -152,6 +155,7 @@ export class Command implements CommandDef {
     this.humanKeys = keys.map(key => getHumanKey(key, isMac));
     this.keys = keys.map(function(k) { return k.trim().toLowerCase().replace(/ *\+ */g, '+'); });
     this.bindKeys = options.bindKeys ?? true;
+    this.alwaysOn = options.alwaysOn ?? false;
     this.isActive = ko.observable(false);
     this._implGroupStack = [];
     this._activeFunc = _.noop; // The function to run when this command is invoked.
@@ -216,14 +220,15 @@ export class Command implements CommandDef {
 
     if (this.bindKeys) {
       // Now bind or unbind the affected key combinations.
-      this.keys.forEach(function(key) {
+      this.keys.forEach((key) => {
         const keyGroups = _allKeys[key];
         if (keyGroups && keyGroups.length > 0) {
           const commandGroup = _.last(keyGroups)!;
           // Command name might be different from this.name in case we are deactivating a command, and
           // the previous meaning of the key points to a different command.
           const commandName = commandGroup.knownKeys[key];
-          Mousetrap.bind(key, wrapKeyCallback(commandGroup.commands[commandName]));
+          const bind = this.alwaysOn ? Mousetrap.bindGlobal : Mousetrap.bind;
+          bind(key, wrapKeyCallback(commandGroup.commands[commandName], key));
         } else {
           Mousetrap.unbind(key);
         }
@@ -236,12 +241,39 @@ export class Command implements CommandDef {
   }
 }
 
+const ignoredBrowserModeKeys = [
+  'enter',
+  'escape',
+  'tab',
+  'space',
+  'left',
+  'right',
+  'up',
+  'down',
+  'pageup',
+  'pagedown',
+  'home',
+  'end',
+];
+
 /**
  * Helper for mousetrap callbacks, which returns a version of the callback that by default stops
  * the propagation of the keyboard event (unless the callback returns a true value).
  */
-function wrapKeyCallback(callback: Func) {
+function wrapKeyCallback(callback: Func, key: string) {
   return function() {
+    // if we are in keyboard "browser mode", we want to ignore our custom commands bound
+    // to usual navigation keys, so that the user can navigate in the browser as usual.
+    if (G.window.manuisKbBrowserMode() && (
+      ignoredBrowserModeKeys.includes(key.toLowerCase().replace('shift+', ''))
+    )) {
+      console.log('browser mode: ignore', key);
+      return true;
+    }
+
+    // when we trigger a command, make sure to turn off "browser mode" again: for example,
+    // pressing F1 shows a help dialog that listens for the Escape key when open
+    G.window.manuisKbBrowserMode(false);
     return callback(...arguments) || false;
   };
 }

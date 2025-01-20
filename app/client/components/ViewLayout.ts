@@ -406,6 +406,19 @@ export class ViewLayout extends DisposableWithEvents implements IDomComponent {
     const sectionId = this.viewModel.activeSectionId.peek();
     const currentIndex = sectionIds.indexOf(sectionId);
     const index = mod(currentIndex + delta, sectionIds.length);
+
+    if (currentIndex + delta === sectionIds.length) {
+      console.log(this);
+
+      this.trigger('sectionWrapEnd');
+      return;
+    }
+    if (currentIndex + delta === -1) {
+      console.log(this);
+      this.trigger('sectionWrapStart');
+      return;
+    }
+
     // update the active section id
     this.viewModel.activeSectionId(sectionIds[index]);
   }

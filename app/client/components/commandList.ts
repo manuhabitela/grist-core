@@ -25,6 +25,9 @@ export type CommandName =
   | 'expandSection'
   | 'leftPanelOpen'
   | 'rightPanelOpen'
+  | 'nextRegion'
+  | 'prevRegion'
+  | 'creatorPanel'
   | 'cursorDown'
   | 'cursorUp'
   | 'cursorRight'
@@ -126,6 +129,10 @@ export interface CommandDef {
   keys: string[];
   desc: string | null;
   bindKeys?: boolean;
+  /**
+   * When true, the command is always enabled, even in form inputs.
+   */
+  alwaysOn?: boolean;
   deprecated?: boolean;
 }
 
@@ -301,15 +308,15 @@ export const groups: CommendGroupDef[] = [{
     {
       name: 'cursorDown',
       keys: ['Down'],
-      desc: 'Move downward to next record or field'
+      desc: 'Move downward to next record or field',
     }, {
       name: 'cursorUp',
       keys: ['Up'],
-      desc: 'Move upward to previous record or field'
+      desc: 'Move upward to previous record or field',
     }, {
       name: 'cursorRight',
       keys: ['Right'],
-      desc: 'Move right to the next field'
+      desc: 'Move right to the next field',
     }, {
       name: 'cursorLeft',
       keys: ['Left'],
@@ -333,11 +340,11 @@ export const groups: CommendGroupDef[] = [{
     }, {
       name: 'moveToFirstRecord',
       keys: ['Mod+Up'],
-      desc: 'Move up to the first record',
+      desc: 'Move up to the first record'
     }, {
       name: 'moveToLastRecord',
       keys: ['Mod+Down'],
-      desc: 'Move down to the last record',
+      desc: 'Move down to the last record'
     }, {
       name: 'moveToFirstField',
       keys: ['Home'],
@@ -374,13 +381,31 @@ export const groups: CommendGroupDef[] = [{
       desc: 'Open previous page'
     }, {
       name: 'nextSection',
-      keys: ['Mod+o'],
+      keys: ['Mod+p'],
       desc: 'Activate next page widget',
     }, {
       name: 'prevSection',
-      keys: ['Mod+Shift+O'],
+      keys: ['Mod+y'],
       desc: 'Activate previous page widget',
-    }
+    },
+    {
+      name: 'nextRegion',
+      keys: ['Mod+o'],
+      desc: 'Focus next region',
+      alwaysOn: true,
+    },
+    {
+      name: 'prevRegion',
+      keys: ['Mod+Shift+O'],
+      desc: 'Focus previous region',
+      alwaysOn: true,
+    },
+    {
+      name: 'creatorPanel',
+      keys: ['Mod+Alt+o'],
+      desc: 'Toggle creator panel focus',
+      alwaysOn: true,
+    },
   ],
 }, {
   group: 'Selection',
@@ -437,11 +462,11 @@ export const groups: CommendGroupDef[] = [{
     {
       name: 'editField',
       keys: ['Enter', 'F2'],
-      desc: 'Start editing the currently-selected cell'
+      desc: 'Start editing the currently-selected cell',
     }, {
       name: 'fieldEditSave',
       keys: ['Enter'],
-      desc: 'Finish editing a cell, saving the value'
+      desc: 'Finish editing a cell, saving the value',
     }, {
       name: 'detachEditor',
       keys: [],

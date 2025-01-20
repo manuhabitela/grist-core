@@ -140,6 +140,7 @@
     "csv": "6.3.8",
     "currency-symbol-map": "5.1.0",
     "diff-match-patch": "1.0.5",
+    "dom-focus-lock": "1.1.0",
     "dompurify": "3.2.3",
     "double-ended-queue": "2.1.0-0",
     "emoji-mart": "5.6.0",

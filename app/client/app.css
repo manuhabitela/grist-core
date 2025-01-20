@@ -188,3 +188,19 @@ div.dev_warning {
 .browser-check-close:hover {
   background-color: #16B378;
 }
+
+.panel--is-focused {
+  outline: 3px solid var(--color-link-bright);
+  z-index: 1000 !important;
+  outline-offset: -3px;
+}
+
+body.kb-browser-mode .active_cursor {
+  box-shadow: inset 0 0 0 1px #16b37854;
+  outline: 1px solid #16b3783b;
+}
+
+body.kb-browser-mode .active_section > .view_data_pane_container {
+  box-shadow: -2px 0 0 0px #16b37821;
+  border-left-color: #16b37821;
+}

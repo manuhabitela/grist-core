@@ -41,6 +41,7 @@ export class App extends DisposableWithEvents {
   public clientScope: ClientScope;
   public features: ko.Computed<ISupportedFeatures>;
   public topAppModel: TopAppModel;    // Exposed because used by test/nbrowser/gristUtils.
+  public isKbBrowserMode = ko.observable(false);
 
   private _settings: ko.Observable<{features?: ISupportedFeatures}>;
 
@@ -50,6 +51,7 @@ export class App extends DisposableWithEvents {
 
   // Track the most recently created DocPageModel, for some error handling.
   private _mostRecentDocPageModel?: DocPageModel;
+
 
   constructor() {
     super();
@@ -64,6 +66,11 @@ export class App extends DisposableWithEvents {
     // Settings, initialized by initSettings event triggered by a server message.
     this._settings = ko.observable({});
     this.features = ko.computed(() => this._settings().features || {});
+
+    G.window.manuisKbBrowserMode = this.isKbBrowserMode;
+    this.isKbBrowserMode.subscribe((value) => {
+      document.body.classList.toggle('kb-browser-mode', value);
+    });
 
     if (isDesktop()) {
       this.autoDispose(Clipboard.create(this));

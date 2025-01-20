@@ -28,20 +28,29 @@ if (typeof window === 'undefined') {
   var MousetrapProtype = Mousetrap.prototype;
   var origStopCallback = MousetrapProtype.stopCallback;
 
+  var globalCallbacks = {};
+
   /**
    * Enhances Mousetrap's stopCallback filter. Normally, mousetrap ignores key events in input
    * fields and textareas. This replacement allows individual CommandGroups to be activated in such
    * elements. See also 'attach' method of commands.CommandGroup.
    */
   MousetrapProtype.stopCallback = function(e, element, combo, sequence) {
+    // If the keyboard shortcut is meant to be global, we never stop it.
+    if (globalCallbacks[combo] || globalCallbacks[sequence]) {
+      return false;
+    }
+
     if (mousetrapBindingsPaused) {
       return true;
     }
+
     // If we have a custom stopCallback, use it now.
     const custom = customStopCallbacks.get(element);
     if (custom) {
       return custom(combo);
     }
+
     try {
       return origStopCallback.call(this, e, element, combo, sequence);
     } catch (err) {
@@ -72,6 +81,22 @@ if (typeof window === 'undefined') {
   Mousetrap.setCustomStopCallback = function(element, callback) {
     customStopCallbacks.set(element, callback);
   };
+
+  Mousetrap.prototype.bindGlobal = function(keys, callback, action) {
+    var self = this;
+    self.bind(keys, callback, action);
+
+    if (keys instanceof Array) {
+        for (var i = 0; i < keys.length; i++) {
+            globalCallbacks[keys[i]] = true;
+        }
+        return;
+    }
+
+    globalCallbacks[keys] = true;
+  };
+
+  Mousetrap.init();
 
   module.exports = Mousetrap;
 }

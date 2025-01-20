@@ -94,6 +94,7 @@ export function createTopBarDoc(owner: MultiHolder, appModel: AppModel, pageMode
     // showing of breadcrumbs until gristDoc is loaded.
     dom.maybe(pageModel.gristDoc, (gristDoc) =>
       cssBreadcrumbContainer(
+        // dom.domComputed((use) => use(gristDoc.app.isKbBrowserMode) ? 'browser' : 'grist'),
         docBreadcrumbs(displayNameWs, pageModel.currentDocTitle, gristDoc.currentPageName, {
           docNameSave: renameDoc,
           pageNameSave: getRenamePageFn(gristDoc),
@@ -110,7 +111,6 @@ export function createTopBarDoc(owner: MultiHolder, appModel: AppModel, pageMode
           isTemplate: pageModel.isTemplate,
           isAnonymous,
         }),
-        dom.hide(use => use(isSearchOpen) && use(isNarrowScreenObs())),
       )
     ),
     cssFlexSpace(),
@@ -133,10 +133,7 @@ export function createTopBarDoc(owner: MultiHolder, appModel: AppModel, pageMode
       ),
       cssSpacer(),
     ]),
-    dom.domComputed((use) => {
-      const model = use(searchModelObs);
-      return model && use(moduleObs)?.searchBar(model, makeTestId('test-tb-search-'));
-    }),
+
     dom.maybe(use => !(use(pageModel.isTemplate) && isAnonymous), () => [
       buildShareMenuButton(pageModel),
       dom.maybe(use =>
