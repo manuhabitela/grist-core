@@ -30,7 +30,7 @@ import { confirmModal } from "app/client/ui2018/modals";
 import { isNonNullish } from "app/common/gutil";
 import { tsvDecode } from "app/common/tsvFormat";
 
-import { Computed, Disposable, dom, Observable, styled, subscribe } from "grainjs";
+import { Disposable, dom, styled } from "grainjs";
 
 import type { CopySelection } from "app/client/components/CopySelection";
 import type { App } from "app/client/ui/App";
@@ -91,8 +91,6 @@ export class Clipboard extends Disposable {
 
   public readonly copypasteField: HTMLDivElement;
 
-  private _activeDescendant = Observable.create<string | null>(this, null);
-
   // In the event of a cut a callback is provided by the viewsection that is the target of the cut.
   // When called it returns the additional removal action needed for a cut.
   private _cutCallback: (() => unknown) | null = null;
@@ -105,11 +103,13 @@ export class Clipboard extends Disposable {
     super();
     this.copypasteField = dom("div",
       {
-        id: "copypaste-field",
-        class: "copypaste mousetrap",
-        tabIndex: "0",
-        contentEditable: "true",
-        role: "textbox",
+        "id": "copypaste-field",
+        "class": "copypaste mousetrap",
+        "tabIndex": "0",
+        "contentEditable": "true",
+        "role": "textbox",
+        "aria-owns": "fake-active-descendant",
+        "aria-activedescendant": "fake-active-descendant",
       },
       dom.on("input", (event, elem) => {
         const value = (event as InputEvent).data;
@@ -123,7 +123,17 @@ export class Clipboard extends Disposable {
       dom.on("paste", this._onPaste.bind(this)),
     );
     document.body.appendChild(this.copypasteField);
-    this.onDispose(() => { dom.domDispose(this.copypasteField); this.copypasteField.remove(); });
+    // This "fake active descendant" is very important for screen reader users.
+    // It is there to prevent screen readers from announcing usual input-related things,
+    // like announcing the input content when pressing arrow keys.
+    const fakeActiveDescendant = dom("div", { id: "fake-active-descendant", role: "group" });
+    document.body.appendChild(fakeActiveDescendant);
+
+    this.onDispose(() => {
+      dom.domDispose(this.copypasteField);
+      this.copypasteField.remove();
+      fakeActiveDescendant.remove();
+    });
 
     FocusLayer.create(this, {
       defaultFocusElem: this.copypasteField,
@@ -151,34 +161,6 @@ export class Clipboard extends Disposable {
     });
 
     this.autoDispose(commands.createGroup(Clipboard.commands, this, true));
-
-    const screenReaderMode = Computed.create(this, (use) => {
-      const appModel = use(this._app.topAppModel.appObs);
-      return appModel ? use(appModel.screenReaderMode) : false;
-    });
-
-    // Keep aria-activedescendant in sync with the active cell whenever screen reader mode
-    // is enabled. This reacts to both cursor movement (via _activeDescendant) and SR mode toggle.
-    this.autoDispose(subscribe(screenReaderMode, this._activeDescendant, (_use, srEnabled, cellId) => {
-      if (srEnabled && cellId) {
-        const viewId = cellId.split("_")[0];
-        this.copypasteField.setAttribute("aria-owns", viewId);
-        this.copypasteField.setAttribute("aria-activedescendant", cellId);
-        this.copypasteField.setAttribute("aria-labelledby", viewId);
-        this.copypasteField.setAttribute("role", "application");
-      } else {
-        this.copypasteField.removeAttribute("aria-activedescendant");
-        this.copypasteField.removeAttribute("aria-owns");
-        this.copypasteField.setAttribute("role", "textbox");
-      }
-    }));
-  }
-
-  /**
-   * Called by GristDoc to update the active cell's DOM id for aria-activedescendant.
-   */
-  public setActiveDescendant(id: string | null): void {
-    this._activeDescendant.set(id);
   }
 
   /**

@@ -767,21 +767,6 @@ export class GristDocImpl extends DisposableWithEvents implements GristDoc {
       return undefined;
     });
 
-    // Push the active view's activeDescendantId to the Clipboard so that
-    // aria-activedescendant stays in sync with the focused cell.
-    if (this.app.clipboard) {
-      const clipboard = this.app.clipboard;
-      this.autoDispose(Computed.create(this, (use) => {
-        const view = use(this.currentView);
-        if (!view) {
-          return null;
-        }
-        return use(view.activeDescendantId);
-      }).addListener((id) => {
-        clipboard.setActiveDescendant(id);
-      }));
-    }
-
     this.hasCustomNav = Computed.create(this, urlState().state, (_, state) => {
       const hash = state.hash;
       return !!(hash && (undef(hash.colRef, hash.rowId, hash.sectionId) !== undefined));

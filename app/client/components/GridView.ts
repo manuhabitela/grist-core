@@ -245,8 +245,25 @@ export default class GridView extends BaseView {
         // …if so, update the row and scroll it into view (using kd.scrollChildIntoView in buildDom function).
         this.visibleRowIndex(cur.rowIndex);
 
-        // …also update current id so that screen readers correctly announce the active cell.
-        this.activeDescendantId.set(gridCellId(sectionId, cur.rowIndex ?? 0, cur.fieldIndex));
+        // Also announce the current cell content to screen readers.
+        if (cur.rowIndex !== null) {
+          const rowId = this.viewData.getRowId(cur.rowIndex);
+          const field = this.viewSection.viewFields().at(cur.fieldIndex);
+          const cellId = gridCellId(sectionId, cur.rowIndex ?? 0, cur.fieldIndex);
+          if (field && rowId !== "new") {
+            // Note: use a logic like the formatter here, with a screen-reader specific formatter?
+            //   const value = this.tableModel.tableData.getValue(rowId as number, field.column().colId());
+            //   const content = field.formatter().formatForScreenReader(value);
+            // or, get the current cell ID and announce the DOM element directly?
+            const content = document.getElementById(cellId);
+            const rowNum = cur.rowIndex + 1;
+            const label = field.label();
+            this.gristDoc.appModel.screenReaderAnnouncer.announce(
+              content,
+              `${t("row {{rowNum}} column {{colName}}", { rowNum, colName: label })}`,
+            );
+          }
+        }
       }
     }));
 
@@ -1355,15 +1372,6 @@ export default class GridView extends BaseView {
 
     return dom(
       "div.gridview_data_pane.flexvbox",
-      { id: `view-${sectionId}`, role: "grid" },
-      dom.attr("aria-label", use => t("{{title}} widget", { title: use(v.titleDef) })),
-      dom.attr("aria-describedby", "tree-item-current-page"),
-      dom.attr("aria-rowcount", (use) => {
-        const dataLength = use(data.getObservable()).length;
-        const hasAddRow = use(this.enableAddRow);
-        return String(hasAddRow ? dataLength - 1 : dataLength);
-      }),
-      dom.attr("aria-colcount", use => String(use(v.viewFields().getObservable()).length)),
       // offset for frozen columns - how much move them to the left
       styleCustomVar("--frozen-offset", this.frozenOffset),
       // total width of frozen columns
@@ -1421,7 +1429,6 @@ export default class GridView extends BaseView {
 
       this.scrollPane =
         dom("div.grid_view_data.gridview_data_scroll.show_scrollbar",
-          { role: "rowgroup" },
           kd.scrollChildIntoView(this.visibleRowIndex),
           dom.onDispose(() => {
           // Save the previous scroll values to the section.
@@ -1437,7 +1444,6 @@ export default class GridView extends BaseView {
             this.header = dom("div.gridview_data_header.flexhbox", // main header, flexbox floats contents onto a line
 
               dom("div.column_names.record",
-                { role: "row" },
                 dom.style("minWidth", "100%"),
                 dom.style("borderLeftWidth", v.borderWidthPx),
                 kd.foreach(v.viewFields(), (field: ViewFieldRec) => {
@@ -1470,8 +1476,6 @@ export default class GridView extends BaseView {
 
                   return dom(
                     "div.column_name.field",
-                    { role: "columnheader" },
-                    dom.attr("id", use => columnHeaderId(sectionId, use(field._index) ?? 0)),
                     dom.autoDispose(canRename),
                     styleCustomVar("--grist-header-color", use => use(field.headerTextColor) || ""),
                     styleCustomVar("--grist-header-background-color", use => use(field.headerFillColor) || ""),
@@ -1620,8 +1624,6 @@ export default class GridView extends BaseView {
       );
 
       return dom("div.gridview_row",
-        { role: "row" },
-        row._isAddRow() ? null : dom.attr("aria-rowindex", use => String((use(row._index) ?? 0) + 1)),
         dom.autoDispose(isRowActive),
         dom.autoDispose(computedFlags),
         dom.autoDispose(computedRule),
@@ -1742,13 +1744,9 @@ export default class GridView extends BaseView {
 
             return dom(
               "div.field",
-              { role: "gridcell" },
               dom.attr("id", use =>
                 gridCellId(sectionId, use(row._index) ?? 0, use(field._index) ?? 0),
               ),
-              dom.attr("aria-colindex", use => String((use(field._index) ?? 0) + 1)),
-              dom.attr("aria-describedby", use => columnHeaderId(sectionId, use(field._index) ?? 0)),
-              dom.attr("aria-selected", use => use(isCellActive) ? "true" : "false"),
               dom.cls("field-insert-before", use =>
                 use(this._insertColumnIndex) === use(field._index)),
               kd.style("--frozen-position", () => ko.unwrap(this.frozenPositions.at(field._index()!)!)),
@@ -2513,8 +2511,4 @@ function scrollBar(): { width: number; height: number } {
  */
 function gridCellId(sectionId: number, rowIndex: number, fieldIndex: number): string {
   return `view-${sectionId}_cell-${rowIndex}-${fieldIndex}`;
-}
-
-function columnHeaderId(sectionId: number, fieldIndex: number): string {
-  return `view-${sectionId}_col-${fieldIndex}`;
 }

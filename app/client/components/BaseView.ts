@@ -42,7 +42,7 @@ import { SortFunc } from "app/common/SortFunc";
 import { Sort } from "app/common/SortSpec";
 import { CursorPos, UIRowId } from "app/plugin/GristAPI";
 
-import { DomArg, Observable } from "grainjs";
+import { DomArg } from "grainjs";
 import ko from "knockout";
 import mapValues from "lodash/mapValues";
 import moment from "moment-timezone";
@@ -87,14 +87,6 @@ export default class BaseView extends DisposableWithEvents {
   public currentEditingColumnIndex: ko.Observable<number>;
   public enableAddRow: ko.Computed<boolean>;
   public options: ViewOptions;
-
-  /**
-   * Observable holding the DOM id of the currently active cell for screen reader
-   * aria-activedescendant support. Subclasses (e.g. GridView) override this by
-   * computing the value from cursor position and section identity.
-   * Defaults to null (no active descendant).
-   */
-  public activeDescendantId: Observable<string | null> = Observable.create(this, null);
 
   public onNewRecordRequest?(): Promise<number> | void;
 
