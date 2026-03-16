@@ -323,6 +323,7 @@ export class TreeViewComponent extends Disposable {
             testId("label"),
             treeItem.buildDom(),
             dom.style("top", use => use(deltaY) + "px"),
+            dom.attr("id", use => use(this._options.selected) === treeItem ? "tree-item-current-page" : null),
           ),
           arrowElement = css.arrow(
             dom.attr("aria-label", use => use(collapsed) ? t("Expand") : t("Collapse")),

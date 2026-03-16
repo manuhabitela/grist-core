@@ -30,7 +30,7 @@ import { confirmModal } from "app/client/ui2018/modals";
 import { isNonNullish } from "app/common/gutil";
 import { tsvDecode } from "app/common/tsvFormat";
 
-import { Disposable, dom, styled } from "grainjs";
+import { Computed, Disposable, dom, Observable, styled, subscribe } from "grainjs";
 
 import type { CopySelection } from "app/client/components/CopySelection";
 import type { App } from "app/client/ui/App";
@@ -61,15 +61,6 @@ export class Clipboard extends Disposable {
   };
 
   /**
-   * String used as a DOM element id that identifies the currently active item in a View.
-   * It is used by the clipboard's hidden input to correctly announce the active item to screen readers.
-   *
-   * A View is meant to place this id on the element that should be announced as active to screen readers,
-   * for example, the currently active cell in a GridView.
-   */
-  public static readonly srActiveId = "current-screenreader-item";
-
-  /**
    * Helper to determine if the currently active element deserves to keep its own focus, and capture copy-paste events.
    *
    * By default, focus is automatically allowed if:
@@ -98,7 +89,9 @@ export class Clipboard extends Disposable {
     return FOCUS_TARGET_TAGS.has(elem.tagName) || elem.hasAttribute("tabindex");
   }
 
-  public readonly copypasteField: HTMLTextAreaElement;
+  public readonly copypasteField: HTMLDivElement;
+
+  private _activeDescendant = Observable.create<string | null>(this, null);
 
   // In the event of a cut a callback is provided by the viewsection that is the target of the cut.
   // When called it returns the additional removal action needed for a cut.
@@ -110,18 +103,17 @@ export class Clipboard extends Disposable {
 
   constructor(private _app: App) {
     super();
-    this.copypasteField = dom("textarea",
+    this.copypasteField = dom("div",
       {
-        "id": "copypaste-field",
-        "class": "copypaste mousetrap",
-        // These 2 attributes expose to screen readers the current active item of the view (i.e the current grid cell),
-        // SRs more-or-less act as if the DOM focus is on the target element of aria-activedescendant
-        "aria-owns": "main-content",
-        "aria-activedescendant": Clipboard.srActiveId,
+        id: "copypaste-field",
+        class: "copypaste mousetrap",
+        tabIndex: "0",
+        contentEditable: "true",
+        role: "textbox",
       },
       dom.on("input", (event, elem) => {
         const value = (event as InputEvent).data;
-        elem.value = "";
+        elem.textContent = "";
         event.stopPropagation();
         event.preventDefault();
         commands.allCommands.input.run(value);
@@ -137,8 +129,8 @@ export class Clipboard extends Disposable {
       defaultFocusElem: this.copypasteField,
       allowFocus: Clipboard.allowFocus,
       onDefaultFocus: () => {
-        this.copypasteField.value = " ";
-        this.copypasteField.select();
+        this.copypasteField.textContent = " ";
+        window.getSelection()?.selectAllChildren(this.copypasteField);
         this._app.trigger("clipboard_focus");
       },
       onDefaultBlur: () => {
@@ -159,13 +151,41 @@ export class Clipboard extends Disposable {
     });
 
     this.autoDispose(commands.createGroup(Clipboard.commands, this, true));
+
+    const screenReaderMode = Computed.create(this, (use) => {
+      const appModel = use(this._app.topAppModel.appObs);
+      return appModel ? use(appModel.screenReaderMode) : false;
+    });
+
+    // Keep aria-activedescendant in sync with the active cell whenever screen reader mode
+    // is enabled. This reacts to both cursor movement (via _activeDescendant) and SR mode toggle.
+    this.autoDispose(subscribe(screenReaderMode, this._activeDescendant, (_use, srEnabled, cellId) => {
+      if (srEnabled && cellId) {
+        const viewId = cellId.split("_")[0];
+        this.copypasteField.setAttribute("aria-owns", viewId);
+        this.copypasteField.setAttribute("aria-activedescendant", cellId);
+        this.copypasteField.setAttribute("aria-labelledby", viewId);
+        this.copypasteField.setAttribute("role", "application");
+      } else {
+        this.copypasteField.removeAttribute("aria-activedescendant");
+        this.copypasteField.removeAttribute("aria-owns");
+        this.copypasteField.setAttribute("role", "textbox");
+      }
+    }));
+  }
+
+  /**
+   * Called by GristDoc to update the active cell's DOM id for aria-activedescendant.
+   */
+  public setActiveDescendant(id: string | null): void {
+    this._activeDescendant.set(id);
   }
 
   /**
    * Internal helper fired on `copy` events. If a callback was registered from a component, calls the
    * callback to get selection data and puts it on the clipboard.
    */
-  private _onCopy(event: ClipboardEvent, elem: HTMLTextAreaElement) {
+  private _onCopy(event: ClipboardEvent, elem: HTMLDivElement) {
     event.preventDefault();
     const pasteObj = commands.allCommands.copy.run();
     this._setCBdata(pasteObj, event.clipboardData!);
@@ -181,7 +201,7 @@ export class Clipboard extends Disposable {
     void this._copyToClipboard(pasteObj, "copy", true);
   }
 
-  private _onCut(event: ClipboardEvent, elem: HTMLTextAreaElement) {
+  private _onCut(event: ClipboardEvent, elem: HTMLDivElement) {
     event.preventDefault();
     const pasteObj = commands.allCommands.cut.run();
     this._setCBdata(pasteObj, event.clipboardData!);
@@ -250,7 +270,7 @@ export class Clipboard extends Disposable {
    * Internal helper fired on `paste` events. If a callback was registered from a component, calls the
    * callback with data from the clipboard.
    */
-  private _onPaste(event: ClipboardEvent, elem: HTMLTextAreaElement) {
+  private _onPaste(event: ClipboardEvent, elem: HTMLDivElement) {
     event.preventDefault();
     const cb = event.clipboardData!;
     const plainText = cb.getData("text/plain");

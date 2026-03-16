@@ -2,7 +2,7 @@ import BaseView, { ViewOptions } from "app/client/components/BaseView";
 import { parsePasteForView } from "app/client/components/BaseView2";
 import * as selector from "app/client/components/CellSelector";
 import { ElemType } from "app/client/components/CellSelector";
-import { Clipboard, CutCallback } from "app/client/components/Clipboard";
+import { CutCallback } from "app/client/components/Clipboard";
 import * as commands from "app/client/components/commands";
 import { CopySelection } from "app/client/components/CopySelection";
 import { GristDoc } from "app/client/components/GristDoc";
@@ -227,6 +227,8 @@ export default class GridView extends BaseView {
       return tree;
     }));
 
+    const sectionId = this.viewSection.id();
+
     // Create observable holding current rowIndex that the view should be scrolled to.
     // We will always notify, because we want to scroll to the row even when only the
     // column is changed (in situation when the row is not visible).
@@ -237,11 +239,14 @@ export default class GridView extends BaseView {
       rowIndex: use(this.cursor.rowIndex),
       fieldIndex: use(this.cursor.fieldIndex),
     }));
-    // Add listener, and check if the cursor is indeed changed, if so, update the row
-    // and scroll it into view (using kd.scrollChildIntoView in buildDom function).
+    // Add listener, and check if the cursor is indeed changed…
     this.autoDispose(this.currentPosition.addListener((cur, prev) => {
       if (cur.rowIndex !== prev.rowIndex || cur.fieldIndex !== prev.fieldIndex) {
+        // …if so, update the row and scroll it into view (using kd.scrollChildIntoView in buildDom function).
         this.visibleRowIndex(cur.rowIndex);
+
+        // …also update current id so that screen readers correctly announce the active cell.
+        this.activeDescendantId.set(gridCellId(sectionId, cur.rowIndex ?? 0, cur.fieldIndex));
       }
     }));
 
@@ -1324,6 +1329,7 @@ export default class GridView extends BaseView {
   protected buildDom() {
     const data = this.viewData;
     const v = this.viewSection;
+    const sectionId = v.id();
     const editIndex = this.currentEditingColumnIndex;
 
     // each row has toggle classes on these props, so grab them once to save on lookups
@@ -1349,14 +1355,9 @@ export default class GridView extends BaseView {
 
     return dom(
       "div.gridview_data_pane.flexvbox",
-      { role: "grid" },
-      dom.attr("aria-label", use =>
-        t("{{title}} widget on {{pageName}} page", {
-          title: use(v.titleDef),
-          pageName: use(this.gristDoc.currentPageName),
-        }),
-      ),
-      dom.attr("aria-describedby", "current-page-name"),
+      { id: `view-${sectionId}`, role: "grid" },
+      dom.attr("aria-label", use => t("{{title}} widget", { title: use(v.titleDef) })),
+      dom.attr("aria-describedby", "tree-item-current-page"),
       dom.attr("aria-rowcount", (use) => {
         const dataLength = use(data.getObservable()).length;
         const hasAddRow = use(this.enableAddRow);
@@ -1420,6 +1421,7 @@ export default class GridView extends BaseView {
 
       this.scrollPane =
         dom("div.grid_view_data.gridview_data_scroll.show_scrollbar",
+          { role: "rowgroup" },
           kd.scrollChildIntoView(this.visibleRowIndex),
           dom.onDispose(() => {
           // Save the previous scroll values to the section.
@@ -1469,6 +1471,7 @@ export default class GridView extends BaseView {
                   return dom(
                     "div.column_name.field",
                     { role: "columnheader" },
+                    dom.attr("id", use => columnHeaderId(sectionId, use(field._index) ?? 0)),
                     dom.autoDispose(canRename),
                     styleCustomVar("--grist-header-color", use => use(field.headerTextColor) || ""),
                     styleCustomVar("--grist-header-background-color", use => use(field.headerFillColor) || ""),
@@ -1740,9 +1743,11 @@ export default class GridView extends BaseView {
             return dom(
               "div.field",
               { role: "gridcell" },
-              dom.attr("id", use => use(isCellActive) ? Clipboard.srActiveId : undefined),
+              dom.attr("id", use =>
+                gridCellId(sectionId, use(row._index) ?? 0, use(field._index) ?? 0),
+              ),
               dom.attr("aria-colindex", use => String((use(field._index) ?? 0) + 1)),
-              dom.attr("aria-rowindex", use => String((use(row._index) ?? 0) + 1)),
+              dom.attr("aria-describedby", use => columnHeaderId(sectionId, use(field._index) ?? 0)),
               dom.attr("aria-selected", use => use(isCellActive) ? "true" : "false"),
               dom.cls("field-insert-before", use =>
                 use(this._insertColumnIndex) === use(field._index)),
@@ -2500,4 +2505,16 @@ function scrollBar(): { width: number; height: number } {
   // standard width/height across all browsers.
   // Tested on Chrome/FF Linux/Windows/MacOS.
   return { width: 13, height: 13 };
+}
+
+/**
+ * Builds a stable DOM id for a grid cell, unique per section/row/column.
+ * Used for aria-activedescendant to let screen readers track the active cell.
+ */
+function gridCellId(sectionId: number, rowIndex: number, fieldIndex: number): string {
+  return `view-${sectionId}_cell-${rowIndex}-${fieldIndex}`;
+}
+
+function columnHeaderId(sectionId: number, fieldIndex: number): string {
+  return `view-${sectionId}_col-${fieldIndex}`;
 }
