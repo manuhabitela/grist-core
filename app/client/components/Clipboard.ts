@@ -27,6 +27,7 @@ import { makeT } from "app/client/lib/localization";
 import { makePasteHtml, makePasteText, parsePasteHtml, PasteData } from "app/client/lib/tableUtil";
 import { ShortcutKey, ShortcutKeyContent } from "app/client/ui/ShortcutKey";
 import { confirmModal } from "app/client/ui2018/modals";
+import { visuallyHidden } from "app/client/ui2018/visuallyHidden";
 import { isNonNullish } from "app/common/gutil";
 import { tsvDecode } from "app/common/tsvFormat";
 
@@ -101,6 +102,7 @@ export class Clipboard extends Disposable {
 
   constructor(private _app: App) {
     super();
+    const copypasteContainer = visuallyHidden({ "role": "main", "aria-owns": "floating-editor" });
     this.copypasteField = dom("textarea",
       {
         "id": "copypaste-field",
@@ -119,17 +121,17 @@ export class Clipboard extends Disposable {
       dom.on("cut", this._onCut.bind(this)),
       dom.on("paste", this._onPaste.bind(this)),
     );
-    document.body.appendChild(this.copypasteField);
+    copypasteContainer.appendChild(this.copypasteField);
     // This "fake active descendant" is very important for screen reader users.
     // It is there to prevent screen readers from announcing usual input-related things,
     // like announcing the input content when pressing arrow keys.
     const fakeActiveDescendant = dom("div", { id: "fake-active-descendant", role: "group" });
-    document.body.appendChild(fakeActiveDescendant);
+    copypasteContainer.appendChild(fakeActiveDescendant);
+    document.body.appendChild(copypasteContainer);
 
     this.onDispose(() => {
       dom.domDispose(this.copypasteField);
-      this.copypasteField.remove();
-      fakeActiveDescendant.remove();
+      copypasteContainer.remove();
     });
 
     FocusLayer.create(this, {
