@@ -2,6 +2,7 @@ import BaseView from "app/client/components/BaseView";
 import * as commands from "app/client/components/commands";
 import { GristDoc } from "app/client/components/GristDoc";
 import { kbFocusHighlighterClass } from "app/client/components/KeyboardFocusHighlighter";
+import { ScreenReaderAnnouncer } from "app/client/components/ScreenReaderAnnouncer";
 import { FocusLayer } from "app/client/lib/FocusLayer";
 import { isFocusable } from "app/client/lib/isFocusable";
 import { makeT } from "app/client/lib/localization";
@@ -382,7 +383,7 @@ export class RegionFocusSwitcher extends Disposable {
     // If clicking or kb-focusing a section: focus the section,
     // enabling back the view layout commands (see `focusSection`).
     } else if (current.region?.type === "section" && gristDoc) {
-      focusSection(current.region, gristDoc);
+      focusSection(current.region, gristDoc, this._app?.topAppModel.screenReaderAnnouncer);
     }
 
     // If we reset the focus switch, clean all necessary state
@@ -583,10 +584,13 @@ const escapeViewLayout = (gristDoc: GristDoc, isRelated = false) => {
  * This enables the view layout keyboard commands, noticeably making the Tab key
  * respond to the `nextField` and `prevField` commands instead of normal browser behavior.
  */
-const focusSection = (section: SectionRegion, gristDoc: GristDoc) => {
+const focusSection = (section: SectionRegion, gristDoc: GristDoc, screenReaderAnnouncer?: ScreenReaderAnnouncer) => {
   focusViewLayout(gristDoc);
   if (section.id) {
     gristDoc.viewModel.activeSectionId(section.id);
+    screenReaderAnnouncer?.announce(t("{{title}} widget", {
+      title: gristDoc.viewModel.activeSection().titleDef(),
+    }));
   }
 };
 
