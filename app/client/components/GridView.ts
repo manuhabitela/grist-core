@@ -45,6 +45,7 @@ import { menuToggle } from "app/client/ui/MenuToggle";
 import { mouseDragMatchElem } from "app/client/ui/mouseDrag";
 import { IRowContextMenu, RowContextMenu } from "app/client/ui/RowContextMenu";
 import { applyRowHeightLimit } from "app/client/ui/RowHeightConfig";
+import { formatForScreenReader } from "app/client/ui/ScreenReaderFormatters";
 import { ITooltipControl, showTooltip } from "app/client/ui/tooltips";
 import { isNarrowScreen, testId } from "app/client/ui2018/cssVars";
 import { closeRegisteredMenu, menu } from "app/client/ui2018/menus";
@@ -227,8 +228,6 @@ export default class GridView extends BaseView {
       return tree;
     }));
 
-    const sectionId = this.viewSection.id();
-
     // Create observable holding current rowIndex that the view should be scrolled to.
     // We will always notify, because we want to scroll to the row even when only the
     // column is changed (in situation when the row is not visible).
@@ -249,18 +248,12 @@ export default class GridView extends BaseView {
         if (cur.rowIndex !== null) {
           const rowId = this.viewData.getRowId(cur.rowIndex);
           const field = this.viewSection.viewFields().at(cur.fieldIndex);
-          const cellId = gridCellId(sectionId, cur.rowIndex ?? 0, cur.fieldIndex);
           if (field && rowId !== "new") {
-            // Note: use a logic like the formatter here, with a screen-reader specific formatter?
-            //   const value = this.tableModel.tableData.getValue(rowId as number, field.column().colId());
-            //   const content = field.formatter().formatForScreenReader(value);
-            // or, get the current cell ID and announce the DOM element directly?
-            const content = document.getElementById(cellId);
-            const rowNum = cur.rowIndex + 1;
-            const label = field.label();
+            const value = this.tableModel.tableData.getValue(rowId as number, field.displayColModel().colId());
+            const content = formatForScreenReader(field.formatter(), value);
             this.gristDoc.appModel.screenReaderAnnouncer.announce(
               content,
-              `${t("row {{rowNum}} column {{colName}}", { rowNum, colName: label })}`,
+              `${t("row {{rowNum}} {{colName}}", { rowNum: cur.rowIndex + 1, colName: field.label() })}`,
             );
           }
         }
@@ -1346,7 +1339,6 @@ export default class GridView extends BaseView {
   protected buildDom() {
     const data = this.viewData;
     const v = this.viewSection;
-    const sectionId = v.id();
     const editIndex = this.currentEditingColumnIndex;
 
     // each row has toggle classes on these props, so grab them once to save on lookups
@@ -1744,9 +1736,6 @@ export default class GridView extends BaseView {
 
             return dom(
               "div.field",
-              dom.attr("id", use =>
-                gridCellId(sectionId, use(row._index) ?? 0, use(field._index) ?? 0),
-              ),
               dom.cls("field-insert-before", use =>
                 use(this._insertColumnIndex) === use(field._index)),
               kd.style("--frozen-position", () => ko.unwrap(this.frozenPositions.at(field._index()!)!)),
@@ -2503,12 +2492,4 @@ function scrollBar(): { width: number; height: number } {
   // standard width/height across all browsers.
   // Tested on Chrome/FF Linux/Windows/MacOS.
   return { width: 13, height: 13 };
-}
-
-/**
- * Builds a stable DOM id for a grid cell, unique per section/row/column.
- * Used for aria-activedescendant to let screen readers track the active cell.
- */
-function gridCellId(sectionId: number, rowIndex: number, fieldIndex: number): string {
-  return `view-${sectionId}_cell-${rowIndex}-${fieldIndex}`;
 }

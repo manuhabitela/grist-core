@@ -11,7 +11,6 @@ import { MetaTableData } from "app/client/models/TableData";
 import { cssRow } from "app/client/ui/RightPanelStyles";
 import { colors, testId, theme, vars } from "app/client/ui2018/cssVars";
 import { loadingSpinner } from "app/client/ui2018/loaders";
-import { visuallyHidden } from "app/client/ui2018/visuallyHidden";
 import { NewAbstractWidget } from "app/client/widgets/NewAbstractWidget";
 import { CellValue } from "app/common/DocActions";
 import { encodeQueryParams } from "app/common/gutil";
@@ -84,7 +83,6 @@ export class AttachmentsWidget extends NewAbstractWidget {
           testId("attachment-icon"),
         ),
       ]),
-      visuallyHidden(t("Attachments:")),
       dom.maybe<number>(row.id, (rowId) => {
         return dom.forEach(values, (value: number) =>
           isNaN(value) ? null : this._buildAttachment(value, values, {
