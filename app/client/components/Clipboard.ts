@@ -89,7 +89,7 @@ export class Clipboard extends Disposable {
     return FOCUS_TARGET_TAGS.has(elem.tagName) || elem.hasAttribute("tabindex");
   }
 
-  public readonly copypasteField: HTMLDivElement;
+  public readonly copypasteField: HTMLTextAreaElement;
 
   // In the event of a cut a callback is provided by the viewsection that is the target of the cut.
   // When called it returns the additional removal action needed for a cut.
@@ -101,19 +101,16 @@ export class Clipboard extends Disposable {
 
   constructor(private _app: App) {
     super();
-    this.copypasteField = dom("div",
+    this.copypasteField = dom("textarea",
       {
         "id": "copypaste-field",
         "class": "copypaste mousetrap",
-        "tabIndex": "0",
-        "contentEditable": "true",
-        "role": "textbox",
         "aria-owns": "fake-active-descendant",
         "aria-activedescendant": "fake-active-descendant",
       },
       dom.on("input", (event, elem) => {
-        const value = (event as InputEvent).data;
-        elem.textContent = "";
+        const value = elem.value;
+        elem.value = "";
         event.stopPropagation();
         event.preventDefault();
         commands.allCommands.input.run(value);
@@ -139,8 +136,8 @@ export class Clipboard extends Disposable {
       defaultFocusElem: this.copypasteField,
       allowFocus: Clipboard.allowFocus,
       onDefaultFocus: () => {
-        this.copypasteField.textContent = " ";
-        window.getSelection()?.selectAllChildren(this.copypasteField);
+        this.copypasteField.value = " ";
+        this.copypasteField.select();
         this._app.trigger("clipboard_focus");
       },
       onDefaultBlur: () => {
@@ -167,7 +164,7 @@ export class Clipboard extends Disposable {
    * Internal helper fired on `copy` events. If a callback was registered from a component, calls the
    * callback to get selection data and puts it on the clipboard.
    */
-  private _onCopy(event: ClipboardEvent, elem: HTMLDivElement) {
+  private _onCopy(event: ClipboardEvent, elem: HTMLTextAreaElement) {
     event.preventDefault();
     const pasteObj = commands.allCommands.copy.run();
     this._setCBdata(pasteObj, event.clipboardData!);
@@ -183,7 +180,7 @@ export class Clipboard extends Disposable {
     void this._copyToClipboard(pasteObj, "copy", true);
   }
 
-  private _onCut(event: ClipboardEvent, elem: HTMLDivElement) {
+  private _onCut(event: ClipboardEvent, elem: HTMLTextAreaElement) {
     event.preventDefault();
     const pasteObj = commands.allCommands.cut.run();
     this._setCBdata(pasteObj, event.clipboardData!);
@@ -252,7 +249,7 @@ export class Clipboard extends Disposable {
    * Internal helper fired on `paste` events. If a callback was registered from a component, calls the
    * callback with data from the clipboard.
    */
-  private _onPaste(event: ClipboardEvent, elem: HTMLDivElement) {
+  private _onPaste(event: ClipboardEvent, elem: HTMLTextAreaElement) {
     event.preventDefault();
     const cb = event.clipboardData!;
     const plainText = cb.getData("text/plain");

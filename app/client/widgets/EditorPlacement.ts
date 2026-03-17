@@ -74,12 +74,9 @@ export class EditorPlacement extends Disposable {
     editorRoot.style.visibility = "hidden";
 
     document.body.appendChild(editorRoot);
-    this._cellElem.setAttribute("aria-owns", "floating-editor");
-
     this.onDispose(() => {
       // When the editor is destroyed, destroy and remove its DOM.
       dom.domDispose(editorRoot);
-      this._cellElem.removeAttribute("aria-owns");
       editorRoot.remove();
     });
   }
