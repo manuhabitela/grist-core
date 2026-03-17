@@ -3,10 +3,19 @@ import { Notifier } from "app/client/models/NotifyModel";
 import { visuallyHidden } from "app/client/ui2018/visuallyHidden";
 
 import { Disposable, dom } from "grainjs";
+import debounce from "lodash/debounce";
 
 const t = makeT("ScreenReaderAnnouncer");
 
 export class ScreenReaderAnnouncer extends Disposable {
+  /**
+   * Announces the given things to screen reader users.
+   *
+   * Note that announcements are debounced, mostly to prevent announcements triggered by rapid automatic updates
+   * (mostly at page load).
+   */
+  public announce: (...announcements: (string)[]) => void;
+
   private readonly _container: HTMLDivElement;
 
   constructor() {
@@ -21,6 +30,7 @@ export class ScreenReaderAnnouncer extends Disposable {
       dom.domDispose(this._container);
       this._container.remove();
     });
+    this.announce = debounce(this._announce.bind(this), 100);
   }
 
   public listenToNotifier(notifier: Notifier) {
@@ -33,10 +43,7 @@ export class ScreenReaderAnnouncer extends Disposable {
     }));
   }
 
-  /**
-   * Announces the given things to screen reader users.
-   */
-  public announce(...announcements: (string)[]) {
+  private _announce(...announcements: (string)[]) {
     for (const announcement of announcements) {
       if (!announcement) {
         continue;
