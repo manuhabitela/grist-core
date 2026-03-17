@@ -75,17 +75,39 @@ function formatMarkdown(value: any): string {
 function formatMarkdownToken(token: Token): string {
   switch (token.type) {
     case "heading":
-      return t("heading {{- text}}", { text: token.text });
+      return t("heading {{- text}}", { text: formatInlineTokens(token.tokens) });
     case "paragraph":
-      return token.text;
+      return formatInlineTokens(token.tokens);
     case "list":
       // Punctuation is not used lightly here. Screen readers make actual pauses on punctuation, so we can
       // use them to help make content more understandable.
-      return t("list: {{- items}}", { items: token.items.map((item: Tokens.ListItem) => item.text).join(", ") });
-    case "code":
-      return t("code: {{- text}}", { text: token.text });
+      return t("list: {{- items}}", {
+        items: token.items.map((item: Tokens.ListItem) => formatInlineTokens(item.tokens)).join(", "),
+      });
     case "space":
       return "";
+    default:
+      return "text" in token ? String(token.text) : "";
+  }
+}
+
+function formatInlineTokens(tokens: Token[] | undefined): string {
+  if (!tokens) {
+    return "";
+  }
+  return tokens.map(formatSingleInlineToken).join("");
+}
+
+/**
+ * This strips ** and _ "tags", and formats [text](url) as "text (link)".
+ */
+function formatSingleInlineToken(token: Token): string {
+  switch (token.type) {
+    case "strong":
+    case "em":
+      return formatInlineTokens((token as Tokens.Strong | Tokens.Em).tokens);
+    case "link":
+      return t("{{- text}} (link)", { text: formatInlineTokens((token as Tokens.Link).tokens) });
     default:
       return "text" in token ? String(token.text) : "";
   }
