@@ -250,7 +250,7 @@ export default class GridView extends BaseView {
           const field = this.viewSection.viewFields().at(cur.fieldIndex);
           if (field && rowId !== "new") {
             const value = this.tableModel.tableData.getValue(rowId as number, field.displayColModel().colId());
-            const content = formatForScreenReader(field.formatter(), value);
+            const content = formatForScreenReader(field, value);
             // the row+column info is announced after a comma, to make the screen reader make a small pause
             this.gristDoc.appModel.screenReaderAnnouncer.announce([
               content,

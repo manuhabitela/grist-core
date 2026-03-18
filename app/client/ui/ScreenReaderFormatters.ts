@@ -1,6 +1,9 @@
 import { makeT } from "app/client/lib/localization";
+import { ViewFieldRec } from "app/client/models/entities/ViewFieldRec";
+import { DocData } from "app/common/DocData";
 import * as gristTypes from "app/common/gristTypes";
-import { BaseFormatter } from "app/common/ValueFormatter";
+
+import { extname } from "path";
 
 import { marked, Token, Tokens } from "marked";
 
@@ -15,9 +18,12 @@ const t = makeT("ScreenReaderFormatters");
  * For example, checkboxes values are usually formatted as "true" or "false". For screen readers,
  * we vocalize them as "Checked"/"Unchecked".
  */
-export function formatForScreenReader(formatter: BaseFormatter, value: any): string {
+export function formatForScreenReader(field: ViewFieldRec, value: any): string {
+  const formatter = field.formatter();
   const widget = formatter.widgetOpts.widget;
   switch (gristTypes.extractTypeFromColType(formatter.type)) {
+    case "Attachments":
+      return formatAttachments(value, field._table.tableData.docData);
     case "Bool":
       return widget === "Switch" ? formatSwitch(value) : formatCheckbox(value);
     case "Text":
@@ -32,6 +38,33 @@ export function formatForScreenReader(formatter: BaseFormatter, value: any): str
     default:
       return formatter.formatAny(value);
   }
+}
+
+/**
+ * Announces each attachment as either "Image" or the file extension (e.g. "PDF").
+ */
+function formatAttachments(value: any, docData: DocData): string {
+  if (!Array.isArray(value)) {
+    return "";
+  }
+  const attachmentIds = value.slice(1) as number[];
+  if (!attachmentIds.length) {
+    return "";
+  }
+
+  const attachmentsTable = docData.getMetaTable("_grist_Attachments");
+  const labels = attachmentIds
+    .filter(id => !isNaN(id))
+    .map((id) => {
+      if (attachmentsTable.getValue(id, "imageHeight")) {
+        return t("Image");
+      }
+      const fileName = attachmentsTable.getValue(id, "fileName") || "";
+      const fileIdent = attachmentsTable.getValue(id, "fileIdent") || "";
+      const extension = extname("x" + fileName).slice(1) || extname("x" + fileIdent).slice(1) || "?";
+      return extension.toUpperCase();
+    });
+  return labels.join(", ");
 }
 
 function formatCheckbox(value: any): string {
