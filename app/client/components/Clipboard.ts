@@ -132,7 +132,12 @@ export class Clipboard extends Disposable {
     );
     const fakeActiveDescendant = dom("div", {
       id: "fake-active-descendant",
-      role: "group",
+      // The role "application" helps some screen readers automatically change their navigation mode to navigate
+      // in widgets through grist keyboard shortcuts directly, without having to enable focus/app mode manually.
+      // [*]: One downside is the word "application" can literally be announced when focus gets on the clipboard.
+      // I'm guessing it's an okay downside compared to the benefit of automatic app mode switching, but this definitely
+      // needs feedback from actual screen reader users.
+      role: "application",
     });
     // The element is added to a container div, and not to the body directly. This helps preventing NVDA announce
     // the document `<title>` when focusing back on the clipboard, when coming from a region (panels).
