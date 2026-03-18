@@ -8,15 +8,8 @@ import debounce from "lodash/debounce";
 const t = makeT("ScreenReaderAnnouncer");
 
 export class ScreenReaderAnnouncer extends Disposable {
-  /**
-   * Announces the given things to screen reader users.
-   *
-   * Note that announcements are debounced, mostly to prevent announcements triggered by rapid automatic updates
-   * (mostly at page load).
-   */
-  public announce: (...announcements: (string)[]) => void;
-
   private readonly _container: HTMLDivElement;
+  private _debouncedByKey: Record<string, ReturnType<typeof debounce<(announcements: string[]) => void>>> = {};
 
   constructor() {
     super();
@@ -29,8 +22,23 @@ export class ScreenReaderAnnouncer extends Disposable {
     this.onDispose(() => {
       dom.domDispose(this._container);
       this._container.remove();
+      Object.values(this._debouncedByKey).forEach(debouncedFunction => debouncedFunction.cancel());
+      this._debouncedByKey = {};
     });
-    this.announce = debounce(this._announce.bind(this), 100);
+  }
+
+  /**
+   * Announces the given string or array of strings to screen reader users.
+   *
+   * If the thing you announce risks being announced multiple times in rapid succession for wrong reasons
+   * (example: state moves quickly while the app loading until it's stable), you can pass a `key` to
+   * prevent the intermediate announcements from being actually vocalized. Announcements are debounced per key.
+   */
+  public announce(announcements: string | string[], key: string = "default") {
+    if (!this._debouncedByKey[key]) {
+      this._debouncedByKey[key] = debounce((messages: string[]) => this._announce(messages), 100);
+    }
+    this._debouncedByKey[key](Array.isArray(announcements) ? announcements : [announcements]);
   }
 
   public listenToNotifier(notifier: Notifier) {
@@ -43,7 +51,7 @@ export class ScreenReaderAnnouncer extends Disposable {
     }));
   }
 
-  private _announce(...announcements: (string)[]) {
+  private _announce(announcements: string[]) {
     for (const announcement of announcements) {
       if (!announcement) {
         continue;

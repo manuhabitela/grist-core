@@ -252,10 +252,10 @@ export default class GridView extends BaseView {
             const value = this.tableModel.tableData.getValue(rowId as number, field.displayColModel().colId());
             const content = formatForScreenReader(field.formatter(), value);
             // the row+column info is announced after a comma, to make the screen reader make a small pause
-            this.gristDoc.appModel.screenReaderAnnouncer.announce(
+            this.gristDoc.appModel.screenReaderAnnouncer.announce([
               content,
               `, ${t("row {{rowNum}} {{colName}}", { rowNum: cur.rowIndex + 1, colName: field.label() })}`,
-            );
+            ], "grid-cell");
           }
         }
       }

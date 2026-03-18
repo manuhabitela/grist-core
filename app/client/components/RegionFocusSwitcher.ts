@@ -590,7 +590,7 @@ const focusSection = (section: SectionRegion, gristDoc: GristDoc, screenReaderAn
     gristDoc.viewModel.activeSectionId(section.id);
     screenReaderAnnouncer?.announce(t("{{title}} widget", {
       title: gristDoc.viewModel.activeSection().titleDef(),
-    }));
+    }), "region-switch");
   }
 };
 
