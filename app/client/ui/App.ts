@@ -148,7 +148,7 @@ export class AppImpl extends DisposableWithEvents implements App {
           appModel.screenReaderMode.set(!appModel.screenReaderMode.get());
           appModel.notifier.createUserMessage(
             appModel.screenReaderMode.get() ?
-              t("Enabled screen reader mode") : t("Disabled screen reader mode"),
+              t("Enabled screen reader improvements") : t("Disabled screen reader improvements"),
             {
               level: "success",
               key: "sr-mode-change",

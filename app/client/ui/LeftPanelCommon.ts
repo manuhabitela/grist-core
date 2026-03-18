@@ -73,8 +73,8 @@ export function createAccessibilityTools(appModel: AppModel): DomContents {
       cssLinkText(t("Accessibility"), { "aria-hidden": "true" }),
       dom.maybe(appModel.screenReaderMode, () => {
         return [
-          visuallyHidden(t("(Screen reader mode enabled)")),
-          cssContextIcon("VolumeUp", hoverTooltip("Screen reader mode enabled")),
+          visuallyHidden(t("(Screen reader improvements enabled)")),
+          cssContextIcon("VolumeUp", hoverTooltip("Screen reader improvements enabled")),
         ];
       }),
       cssKeyboardShortcut(

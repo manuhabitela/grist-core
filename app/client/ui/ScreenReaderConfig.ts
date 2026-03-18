@@ -1,3 +1,4 @@
+import { allCommands } from "app/client/components/commands";
 import { makeT } from "app/client/lib/localization";
 import { AppModel } from "app/client/models/AppModel";
 import * as css from "app/client/ui/AccountPageCss";
@@ -22,14 +23,15 @@ export class ScreenReaderConfig extends Disposable {
       css.dataRow(
         labeledSquareCheckbox(
           this._screenReaderMode,
-          t("Enable screen reader mode"),
+          t("Enable screen reader improvements"),
           testId("checkbox"),
           { "aria-describedby": "screen-reader-mode-description" },
         ),
       ),
       css.description(
-        t("Enable the screen reader mode if you use a screen reader or another assistive technology to improve the \
-navigation experience."),
+        t("Press {{accessibilityModalShortcut}} for more information about screen reader navigation.", {
+          accessibilityModalShortcut: allCommands.accessibility.humanKeys,
+        }),
         { id: "screen-reader-mode-description" },
       ),
       testId("container"),

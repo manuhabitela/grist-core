@@ -153,19 +153,25 @@ const screenReaderSection = (appObs: Observable<AppModel | null>) => {
 
   return cssSection(
     cssModalSubheading(t("Screen reader navigation"), { "role": "heading", "aria-level": 2 }),
-    dom("p", t("First, be sure to check the \"Keyboard navigation\" section above to understand how to navigate the \
-interface with the keyboard.")),
-    dom("p", t("Then, while navigating with a screen reader is possible by default, you can enable a specific mode to \
-improve the navigation experience when using a screen reader or other assistive technologies:")),
+    dom("p", t("Please first read the \"Keyboard navigation\" section above to understand how to navigate \
+across the interface's regions: specific keyboard shortcuts need to be used.")),
+    dom("p", t("Navigation in widgets (i.e. tables) is meant to be done with your screen reader's focus mode, or with \
+Quick Nav disabled in VoiceOver. While navigation when positioned in other regions (i.e. panels) can be done in either \
+browse or focus mode, we advise on staying in focus mode.")),
+    dom("p", t("While not mandatory for things to work, you can enable screen reader improvements for a better \
+navigation experience:")),
     dom("p",
       labeledSquareCheckbox(
         checked,
-        t("Enable screen reader improvements (global shortcut: {{shortcut}})", {
+        t("Enable screen reader improvements (keyboard shortcut: {{shortcut}})", {
           shortcut: allCommands.toggleScreenReaderMode.humanKeys,
         }),
         testId("screen-reader-checkbox"),
       ),
       dom.autoDispose(checked),
+    ),
+    dom("p", t("Warning: screen reader support is a work-in-progress in Grist and is improving over time. \
+Feedback is greatly appreciated!"),
     ),
   );
 };

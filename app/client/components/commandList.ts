@@ -166,7 +166,7 @@ export const groups: CommendGroupDef[] = [{
     {
       name: "toggleScreenReaderMode",
       keys: ["Shift+F4"],
-      desc: () => t("Toggle the screen reader mode"),
+      desc: () => t("Toggle the screen reader improvements"),
     },
   ],
 }, {
