@@ -102,11 +102,20 @@ export class Clipboard extends Disposable {
 
   constructor(private _app: App) {
     super();
-    const copypasteContainer = visuallyHidden({ "role": "main", "aria-owns": "floating-editor" });
     this.copypasteField = dom("textarea",
       {
         "id": "copypaste-field",
         "class": "copypaste mousetrap",
+        // This "fake active descendant" helps handling screen readers.
+        // Context:
+        //   when focused on an input, SRs try to help you understanding what's happening.
+        //   For example, NVDA announces the current input value when pressing arrow keys.
+        //   But in our case, we use this clipboard input as a trick to handle keyboard focus as a whole in Grist.
+        //   We don't really want SRs to help us on understanding this input. We actually want to make it so that they
+        //   don't even know there is an input.
+        // So, this dummy activedescendant makes SRs think focus is actually on the targetted thing, not the input.
+        // So, "input helpers" are disabled. And the targetted thing is an empty element, so the idea is that SRs
+        // don't say anything about it. Note that it's not _exactly_ what happens, but we are close.
         "aria-owns": "fake-active-descendant",
         "aria-activedescendant": "fake-active-descendant",
       },
@@ -121,11 +130,16 @@ export class Clipboard extends Disposable {
       dom.on("cut", this._onCut.bind(this)),
       dom.on("paste", this._onPaste.bind(this)),
     );
+    const fakeActiveDescendant = dom("div", {
+      id: "fake-active-descendant",
+      role: "group",
+    });
+    // The element is added to a container div, and not to the body directly. This helps preventing NVDA announce
+    // the document `<title>` when focusing back on the clipboard, when coming from a region (panels).
+    // The `aria-owns` attr is used to make SRs think that the #floating-editor, appearing when editing a grid cell,
+    // is a child of this container, again to prevent SRs from announcing unnecessary context switching.
+    const copypasteContainer = visuallyHidden({ "id": "copypaste-container", "aria-owns": "floating-editor" });
     copypasteContainer.appendChild(this.copypasteField);
-    // This "fake active descendant" is very important for screen reader users.
-    // It is there to prevent screen readers from announcing usual input-related things,
-    // like announcing the input content when pressing arrow keys.
-    const fakeActiveDescendant = dom("div", { id: "fake-active-descendant", role: "group" });
     copypasteContainer.appendChild(fakeActiveDescendant);
     document.body.appendChild(copypasteContainer);
 
