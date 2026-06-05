@@ -1,5 +1,4 @@
-import * as commands from "app/client/components/commands";
-import { FocusLayer } from "app/client/lib/FocusLayer";
+import { lockFocusUntilRemoved } from "app/client/lib/focusUtils";
 import { makeT } from "app/client/lib/localization";
 import { ViewSectionRec } from "app/client/models/entities/ViewSectionRec";
 import { autoGrow } from "app/client/ui/forms";
@@ -230,56 +229,11 @@ function buildRenameTitlePopup(ctrl: IOpenController, vs: ViewSectionRec, option
     }
   };
 
-  // User interface for the popup.
-  const myCommands = {
-    // Escape key: just close the popup.
-    cancel,
-    // Enter key: save and close the popup, unless the description input is focused.
-    // There is also a variant for Ctrl+Enter which will always save.
-    accept: () => {
-      // Enters are ignored in the description input (unless ctrl is pressed)
-      if (document.activeElement === descInput) { return true; }
-      close();
-    },
-    // ArrowUp
-    cursorUp: () => {
-      // moves focus to the widget title input if it is already at the top of widget description
-      if (document.activeElement === descInput && descInput?.selectionStart === 0) {
-        widgetInput?.focus();
-        widgetInput?.select();
-      } else if (document.activeElement === widgetInput) {
-        tableInput?.focus();
-        tableInput?.select();
-      } else {
-        return true;
-      }
-    },
-    // ArrowDown
-    cursorDown: () => {
-      if (document.activeElement === tableInput) {
-        widgetInput?.focus();
-        widgetInput?.select();
-      } else if (document.activeElement === widgetInput) {
-        descInput?.focus();
-        descInput?.select();
-      } else {
-        return true;
-      }
-    },
-  };
-
-  // Create this group and attach it to the popup and all inputs.
-  const commandGroup = commands.createGroup({ ...myCommands }, ctrl, true);
-
   let tableInput: HTMLInputElement | undefined;
   let widgetInput: HTMLInputElement | undefined;
-  let descInput: HTMLTextAreaElement | undefined;
   return cssRenamePopup(
-    // Create a FocusLayer to keep focus in this popup while it's active, and prevent keyboard
-    // shortcuts from being seen by the view underneath.
-    (elem) => { FocusLayer.create(ctrl, { defaultFocusElem: elem, pauseMousetrap: false }); },
+    lockFocusUntilRemoved(ctrl),
     dom.onDispose(onClose),
-    dom.autoDispose(commandGroup),
     testId("popup"),
     dom.cls(menuCssClass),
     dom.maybe(!options.tableNameHidden, () => [
@@ -291,20 +245,17 @@ function buildRenameTitlePopup(ctrl: IOpenController, vs: ViewSectionRec, option
         updateOnKey,
         { disabled: isSummary, placeholder: t("Provide a table name") },
         testId("table-name-input"),
-        commandGroup.attach(),
       ),
     ]),
     dom.maybe(!options.widgetNameHidden, () => [
       cssLabel(t("WIDGET TITLE")),
       widgetInput = cssInput(inputWidgetTitle, updateOnKey, { placeholder: inputWidgetPlaceholder },
         testId("section-name-input"),
-        commandGroup.attach(),
       ),
     ]),
     cssLabel(t("WIDGET DESCRIPTION")),
-    descInput = cssTextArea(inputWidgetDesc, updateOnKey,
+    cssTextArea(inputWidgetDesc, updateOnKey,
       testId("section-description-input"),
-      commandGroup.attach(),
       autoGrow(inputWidgetDesc),
     ),
     cssButtons(
@@ -319,8 +270,13 @@ function buildRenameTitlePopup(ctrl: IOpenController, vs: ViewSectionRec, option
       ),
     ),
     dom.onKeyDown({
+      Escape: () => cancel(),
       Enter$: (e) => {
         if (e.ctrlKey || e.metaKey) {
+          close();
+          return false;
+        }
+        if (document.activeElement === tableInput || document.activeElement === widgetInput) {
           close();
           return false;
         }
