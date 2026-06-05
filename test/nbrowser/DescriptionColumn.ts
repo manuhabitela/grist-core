@@ -200,7 +200,7 @@ describe("DescriptionColumn", function() {
 
     // Clear and move to label.
     await gu.sendKeys(Key.BACK_SPACE);
-    await gu.sendKeys(Key.ARROW_UP);
+    await gu.sendKeys(Key.SHIFT, Key.TAB, Key.NULL);
     await waitForFocus("label");
     assert.isTrue(await closeVisible());
     assert.isFalse(await saveVisible());
@@ -216,7 +216,7 @@ describe("DescriptionColumn", function() {
     assert.isTrue(await cancelVisible());
 
     // Add description.
-    await gu.sendKeys(Key.ARROW_DOWN);
+    await gu.sendKeys(Key.TAB);
     await waitForFocus("description");
     await gu.sendKeys("D");
 
@@ -228,7 +228,7 @@ describe("DescriptionColumn", function() {
 
     // Clear description completely, restore label and press close.
     await gu.sendKeys(Key.BACK_SPACE);
-    await gu.sendKeys(Key.ARROW_UP);
+    await gu.sendKeys(Key.SHIFT, Key.TAB, Key.NULL);
     await waitForFocus("label");
     await gu.sendKeys("D");
     await pressClose();
@@ -417,8 +417,7 @@ describe("DescriptionColumn", function() {
     await gu.sendKeys("ColumnB description");
 
     // Go to label.
-    await gu.sendKeys(Key.ARROW_UP);
-    await gu.sendKeys(Key.ARROW_UP);
+    await gu.sendKeys(Key.SHIFT, Key.TAB, Key.NULL);
     await waitForFocus("label");
 
     // Save by pressing enter.
@@ -433,9 +432,9 @@ describe("DescriptionColumn", function() {
     await revert();
   });
 
-  it("should support saving by tab", async () => {
-    await saveTest(() => gu.sendKeys(Key.TAB));
-    await saveTest(() => gu.sendKeys(Key.SHIFT, Key.TAB, Key.NULL));
+  it("should support saving by pressing page down and page up", async () => {
+    await saveTest(() => gu.sendKeys(Key.PAGE_DOWN));
+    await saveTest(() => gu.sendKeys(Key.PAGE_UP));
   });
 
   const cancelTest = async (makeCancel: () => Promise<void>) => {
@@ -467,43 +466,36 @@ describe("DescriptionColumn", function() {
     await cancelTest(() => gu.sendKeys(Key.ESCAPE));
   });
 
-  it("should add description by pressing arrow down", async () => {
+  it("should add description by tabbing to add button", async () => {
     await doubleClickHeader("A");
     await addDescriptionIsVisible(true);
     await descriptionIsVisible(false);
-    await gu.sendKeys(Key.ARROW_DOWN);
+    await gu.sendKeys(Key.TAB);
+    await gu.sendKeys(Key.ENTER);
     await waitForFocus("description");
     await addDescriptionIsVisible(false);
     await descriptionIsVisible(true);
     // Type something.
-    await gu.sendKeys("ColumnA description", Key.ENTER);
     await gu.sendKeys("ColumnA description");
-    // Now press 2 times the up key.
-    await gu.sendKeys(Key.ARROW_UP);
-    await gu.sendKeys(Key.ARROW_UP);
-    // We should still be in the description field.
-    await waitForFocus("description");
-    // Now press down key and test if that works.
-    await gu.sendKeys(Key.ARROW_DOWN);
-    await driver.wait(() => driver.executeScript(() => ((document as any).activeElement.selectionEnd === 39)), 500);
-
-    // Now press it 3 times, we should be back in the label field.
-    await gu.sendKeys(Key.ARROW_UP);
-    await gu.sendKeys(Key.ARROW_UP);
-    await gu.sendKeys(Key.ARROW_UP);
-
-    // We should be focused back in the label field.
+    // Shift+tab moves to the label field.
+    await gu.sendKeys(Key.SHIFT, Key.TAB, Key.NULL);
     await waitForFocus("label");
+    // Tab moves back to the description field.
+    await gu.sendKeys(Key.TAB);
+    await waitForFocus("description");
+    // Arrow keys still edit text within the description field.
+    await gu.sendKeys(Key.ARROW_UP);
+    await waitForFocus("description");
     await pressCancel();
   });
 
-  it("should tab to other columns and save", async () => {
+  it("should go to other columns and save with page down and page up", async () => {
     const revert = await gu.begin();
     // Start renaming col A.
     await doubleClickHeader("B");
     await gu.sendKeys("ColumnB");
-    // Press tab.
-    await gu.sendKeys(Key.TAB);
+    // Press page down.
+    await gu.sendKeys(Key.PAGE_DOWN);
     await gu.waitCellFocus(gu.getCell({ col: "C", rowNum: 1 }));
 
     // Make sure it is renamed.
@@ -521,27 +513,24 @@ describe("DescriptionColumn", function() {
     // Rename description.
     await gu.sendKeys("ColumnC description");
 
-    // Go back to column B from description by pressing shift tab
-    await gu.sendKeys(Key.SHIFT, Key.TAB, Key.NULL);
+    // Go back to column B from description by pressing page up.
+    await gu.sendKeys(Key.PAGE_UP);
     await gu.waitForServer();
     // Make sure we are now at column B.
     await gu.waitCellFocus(await gu.getCell({ col: "ColumnB", rowNum: 1 }));
     await popupIsAt("ColumnB");
     // Make sure the label has focus.
     await waitForFocus("label");
-    // Go to column C and from the label.
-    await gu.sendKeys(Key.TAB);
-    await driver.sleep(10);
+    // Go to column C from the label.
+    await gu.sendKeys(Key.PAGE_DOWN);
     // Make sure we are now at column C.
     await popupIsAt("ColumnC");
-    // Just quick test that shift tab will work.
-    await gu.sendKeys(Key.SHIFT, Key.TAB, Key.NULL);
-    await driver.sleep(10);
+    // Just quick test that page up will work.
+    await gu.sendKeys(Key.PAGE_UP);
     // Make sure we are now at column B.
     await popupIsAt("ColumnB");
     // Go to column C and test if the description was saved.
-    await gu.sendKeys(Key.TAB);
-    await driver.sleep(10);
+    await gu.sendKeys(Key.PAGE_DOWN);
     // Make sure we are now at column C.
     await popupIsAt("ColumnC");
     // And it has proper description.
@@ -554,12 +543,13 @@ describe("DescriptionColumn", function() {
   });
 
   it("should reopen editor when adding new column", async () => {
-    // This partially worked before - there was a bug where if you pressed tab on
+    // This partially worked before - there was a bug where if you pressed tab (at the time of the bug,
+    // we pressed tab to move between columns and not pageup/down) on
     // the last column, and then clicked Add Column, the editor wasn't shown, and the
     // auto-generated column name was used.
     const revert = await gu.begin();
     await doubleClickHeader("E");
-    await gu.sendKeys(Key.TAB);
+    await gu.sendKeys(Key.PAGE_DOWN);
     await gu.waitToPass(async () => {
       assert.isFalse(await popupVisible());
     }, 1000);
@@ -635,7 +625,11 @@ describe("DescriptionColumn", function() {
 });
 
 async function clickTooltip(col: string) {
-  await gu.getColumnHeader({ col }, { waitMs: 100 }).find(".test-column-info-tooltip").click();
+  await gu.waitToPass(async () => {
+    const header = gu.getColumnHeader({ col }, { waitMs: 100 });
+    assert.isTrue(await header.find(".test-column-info-tooltip").isPresent());
+    await header.find(".test-column-info-tooltip").click();
+  }, 4000);
 }
 
 async function addDescriptionIsVisible(visible = true) {
@@ -679,28 +673,32 @@ function getLabel() {
 
 async function popupVisible() {
   try {
-    return await driver.findWait(".test-column-title-popup", 50).isDisplayed();
+    return await driver.findWait(".test-column-title-popup", 200).isDisplayed();
   } catch {
     return false;
   }
 }
 
 async function popupIsAt(col: string) {
-  // Make sure we are now at column.
-  assert.equal(await getLabelText(), col);
-  // Make sure that popup is near the column.
-  const headerCRect = await gu.getColumnHeader({ col }).getRect();
-  const popup = await driver.find(".test-column-title-popup").getRect();
-  assert.isAtLeast(popup.x, headerCRect.x - 2);
-  assert.isBelow(popup.x, headerCRect.x + 2);
-  assert.isAtLeast(popup.y, headerCRect.y + headerCRect.height - 2);
-  assert.isBelow(popup.y, headerCRect.y + headerCRect.height + 2);
+  await gu.waitToPass(async () => {
+    assert.equal(await getLabelText(), col);
+    const headerCRect = await gu.getColumnHeader({ col }).getRect();
+    const popup = await driver.find(".test-column-title-popup").getRect();
+    assert.isAtLeast(popup.x, headerCRect.x - 2);
+    assert.isBelow(popup.x, headerCRect.x + 2);
+    assert.isAtLeast(popup.y, headerCRect.y + headerCRect.height - 2);
+    assert.isBelow(popup.y, headerCRect.y + headerCRect.height + 2);
+  }, 2000);
 }
 
 async function doubleClickHeader(col: string, focus: "label" | "description" | null = "label") {
   const header = await gu.getColumnHeader({ col });
   await header.click();
   await header.click();
+  // Wait for the popup to appear (it opens asynchronously).
+  await gu.waitToPass(async () => {
+    assert.isTrue(await popupVisible(), `popup for ${col} didn't open`);
+  }, 2000);
   if (focus) {
     await waitForFocus(focus);
   }
@@ -708,7 +706,7 @@ async function doubleClickHeader(col: string, focus: "label" | "description" | n
 
 async function waitForFocus(field: "label" | "description") {
   await gu.waitToPass(async () => assert.isTrue(
-    await driver.find(`.test-column-title-${field}`).hasFocus(), `${field} doesn't have focus`), 200);
+    await driver.find(`.test-column-title-${field}`).hasFocus(), `${field} doesn't have focus`), 2000);
 }
 
 async function waitForTooltip() {

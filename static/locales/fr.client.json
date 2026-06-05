@@ -1490,7 +1490,8 @@
         "Column label": "Libellé de la colonne",
         "Provide a column label": "Donner un nom à la colonne",
         "Save": "Sauvegarder",
-        "Close": "Fermer"
+        "Close": "Fermer",
+        "Use Page Up and Page Down to edit neighboring column titles.": "Utilisez les touches Page Haut et Page Bas pour modifier les titres des colonnes voisines."
     },
     "DescriptionConfig": {
         "DESCRIPTION": "DESCRIPTION",

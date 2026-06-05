@@ -1,7 +1,7 @@
-import { Clipboard } from "app/client/components/Clipboard";
 import * as commands from "app/client/components/commands";
+import { cssWhenKeyboardUser } from "app/client/components/KeyboardFocusHighlighter";
 import { copyToClipboard } from "app/client/lib/clipboardUtils";
-import { FocusLayer } from "app/client/lib/FocusLayer";
+import { lockFocusUntilRemoved } from "app/client/lib/focusUtils";
 import { makeT } from "app/client/lib/localization";
 import { setTestState } from "app/client/lib/testState";
 import { ViewFieldRec } from "app/client/models/DocModel";
@@ -147,53 +147,8 @@ function buildColumnRenamePopup(ctrl: IOpenController, options: IColumnTitleOpti
     isEditing(false);
   };
 
-  // User interface for the popup.
-  const myCommands = {
-    // Escape key: just close the popup.
-    cancel,
-    // Enter key: save and close the popup, unless the description input is focused.
-    // There is also a variant for Ctrl+Enter which will always save.
-    accept: () => {
-      // Enters are ignored in the description input (unless ctrl is pressed)
-      if (document.activeElement === descInput) { return true; }
-      close();
-    },
-    // Tab: save and close the popup, and move to the next field.
-    nextField: () => {
-      close();
-      optCommands?.nextField?.();
-    },
-    // Shift + Tab: save and close the popup, and move to the previous field.
-    prevField: () => {
-      close();
-      optCommands?.prevField?.();
-    },
-    // ArrowUp: moves focus to the label if it is already at the top
-    cursorUp: () => {
-      if (document.activeElement === descInput && descInput?.selectionStart === 0) {
-        labelInput?.focus();
-        labelInput?.select();
-      } else {
-        return true;
-      }
-    },
-    // ArrowDown: move to the description input, only if the label input is focused.
-    cursorDown: () => {
-      if (document.activeElement === labelInput) {
-        const focus = () => {
-          descInput?.focus();
-          descInput?.select();
-        };
-        showDesc.set(true);
-        focus();
-      } else {
-        return true;
-      }
-    },
-  };
-
   // Create this group and attach it to the popup and both inputs.
-  const commandGroup = commands.createGroup({ ...optCommands, ...myCommands }, ctrl, true);
+  const commandGroup = commands.createGroup(optCommands ?? {}, ctrl, true);
   ctrl.autoDispose(commandGroup);
 
   // We will still focus from other elements and restore it on either the label or description input.
@@ -270,11 +225,24 @@ function buildColumnRenamePopup(ctrl: IOpenController, options: IColumnTitleOpti
       ),
     ]),
     dom.onKeyDown({
+      Escape: () => cancel(),
       Enter$: (e) => {
         if (e.ctrlKey || e.metaKey) {
           close();
           return false;
         }
+        if (document.activeElement === labelInput) {
+          close();
+          return false;
+        }
+      },
+      PageUp: () => {
+        close();
+        optCommands?.prevField?.();
+      },
+      PageDown: () => {
+        close();
+        optCommands?.nextField?.();
       },
     }),
     cssButtons(
@@ -296,6 +264,10 @@ function buildColumnRenamePopup(ctrl: IOpenController, options: IColumnTitleOpti
         dom.show(hasChange),
       ),
     ),
+    optCommands?.prevField && optCommands?.nextField ? cssKeyboardHint(
+      t("Use Page Up and Page Down to edit neighboring column titles."),
+      testId("keyboard-hint"),
+    ) : null,
     // After showing the popup, focus the label input and select it's content.
     (elem) => {
       setTimeout(() => {
@@ -309,17 +281,7 @@ function buildColumnRenamePopup(ctrl: IOpenController, options: IColumnTitleOpti
         }
       }, 0);
     },
-    // Create a FocusLayer to keep focus in this popup while it's active, by default when focus is stolen
-    // by someone else, we will bring back it to the label element. Clicking anywhere outside the popup
-    // will close it, but not when we click on the header itself (as it will reopen it). So this one
-    // makes sure that the focus is restored in the label.
-    (elem) => {
-      FocusLayer.create(ctrl, {
-        defaultFocusElem: elem,
-        pauseMousetrap: false,
-        allowFocus: Clipboard.allowFocus,
-      });
-    },
+    lockFocusUntilRemoved(ctrl),
     restoreFocus,
   );
 }
@@ -363,6 +325,13 @@ const cssButtons = styled("div", `
   & button {
     min-width: calc(50 / 13 * 1em); /* Min 50px for 13px font size, to make Save and Close buttons equal width */
   }
+`);
+
+const cssKeyboardHint = styled(cssWhenKeyboardUser, `
+  margin: 12px 0 0 0;
+  font-size: ${vars.smallFontSize};
+  color: ${theme.lightText};
+  line-height: 1.4;
 `);
 
 const cssColumnHeaderLabel = styled("div", `

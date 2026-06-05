@@ -1501,7 +1501,8 @@
         "Column label": "Column label",
         "Provide a column label": "Provide a column label",
         "Save": "Save",
-        "Close": "Close"
+        "Close": "Close",
+        "Use Page Up and Page Down to edit neighboring column titles.": "Use Page Up and Page Down to edit neighboring column titles."
     },
     "Clipboard": {
         "Got it": "Got it",

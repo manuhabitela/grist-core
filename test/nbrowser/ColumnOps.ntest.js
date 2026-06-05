@@ -179,7 +179,7 @@ describe("ColumnOps.ntest", function() {
     await gu.waitForServer();
     await shouldHaveColumnHeader("A");
     await gu.clickColumnMenuItem("A", "Rename column");
-    await gu.getOpenEditingLabel(await gu.getColumnHeader("A")).sendKeys("C", $.TAB);
+    await gu.getOpenEditingLabel(await gu.getColumnHeader("A")).sendKeys("C", $.PAGE_DOWN);
     await gu.waitForServer();
     await shouldHaveColumnHeader("C");
   });
