@@ -158,7 +158,9 @@
         "Memory Error": "Memory Error",
         "Translators: please translate this only when your language is ready to be offered to users": "Translators: please translate this only when your language is ready to be offered to users",
         "Disabled screen reader improvements": "Disabled screen reader improvements",
-        "Enabled screen reader improvements": "Enabled screen reader improvements"
+        "Enabled screen reader improvements": "Enabled screen reader improvements",
+        "Close": "Close",
+        "Keyboard shortcuts list": "Keyboard shortcuts list"
     },
     "AppHeader": {
         "Home page": "Home page",

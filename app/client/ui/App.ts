@@ -10,6 +10,7 @@ import { get as getBrowserGlobals } from "app/client/lib/browserGlobals";
 import { isDesktop } from "app/client/lib/browserInfo";
 import { onClickOutside } from "app/client/lib/domUtils";
 import { FocusLayer } from "app/client/lib/FocusLayer";
+import { lockFocusUntilRemoved } from "app/client/lib/focusUtils";
 import * as koUtil from "app/client/lib/koUtil";
 import { makeT } from "app/client/lib/localization";
 import { reportError, TopAppModel, TopAppModelImpl } from "app/client/models/AppModel";
@@ -19,14 +20,16 @@ import { createAppUI } from "app/client/ui/AppUI";
 import { openAccessibilityModal } from "app/client/ui/OpenAccessibilityModal";
 import { addViewportTag } from "app/client/ui/viewport";
 import { attachCssRootVars } from "app/client/ui2018/cssVars";
+import { icon } from "app/client/ui2018/icons";
 import { attachTheme } from "app/client/ui2018/theme";
+import { visuallyHidden } from "app/client/ui2018/visuallyHidden";
 import { BaseAPI } from "app/common/BaseAPI";
 import { CommDocError } from "app/common/CommTypes";
 import { DisposableWithEvents } from "app/common/DisposableWithEvents";
 import { fetchFromHome } from "app/common/urlUtils";
 import { ISupportedFeatures } from "app/common/UserConfig";
 
-import { dom } from "grainjs";
+import { dom, MultiHolder } from "grainjs";
 import * as ko from "knockout";
 
 const t = makeT("App");
@@ -102,39 +105,83 @@ export class AppImpl extends DisposableWithEvents implements App {
     this.topAppModel = this.autoDispose(TopAppModelImpl.create(null, G.window));
 
     const isHelpPaneVisible = ko.observable(false);
+    const closeHelpPane = () => isHelpPaneVisible(false);
+    let helpFocusOwner: MultiHolder | null = null;
 
     G.document.querySelector("#grist-logo-wrapper")?.remove();
 
     const helpDiv = document.body.appendChild(
       dom("div.g-help",
-        onClickOutside(() => isHelpPaneVisible(false)),
+        {
+          "role": "dialog",
+          "aria-modal": "true",
+          "aria-label": t("Keyboard shortcuts list"),
+        },
+        onClickOutside(closeHelpPane),
+        dom.onKeyDown({
+          Escape: () => closeHelpPane(),
+        }),
         dom.show(isHelpPaneVisible), // Toggle visibility dynamically
-        dom("table.g-help-table",
+        dom("button.g-help-close",
+          icon("CrossBig"),
+          dom.on("click", closeHelpPane),
+          { "type": "button", "aria-label": t("Close") },
+        ),
+        dom("table.g-help-table.g-help-table-header",
+          { "aria-hidden": "true" },
+          dom("colgroup",
+            dom("col.g-help-col-key"),
+            dom("col.g-help-col-desc"),
+          ),
           dom("thead",
             dom("tr",
               dom("th", t("Key")),
               dom("th", t("Description")),
             ),
           ),
-          dom.forEach(commandList.groups, (group) => {
-            const cmds = group.commands.filter(cmd => Boolean(cmd.desc && cmd.keys.length && !cmd.deprecated));
-            return cmds.length > 0 ?
-              dom("tbody",
+        ),
+        dom.forEach(commandList.groups, (group) => {
+          const cmds = group.commands.filter(cmd => Boolean(cmd.desc && cmd.keys.length && !cmd.deprecated));
+          return cmds.length > 0 ?
+            dom("table.g-help-table",
+              dom("colgroup",
+                dom("col.g-help-col-key"),
+                dom("col.g-help-col-desc"),
+              ),
+              dom("caption", group.group),
+              dom("thead", dom.cls(visuallyHidden.className),
                 dom("tr",
-                  dom("td", { colspan: "2" }, group.group),
+                  dom("th", { scope: "col" }, t("Key")),
+                  dom("th", { scope: "col" }, t("Description")),
                 ),
+              ),
+              dom("tbody",
                 dom.forEach(cmds, cmd =>
                   dom("tr",
-                    dom("td", commands.allCommands[cmd.name].getKeysDom()),
-                    dom("td", cmd.desc?.() ?? ""),
+                    dom("td.g-help-key", commands.allCommands[cmd.name].getKeysDom()),
+                    dom("td.g-help-desc", cmd.desc?.() ?? ""),
                   ),
                 ),
-              ) : null;
-          }),
-        ),
+              ),
+            ) : null;
+        }),
+        (elem) => {
+          this.autoDispose(isHelpPaneVisible.subscribe((visible) => {
+            helpFocusOwner?.dispose();
+            helpFocusOwner = null;
+            if (visible) {
+              helpFocusOwner = MultiHolder.create(null);
+              lockFocusUntilRemoved(helpFocusOwner)(elem);
+            }
+          }));
+        },
       ),
     );
-    this.onDispose(() => { dom.domDispose(helpDiv); helpDiv.remove(); });
+    this.onDispose(() => {
+      helpFocusOwner?.dispose();
+      dom.domDispose(helpDiv);
+      helpDiv.remove();
+    });
 
     this.autoDispose(commands.createGroup({
       shortcuts() { isHelpPaneVisible(true); },
@@ -157,16 +204,7 @@ export class AppImpl extends DisposableWithEvents implements App {
       historyForward() { G.window.history.forward(); },
     }, this, true));
 
-    /** Ensure menu closes on cancel */
     this.autoDispose(commands.createGroup({
-      cancel() { isHelpPaneVisible(false); },   // Close menu when Esc/Cancel is triggered
-      cursorDown() { helpDiv.scrollBy(0, 30); }, // 30 is height of the row in the help screen
-      cursorUp() { helpDiv.scrollBy(0, -30); },
-      pageUp() { helpDiv.scrollBy(0, -helpDiv.clientHeight); },
-      pageDown() { helpDiv.scrollBy(0, helpDiv.clientHeight); },
-      moveToFirstField() { helpDiv.scrollTo(0, 0); }, // home
-      moveToLastField() { helpDiv.scrollTo(0, helpDiv.scrollHeight); }, // end
-      find() { return true; }, // restore browser search
       shortcuts() { isHelpPaneVisible(false); },  // Close menu
     }, this, isHelpPaneVisible));
 
