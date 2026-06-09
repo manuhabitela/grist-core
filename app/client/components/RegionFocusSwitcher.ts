@@ -82,10 +82,10 @@ export class RegionFocusSwitcher extends Disposable {
 
     this.autoDispose(this._state.addListener(this._onStateChange.bind(this)));
 
-    const focusActiveSection = () => this.focusActiveSection();
-    this._app?.on("clipboard_focus", focusActiveSection);
+    const onClipboardFocus = this._onClipboardFocus.bind(this);
+    this._app?.on("clipboard_focus", onClipboardFocus);
     this.onDispose(() => {
-      this._app?.off("clipboard_focus", focusActiveSection);
+      this._app?.off("clipboard_focus", onClipboardFocus);
       this.reset();
     });
   }
@@ -199,6 +199,26 @@ export class RegionFocusSwitcher extends Disposable {
 
   public reset() {
     this._focusRegion(undefined);
+  }
+
+  /**
+   * Called when the clipboard regains focus, for example after a dropdown menu or modal closes.
+   *
+   * If the user was in a panel before the overlay opened, re-focus that panel instead of the active section.
+   */
+  private _onClipboardFocus() {
+    const current = this._state.get().region;
+    if (!current) {
+      return;
+    }
+    if (current.type === "section") {
+      return this.focusActiveSection();
+    }
+    const panelElement = getPanelElement(current.id);
+    if (!panelElement) {
+      return;
+    }
+    focusPanel(current, this._prevFocusedElements[current.id] as HTMLElement | null, this._getGristDoc());
   }
 
   private _focusRegion(
