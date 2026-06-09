@@ -60,12 +60,13 @@ export type IOption<T> = (T & string) | IOptionFull<T>;
 export function menu(createFunc: weasel.MenuCreateFunc, options?: weasel.IMenuOptions): DomElementMethod {
   const wrappedCreateFunc = (ctl: weasel.IOpenController) => {
     registerMenuOpen(ctl);
-    // We first append all the items to the menu element dom,
-    // then we attach a function that gets called when the dom is built that takes care of making sure
-    // we can't tab out of the menu.
-    return [...createFunc(ctl), (menuContent: HTMLElement) => attachMenuFocusLock(ctl, menuContent)];
+    return createFunc(ctl);
   };
-  return weasel.menu(wrappedCreateFunc, { ...defaults, ...options });
+  return weasel.menu(wrappedCreateFunc, {
+    ...defaults,
+    ...options,
+    modifyContent: (el, ctl) => attachMenuFocusLock(ctl, el),
+  });
 }
 
 export interface SearchableMenuOptions {
@@ -286,11 +287,12 @@ export function select<T>(obs: Observable<T>, optionArray: MaybeObsArray<IOption
   const _btn = cssSelectBtn(testId("select-open"));
 
   const { menuCssClass: menuClass, ...otherOptions } = weaselOptions;
-  const selectOptions = {
+  const selectOptions: weasel.ISelectUserOptions = {
     buttonArrow: cssInlineCollapseIcon("Collapse"),
     menuCssClass: [_menu.className,  (menuClass || ""), gristFloatingMenuClass].join(" "),
     menuWrapCssClass: cssMenuWrapElem.className,
     buttonCssClass: _btn.className,
+    modifyContent: (el, ctl) => attachMenuFocusLock(ctl, el),
     ...otherOptions,
   };
 
@@ -525,7 +527,7 @@ export function autocomplete(
 export function selectMenu(
   label: DomElementArg,
   items: () => DomElementArg[],
-  ...args: IDomArgs<HTMLDivElement>
+  ...args: IDomArgs<HTMLButtonElement>
 ) {
   return cssSelectBtn(
     label,
