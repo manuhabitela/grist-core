@@ -1,5 +1,6 @@
 import { MenuCommand } from "app/client/components/commandList";
 import { FocusLayer } from "app/client/lib/FocusLayer";
+import { clearCurrentFocusLock } from "app/client/lib/focusUtils";
 import { makeT } from "app/client/lib/localization";
 import { NeedUpgradeError, reportError } from "app/client/models/errors";
 import { textButton } from "app/client/ui2018/buttons";
@@ -40,13 +41,29 @@ export function registerMenuOpen(ctl: weasel.IOpenController) {
   ctl.onDispose(() => _lastOpenedController = null);
 }
 
+export function attachMenuFocusLock(ctl: weasel.IOpenController, menuContent: HTMLElement) {
+  const container = menuContent.closest<HTMLElement>(`.${gristFloatingMenuClass}`);
+  if (!container) { return; }
+  // We might open the menu from a panel, where focus is locked inside of it, so make sure it doesn't interfere.
+  clearCurrentFocusLock();
+  ctl.autoDispose(dom.onKeyElem(container, "keydown", {
+    Tab: (ev: KeyboardEvent) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+    },
+  }));
+}
+
 // For string options, we can use a string for label and value without wrapping into an object.
 export type IOption<T> = (T & string) | IOptionFull<T>;
 
 export function menu(createFunc: weasel.MenuCreateFunc, options?: weasel.IMenuOptions): DomElementMethod {
   const wrappedCreateFunc = (ctl: weasel.IOpenController) => {
     registerMenuOpen(ctl);
-    return createFunc(ctl);
+    // We first append all the items to the menu element dom,
+    // then we attach a function that gets called when the dom is built that takes care of making sure
+    // we can't tab out of the menu.
+    return [...createFunc(ctl), (menuContent: HTMLElement) => attachMenuFocusLock(ctl, menuContent)];
   };
   return weasel.menu(wrappedCreateFunc, { ...defaults, ...options });
 }

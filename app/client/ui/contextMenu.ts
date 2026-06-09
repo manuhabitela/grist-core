@@ -7,7 +7,7 @@
  * context menu) dont forget to prevent it by including below line at the root of the dom:
  *   `dom.on('contextmenu', ev => ev.preventDefault())`
  */
-import { cssMenuElem, registerMenuOpen } from "app/client/ui2018/menus";
+import { attachMenuFocusLock, cssMenuElem, registerMenuOpen } from "app/client/ui2018/menus";
 
 import { Disposable, dom, DomArg, DomContents, Holder } from "grainjs";
 import { IMenuOptions, IOpenController, Menu } from "popweasel";
@@ -30,7 +30,10 @@ class ContextMenuController extends Disposable implements IOpenController {
   ) {
     super();
 
-    const menu = Menu.create(null, this, [contentFunc(this)], {
+    const menu = Menu.create(null, this, [
+      contentFunc(this),
+      (menuContent: HTMLElement) => attachMenuFocusLock(this, menuContent),
+    ], {
       menuCssClass: cssMenuElem.className + " grist-floating-menu",
       ...this._options.menuOptions,
     });
