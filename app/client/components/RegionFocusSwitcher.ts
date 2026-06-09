@@ -113,6 +113,9 @@ export class RegionFocusSwitcher extends Disposable {
           "region"),
       dom.attr("aria-label", ariaLabel),
       dom.attr(ATTRS.regionId, id),
+      dom.on("focusin", () => {
+        this._savePrevElementState(this._state.get().region);
+      }),
       dom.cls(kbFocusHighlighterClass, (use) => {
         // highlight focused elements everywhere except in the grist doc views
         return id !== "main" ?
