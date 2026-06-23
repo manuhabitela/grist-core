@@ -25,6 +25,7 @@
 
 import { kbFocusHighlighterClass } from "app/client/components/KeyboardFocusHighlighter";
 import { FocusLayer } from "app/client/lib/FocusLayer";
+import { visuallyHidden } from "app/client/ui2018/visuallyHidden";
 
 import { Disposable, dom, DomMethod, Holder } from "grainjs";
 
@@ -320,3 +321,51 @@ const focusableSelectors = [
 ];
 
 export const focusableSelectorsString = focusableSelectors.join(",");
+
+/**
+ * @see kbFallbackDiv
+ */
+const kbFallbackClass = "kb_fallback_element";
+
+/**
+ * @see kbFallbackDiv
+ */
+export const kbFallbackGroupClass = "kb_fallback_group";
+
+/**
+ * Render an empty, programmatically-focusable div.
+ *
+ * This is used in combination with kbFallbackGroup and focusKbFallback when dealing with
+ * focused elements that disappear when triggered.
+ * Without this, clicking an element that disappears on action makes focus jump back to the current panel itself,
+ * or to the body element, making keyboard nav pretty cumbersome in those cases.
+ *
+ * Note: this should not be used to handle "save" or "cancel" or similar buttons in popups and modals where this
+ * "disappearing" case is already handled. This is meant to be used for specific cases, like the "Hide"/"Clear" buttons
+ * in the VisibleFieldsConfig.
+ *
+ * Usage:
+ *   - wrap a kbFallback and a control that disappears when triggered in something having the `kbFallbackGroup` class.
+ *     For the kbFallback, choose a location that is useful to end up on after the control is triggered!
+ *   - when the control is triggered, call `focusKbFallback()` in addition to the control's own logic
+ */
+export function kbFallbackDiv() {
+  return visuallyHidden(
+    dom.cls(kbFallbackClass),
+    dom.attr("tabindex", "-1"),
+    dom.attr("role", "presentation"),
+    dom.attr("aria-hidden", "true"),
+  );
+}
+
+/**
+ * Focus the nearest preceding `kbFallback()` within the closest `kbFallbackGroup` ancestor.
+ *
+ * @see kbFallbackDiv
+ */
+export function focusKbFallback(from?: Element | null) {
+  (from || getActiveEl())
+    ?.closest(`.${kbFallbackGroupClass}`)
+    ?.querySelector<HTMLElement>(`.${kbFallbackClass}`)
+    ?.focus({ preventScroll: true });
+}
