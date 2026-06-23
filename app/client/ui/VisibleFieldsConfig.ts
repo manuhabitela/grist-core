@@ -1,5 +1,6 @@
 import DetailView from "app/client/components/DetailView";
 import { GristDoc } from "app/client/components/GristDoc";
+import { focusKbFallback, kbFallbackDiv, kbFallbackGroupClass } from "app/client/lib/focusUtils";
 import { KoArray, syncedKoArray } from "app/client/lib/koArray";
 import * as kf from "app/client/lib/koForm";
 import { makeT } from "app/client/lib/localization";
@@ -215,6 +216,7 @@ export class VisibleFieldsConfig extends Disposable {
     });
     return [
       dom("div", { "role": "group", "aria-labelledby": "visible-fields-label" },
+        dom.cls(kbFallbackGroupClass),
         cssHeader(
           cssFieldListHeader(
             dom.text(use => t("Visible {{label}}", { label: use(this._fieldLabel) })),
@@ -238,16 +240,23 @@ export class VisibleFieldsConfig extends Disposable {
           cssFieldsDraggable.cls("-disabled", this._disabled),
           dom.update(fieldsDraggable, testId("visible-fields")),
         ),
+        kbFallbackDiv(),
         dom.maybe(this._showVisibleBatchButtons, () =>
           cssRow(
             primaryButton(
               dom.text(use => t("Hide {{label}}", { label: use(this._fieldLabel) })),
-              dom.on("click", () => this._removeSelectedFields()),
+              dom.on("click", async () => {
+                focusKbFallback();
+                await this._removeSelectedFields();
+              }),
               testId("visible-hide"),
             ),
             basicButton(
               t("Clear"),
-              dom.on("click", () => this._setVisibleCheckboxes(fieldsDraggable, false)),
+              dom.on("click", () => {
+                focusKbFallback();
+                this._setVisibleCheckboxes(fieldsDraggable, false);
+              }),
               testId("visible-clear"),
             ),
             testId("visible-batch-buttons"),
@@ -255,6 +264,7 @@ export class VisibleFieldsConfig extends Disposable {
         ),
       ),
       dom("div", { "role": "group", "aria-labelledby": "hidden-fields-label" },
+        dom.cls(kbFallbackGroupClass),
         cssHeader(
           cssHeaderButton(
             icon(
@@ -297,16 +307,23 @@ export class VisibleFieldsConfig extends Disposable {
               testId("hidden-fields"),
             ),
           ),
+          kbFallbackDiv(),
           dom.maybe(this._showHiddenBatchButtons, () =>
             cssRow(
               primaryButton(
                 dom.text(use => t("Show {{label}}", { label: use(this._fieldLabel) })),
-                dom.on("click", () => this._addSelectedFields()),
+                dom.on("click", () => {
+                  focusKbFallback();
+                  return this._addSelectedFields();
+                }),
                 testId("hidden-show"),
               ),
               basicButton(
                 t("Clear"),
-                dom.on("click", () => this._setHiddenCheckboxes(hiddenFieldsDraggable, false)),
+                dom.on("click", () => {
+                  focusKbFallback();
+                  return this._setHiddenCheckboxes(hiddenFieldsDraggable, false);
+                }),
                 testId("hidden-clear"),
               ),
               testId("hidden-batch-buttons"),
