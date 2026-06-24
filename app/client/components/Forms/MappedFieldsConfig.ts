@@ -1,4 +1,7 @@
 import { allCommands } from "app/client/components/commands";
+import { fixOutlineOverflow } from "app/client/components/KeyboardFocusHighlighter";
+import { kbJumperAnchor } from "app/client/components/RegionFocusSwitcher";
+import { kbFallbackGroupClass } from "app/client/lib/focusUtils";
 import { makeT } from "app/client/lib/localization";
 import { ColumnRec, ViewSectionRec } from "app/client/models/DocModel";
 import { basicButton, cssButton, primaryButton } from "app/client/ui2018/buttons";
@@ -69,6 +72,9 @@ export class MappedFieldsConfig extends Disposable {
 
     return [
       dom("div", { "role": "group", "aria-labelledby": "mapped-fields-label" },
+        dom.cls(kbFallbackGroupClass),
+        kbJumperAnchor,
+        fixOutlineOverflow,
         cssHeader(
           cssFieldListHeader(
             dom.text(t("Mapped")),
@@ -105,6 +111,9 @@ export class MappedFieldsConfig extends Disposable {
         ),
       ),
       dom("div", { "role": "group", "aria-labelledby": "unmapped-fields-label" },
+        dom.cls(kbFallbackGroupClass),
+        kbJumperAnchor,
+        fixOutlineOverflow,
         cssHeader(
           cssFieldListHeader(
             dom.text(t("Unmapped")),

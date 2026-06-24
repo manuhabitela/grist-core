@@ -3,6 +3,7 @@ import * as commands from "app/client/components/commands";
 import { Cursor } from "app/client/components/Cursor";
 import { FormulaTransform } from "app/client/components/FormulaTransform";
 import { GristDoc } from "app/client/components/GristDoc";
+import { kbJumperClass } from "app/client/components/RegionFocusSwitcher";
 import { addColTypeSuffix, guessWidgetOptionsSync, inferColTypeSuffix } from "app/client/components/TypeConversion";
 import { TypeTransform } from "app/client/components/TypeTransform";
 import { UnsavedChange } from "app/client/components/UnsavedChanges";
@@ -22,6 +23,7 @@ import { cssBlockedCursor, cssLabel, cssRow } from "app/client/ui/RightPanelStyl
 import { textButton } from "app/client/ui2018/buttons";
 import { buttonSelect, cssButtonSelect } from "app/client/ui2018/buttonSelect";
 import { IOptionFull, menu, select } from "app/client/ui2018/menus";
+import { cssSelectBtn } from "app/client/ui2018/select";
 import { DiffBox } from "app/client/widgets/DiffBox";
 import { CommentPopup, DiscussionModelImpl } from "app/client/widgets/DiscussionEditor";
 import { buildErrorDom } from "app/client/widgets/ErrorDom";
@@ -317,6 +319,7 @@ export class FieldBuilder extends Disposable {
             (use(this.field.config.multiselect) && !use(allFormulas)) ||
             // If we are waiting for a server response
             use(this.isCallPending),
+          buttonCssClass: `${kbJumperClass} ${cssSelectBtn.className}`,
           menuCssClass: cssTypeSelectMenu.className,
           defaultLabel: t("Mixed types"),
           translateOptionLabels: true,
