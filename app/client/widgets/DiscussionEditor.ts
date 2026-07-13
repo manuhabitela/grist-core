@@ -2,6 +2,7 @@ import { allCommands } from "app/client/components/commands";
 import { showUndoDiscardNotification } from "app/client/components/Drafts";
 import { GristDoc } from "app/client/components/GristDoc";
 import { domDispatch, domOnCustom, makeTestId } from "app/client/lib/domUtils";
+import { FocusLayer } from "app/client/lib/FocusLayer";
 import { createObsArray } from "app/client/lib/koArrayWrap";
 import { makeT } from "app/client/lib/localization";
 import { localStorageBoolObs } from "app/client/lib/localStorageObs";
@@ -1115,12 +1116,28 @@ export class DiscussionPanel extends Disposable implements IDomComponent {
       cssIconButtonMenu(
         icon("Dots"),
         testId("panel-menu"),
-        menu(() => {
-          return [cssDropdownMenu(
-            labeledSquareCheckbox(this._onlyMine, t("Only my threads"), testId("my-threads")),
-            labeledSquareCheckbox(this._currentPage, t("Only current page"), testId("only-page")),
-            labeledSquareCheckbox(this._resolved, t("Show resolved comments"), testId("show-resolved")),
-          )];
+        menu((ctl) => {
+          return [
+            (elem) => { FocusLayer.create(ctl, { defaultFocusElem: elem, pauseMousetrap: true }); },
+            menuItem(
+              () => { this._onlyMine.set(!this._onlyMine.get()); },
+              { role: "menuitemcheckbox" },
+              dom.attr("aria-checked", use => use(this._onlyMine) ? "true" : "false"),
+              labeledSquareCheckbox(this._onlyMine, t("Only my threads"), testId("my-threads")),
+            ),
+            menuItem(
+              () => { this._currentPage.set(!this._currentPage.get()); },
+              { role: "menuitemcheckbox" },
+              dom.attr("aria-checked", use => use(this._currentPage) ? "true" : "false"),
+              labeledSquareCheckbox(this._currentPage, t("Only current page"), testId("only-page")),
+            ),
+            menuItem(
+              () => { this._resolved.set(!this._resolved.get()); },
+              { role: "menuitemcheckbox" },
+              dom.attr("aria-checked", use => use(this._resolved) ? "true" : "false"),
+              labeledSquareCheckbox(this._resolved, t("Show resolved comments"), testId("show-resolved")),
+            ),
+          ];
         }, { placement: "bottom-start" }),
         dom.on("click", stopPropagation),
       ),
@@ -1294,15 +1311,6 @@ const cssPanelHeader = styled("div", `
   flex: 1;
   align-items: center;
   justify-content: space-between;
-`);
-
-const cssDropdownMenu = styled("div", `
-  display: flex;
-  padding: 12px;
-  padding-left: 16px;
-  padding-right: 16px;
-  gap: 10px;
-  flex-direction: column;
 `);
 
 const cssReplyBox = styled(cssCommonPadding, `
