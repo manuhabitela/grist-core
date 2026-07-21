@@ -5,7 +5,7 @@ import * as css from "app/client/ui/DocMenuCss";
 import { buildHomeIntroCards } from "app/client/ui/HomeIntroCards";
 import { isNarrowScreenObs, testId, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
-import { menu, menuCssClass } from "app/client/ui2018/menus";
+import { menu, menuItem } from "app/client/ui2018/menus";
 import { toggleSwitch } from "app/client/ui2018/toggleSwitch";
 import { FullUser } from "app/common/LoginSessionAPI";
 
@@ -86,16 +86,20 @@ function buildPreferencesMenu(homeModel: HomeModel) {
     cssDots(icon("Dots")),
     menu(
       () => [
-        toggleSwitch(onlyShowDocuments, {
-          label: t("Only show documents"),
-          args: [
-            testId("welcome-menu-only-show-documents"),
-          ],
-        }),
+        menuItem(
+          () => onlyShowDocuments.set(!onlyShowDocuments.get()),
+          { role: "menuitemcheckbox" },
+          dom.attr("aria-checked", use => use(onlyShowDocuments) ? "true" : "false"),
+          toggleSwitch(onlyShowDocuments, {
+            label: t("Only show documents"),
+            args: [
+              testId("welcome-menu-only-show-documents"),
+            ],
+          }),
+        ),
       ],
       {
         ...defaultMenuOptions,
-        menuCssClass: `${menuCssClass} ${cssPreferencesMenu.className}`,
         placement: "bottom-end",
       },
     ),
@@ -116,10 +120,6 @@ const cssHeaderWithPill = styled("div", `
 
 const cssPill = styled("div", `
   flex-shrink: 0;
-`);
-
-const cssPreferencesMenu = styled("div", `
-  padding: 10px 16px;
 `);
 
 const cssDotsMenu = styled("div", `
