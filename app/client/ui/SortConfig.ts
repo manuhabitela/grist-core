@@ -1,4 +1,5 @@
 import { GristDoc } from "app/client/components/GristDoc";
+import { FocusLayer } from "app/client/lib/FocusLayer";
 import koArray from "app/client/lib/koArray";
 import * as kf from "app/client/lib/koForm";
 import { makeT } from "app/client/lib/localization";
@@ -11,14 +12,14 @@ import { textButton } from "app/client/ui2018/buttons";
 import { labeledLeftSquareCheckbox } from "app/client/ui2018/checkbox";
 import { theme } from "app/client/ui2018/cssVars";
 import { cssDragger } from "app/client/ui2018/draggableList";
-import { menu } from "app/client/ui2018/menus";
+import { menu, menuItem } from "app/client/ui2018/menus";
 import { unstyledButton } from "app/client/ui2018/unstyled";
 import { Sort } from "app/common/SortSpec";
 
 import { Computed, Disposable, dom, makeTestId, MultiHolder, styled } from "grainjs";
 import difference from "lodash/difference";
 import isEqual from "lodash/isEqual";
-import { cssMenuItem, IMenuOptions } from "popweasel";
+import { IMenuOptions } from "popweasel";
 
 interface SortableColumn {
   label: string;
@@ -194,22 +195,28 @@ export class SortConfig extends Disposable {
           cssIcon("Dots", dom.cls(cssBgAccent.className, hasSpecs)),
           testId("options-icon"),
         ),
-        menu(_ctl => flags.map(({ computed, allowedTypes, flag, label }) => {
-          // when allowedTypes is null, flag can be used for every column
-          const enabled = !allowedTypes || allowedTypes.includes(column!.type);
-          return cssMenuItem(
-            labeledLeftSquareCheckbox(
-              computed as any,
-              label,
-              dom.prop("disabled", !enabled),
-            ),
-            dom.cls(cssOptionMenuItem.className),
-            dom.cls("disabled", !enabled),
-            testId("option"),
-            testId(`option-${flag}`),
-          );
-        },
-        ), menuOptions),
+        menu(_ctl => [
+          (elem) => { FocusLayer.create(_ctl, { defaultFocusElem: elem, pauseMousetrap: true }); },
+          ...flags.map(({ computed, allowedTypes, flag, label }) => {
+            // when allowedTypes is null, flag can be used for every column
+            const enabled = !allowedTypes || allowedTypes.includes(column!.type);
+            return menuItem(
+              () => {
+                computed.set(!computed.get());
+              },
+              { role: "menuitemcheckbox" },
+              dom.attr("aria-checked", use => use(computed) ? "true" : "false"),
+              labeledLeftSquareCheckbox(
+                computed as any,
+                label,
+                dom.prop("disabled", !enabled),
+              ),
+              dom.cls("disabled", !enabled),
+              testId("option"),
+              testId(`option-${flag}`),
+            );
+          }),
+        ], menuOptions),
       ),
       cssSortIconBtn(
         { "aria-label": t("Remove sort setting - {{- columnName }} column", { columnName: column!.label }) },
@@ -350,20 +357,6 @@ const cssMenu = styled(unstyledButton, `
   margin-left: 6px;
   &:hover, &.weasel-popup-open {
     background-color: ${theme.hover};
-  }
-`);
-
-const cssOptionMenuItem = styled("div", `
-  &:hover {
-    background-color: ${theme.hover};
-  }
-  & label {
-    flex: 1;
-    cursor: pointer;
-  }
-  &.disabled * {
-    color: ${theme.menuItemDisabledFg} important;
-    cursor: not-allowed;
   }
 `);
 
