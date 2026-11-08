@@ -8,6 +8,7 @@ import { icon } from "app/client/ui2018/icons";
 import { cssLink } from "app/client/ui2018/links";
 import { loadingSpinner } from "app/client/ui2018/loaders";
 import { menu, menuItem } from "app/client/ui2018/menus";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { confirmModal, modal } from "app/client/ui2018/modals";
 import {
   AuditLogStreamingDestination,
@@ -85,6 +86,7 @@ Splunk. {{learnMoreLink}}.",
                         ev.stopPropagation();
                         ev.preventDefault();
                       }),
+                      { type: "button", "aria-label": t("Destination options") },
                       testId("streaming-destination-options"),
                     ),
                     testId("streaming-destination"),
@@ -332,7 +334,7 @@ const cssDestinationUrl = styled("div", `
   font-weight: normal;
 `);
 
-const cssDestinationOptions = styled("div", `
+const cssDestinationOptions = styled(unstyledButton, `
   flex-shrink: 0;
   margin: 0 4px 0 auto;
   height: 24px;

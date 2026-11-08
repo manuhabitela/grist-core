@@ -3,10 +3,14 @@
  * add a new column, and allows removing already-added columns.
  */
 import { aclSelect, cssSelect } from "app/client/aclui/ACLSelect";
+import { makeT } from "app/client/lib/localization";
 import { testId, theme } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 
 import { Computed, dom, Observable, styled } from "grainjs";
+
+const t = makeT("ACLColumnList");
 
 export function aclColumnList(colIds: Observable<string[]>, validColIds: string[]) {
   // Define some helpers functions.
@@ -53,7 +57,10 @@ export function aclColumnList(colIds: Observable<string[]>, validColIds: string[
     dom.forEach(colIds, colId =>
       cssColItem(
         cssColId(colId),
-        cssColItemIcon(icon("CrossSmall"),
+        cssColItemIcon(
+          { type: "button" },
+          dom.attr("aria-label", t("Remove column")),
+          icon("CrossSmall"),
           dom.on("click", () => removeColId(colId)),
           testId("acl-col-remove"),
         ),
@@ -120,13 +127,14 @@ const cssNewColItem = styled("div", `
   }
 `);
 
-const cssColItemIcon = styled("div", `
+const cssColItemIcon = styled(unstyledButton, `
   flex: none;
   height: 16px;
   width: 16px;
   border-radius: 16px;
   display: none;
   cursor: default;
+  line-height: 0;
   --icon-color: ${theme.accessRulesColumnItemIconFg};
   &:hover {
     background-color: ${theme.accessRulesColumnItemIconHoverBg};

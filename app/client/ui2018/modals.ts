@@ -9,6 +9,7 @@ import { labeledSquareCheckbox } from "app/client/ui2018/checkbox";
 import { mediaSmall, testId, theme, vars } from "app/client/ui2018/cssVars";
 import { loadingSpinner } from "app/client/ui2018/loaders";
 import { cssMenuElem } from "app/client/ui2018/menus";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { waitGrainObs } from "app/common/gutil";
 import { MaybePromise } from "app/plugin/gutil";
 
@@ -710,7 +711,7 @@ export const cssModalButtons = styled("div", `
   }
 `);
 
-export const cssModalCloseButton = styled("div", `
+export const cssModalCloseButton = styled(unstyledButton, `
   align-self: flex-end;
   margin: -8px;
   padding: 4px;

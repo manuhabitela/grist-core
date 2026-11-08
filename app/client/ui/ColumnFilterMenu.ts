@@ -25,11 +25,11 @@ import { cssPinButton } from "app/client/ui/RightPanelStyles";
 import { basicButton, primaryButton, textButton } from "app/client/ui2018/buttons";
 import { cssCheckboxSquare, cssLabel as cssCheckboxLabel,
   cssLabelText, Indeterminate, labeledTriStateSquareCheckbox } from "app/client/ui2018/checkbox";
-import { theme, vars } from "app/client/ui2018/cssVars";
+import { colors, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { cssOptionRowIcon, menu, menuCssClass, menuDivider, menuItem } from "app/client/ui2018/menus";
 import { unstyledButton } from "app/client/ui2018/unstyled";
-import { cssDeleteButton, cssDeleteIcon, cssToken as cssTokenTokenBase } from "app/client/widgets/ChoiceListEditor";
+import { cssToken as cssTokenTokenBase } from "app/client/widgets/ChoiceListEditor";
 import { ChoiceOptions } from "app/client/widgets/ChoiceTextBox";
 import { choiceToken } from "app/client/widgets/ChoiceToken";
 import { CellValue } from "app/common/DocActions";
@@ -537,10 +537,12 @@ function relativeToken(obs: Observable<number | undefined | IRelativeDateSpec>,
   return cssTokenContainer(
     cssTokenToken(
       dom.text(use => formatRelBounds(use(obs) as IRelativeDateSpec)),
-      cssDeleteButton(
+      cssFilterTokenDeleteButton(
+        { type: "button" },
+        dom.attr("aria-label", t("Remove")),
         // Ignore mousedown events, so that tokens aren't draggable by the delete button.
         dom.on("mousedown", ev => ev.stopPropagation()),
-        cssDeleteIcon("CrossSmall"),
+        cssFilterTokenDeleteIcon("CrossSmall"),
         dom.on("click", () => obs.set(undefined)),
         testId("tokenfield-delete"),
       ),
@@ -1120,4 +1122,31 @@ const cssTokenContainer = styled("div", `
   width: 100%;
   display: flex;
   outline: none;
+`);
+
+const cssFilterTokenDeleteButton = styled(unstyledButton, `
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  border-radius: 16px;
+  background-color: ${colors.dark};
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  z-index: 1;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+
+  .${cssTokenToken.className}:hover & {
+    display: flex;
+  }
+`);
+
+const cssFilterTokenDeleteIcon = styled(icon, `
+  --icon-color: ${colors.light};
+  &:hover {
+    --icon-color: ${colors.darkGrey};
+  }
 `);

@@ -11,6 +11,7 @@ import { colors, mediaMedium, mediaXSmall, theme } from "app/client/ui2018/cssVa
 import { IconName } from "app/client/ui2018/IconList";
 import { icon } from "app/client/ui2018/icons";
 import { modal } from "app/client/ui2018/modals";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { BaseAPI } from "app/common/BaseAPI";
 import { commonUrls, getPageTitleSuffix } from "app/common/gristUrls";
 import { UserPrefs } from "app/common/Prefs";
@@ -292,7 +293,12 @@ function buildVideo(_owner: IDisposableOwner, incrementStep: IncrementStep, stat
         }),
         cssModalHeader(
           cssModalCloseButton(
+            { type: "button", "aria-label": t("Close") },
             cssCloseIcon("CrossBig"),
+            dom.on("click", (ev) => {
+              ev.stopPropagation();
+              ctl.close();
+            }),
           ),
         ),
         cssModalBody(
@@ -710,7 +716,7 @@ const cssVideoPlayerModal = styled("div", `
   box-shadow: none;
 `);
 
-const cssModalCloseButton = styled("div", `
+const cssModalCloseButton = styled(unstyledButton, `
   margin-bottom: 8px;
   padding: 4px;
   border-radius: 4px;

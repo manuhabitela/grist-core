@@ -284,7 +284,9 @@ class OnBoardingPopupsCtl extends Disposable {
       { tabindex: "-1" },
       this._arrowEl,
       ContentWrapper(
-        cssCloseButton(cssBigIcon("CrossBig"),
+        cssCloseButton(
+          { type: "button", "aria-label": t("Close") },
+          cssBigIcon("CrossBig"),
           dom.on("click", () => this._finish(ctlIndex)),
           testId("close"),
         ),

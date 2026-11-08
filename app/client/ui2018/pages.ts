@@ -157,6 +157,7 @@ export function buildPageDom(name: Observable<string>, options: PageOptions, ...
               href,
               cssPageInitial(
                 testId("initial"),
+                { "aria-hidden": "true" },
                 dom.text(use => use(splitName).initial),
                 cssPageInitial.cls("-emoji", use => use(splitName).hasEmoji),
               ),

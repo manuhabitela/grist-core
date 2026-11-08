@@ -26,6 +26,7 @@ import { getTelemetryWidgetTypeFromVS } from "app/client/ui/widgetTypesMap";
 import { cssRadioCheckboxOptions, radioCheckboxOption } from "app/client/ui2018/checkbox";
 import { isNarrowScreen, mediaSmall, testId, theme } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { cssLink } from "app/client/ui2018/links";
 import { ISaveModalOptions, saveModal } from "app/client/ui2018/modals";
 import { BoxSpec } from "app/common/BoxSpec";
@@ -264,7 +265,9 @@ export class ViewLayout extends DisposableWithEvents implements IDomComponent {
         ),
       ),
       dom.maybe(use => !!use(this.maximized), () =>
-        cssCloseButton("CrossBig",
+        cssCloseButton(
+          { type: "button", "aria-label": t("Close") },
+          icon("CrossBig"),
           testId("close-button"),
           dom.on("click", () => close()),
         ),
@@ -568,7 +571,7 @@ const cssOverlay = styled("div", `
   }
 `);
 
-const cssCloseButton = styled(icon, `
+const cssCloseButton = styled(unstyledButton, `
   position: absolute;
   top: 16px;
   right: 16px;

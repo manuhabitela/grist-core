@@ -7,6 +7,7 @@ import { labeledSquareCheckbox } from "app/client/ui2018/checkbox";
 import { mediaXSmall, testId, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { cssModalTooltip, modalTooltip } from "app/client/ui2018/modals";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 
 import { dom, DomContents, keyframes, observable, styled, svg } from "grainjs";
 import merge from "lodash/merge";
@@ -224,6 +225,7 @@ export function showNewsPopup(
       cssNewsPopupContainer(
         testId("behavioral-prompt"),
         cssNewsPopupCloseButton(
+          { type: "button", "aria-label": t("Close") },
           icon("CrossBig"),
           dom.on("click", () => ctl.close()),
           testId("behavioral-prompt-dismiss"),
@@ -468,7 +470,7 @@ const cssNewsPopupTitle = styled("div", `
   line-height: 32px;
 `);
 
-const cssNewsPopupCloseButton = styled("div", `
+const cssNewsPopupCloseButton = styled(unstyledButton, `
   position: absolute;
   top: 8px;
   right: 8px;

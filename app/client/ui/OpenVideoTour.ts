@@ -45,6 +45,7 @@ export function openVideoTour(refElement: HTMLElement) {
       return [
         cssModal.cls(""),
         cssModalCloseButton(
+          { type: "button", "aria-label": t("Close") },
           cssCloseIcon("CrossBig"),
           dom.on("click", () => ctl.close()),
           testId("close"),

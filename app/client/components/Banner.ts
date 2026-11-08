@@ -1,8 +1,12 @@
+import { makeT } from "app/client/lib/localization";
 import { colors, isNarrowScreenObs } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { tokens } from "app/common/ThemePrefs";
 
 import { Disposable, dom, DomArg, DomElementArg, makeTestId, Observable, styled } from "grainjs";
+
+const t = makeT("Banner");
 
 const testId = makeTestId("test-banner-");
 
@@ -104,7 +108,9 @@ export class Banner extends Disposable {
   }
 
   private _buildCloseButton() {
-    return cssButton("CrossBig",
+    return cssButton(
+      { type: "button", "aria-label": t("Dismiss") },
+      icon("CrossBig"),
       dom.on("click", () => this._options.onClose?.()),
       testId("close"),
     );
@@ -112,8 +118,12 @@ export class Banner extends Disposable {
 
   private _buildExpandButton() {
     return dom.maybe(isNarrowScreenObs(), () => {
-      return cssExpandButton("Dropdown",
-        cssExpandButton.cls("-expanded", this._isExpanded),
+      return cssButton(
+        { type: "button" },
+        dom.attr("aria-label", use => use(this._isExpanded) ? t("Collapse") : t("Expand")),
+        cssExpandIcon("Dropdown",
+          cssExpandIcon.cls("-expanded", this._isExpanded),
+        ),
         dom.on("click", () => this._isExpanded.set(!this._isExpanded.get())),
       );
     });
@@ -172,13 +182,16 @@ const cssButtons = styled("div", `
   margin-left: auto;
 `);
 
-const cssButton = styled(icon, `
+const cssButton = styled(unstyledButton, `
   width: 16px;
   height: 16px;
   cursor: pointer;
 `);
 
-const cssExpandButton = styled(cssButton, `
+const cssExpandIcon = styled(icon, `
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
   &-expanded {
     -webkit-mask-image: var(--icon-DropdownUp) !important;
   }

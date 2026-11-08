@@ -4,6 +4,7 @@ import { hoverTooltip } from "app/client/ui/tooltips";
 import { isNarrowScreen, isNarrowScreenObs, theme, vars } from "app/client/ui2018/cssVars";
 import { IconName } from "app/client/ui2018/IconList";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { clamp } from "app/common/gutil";
 
 import {
@@ -351,10 +352,12 @@ export class FloatingPopup extends Disposable {
               // center the title.
               cssPopupButtons(
                 cssPopupHeaderButton(
+                  { type: "button" },
                   icon("Maximize"),
                   dom.show(this._minimizable),
                 ),
                 cssPopupHeaderButton(
+                  { type: "button" },
                   icon("CrossBig"),
                   dom.show(this._closable),
                 ),
@@ -366,6 +369,7 @@ export class FloatingPopup extends Disposable {
               ),
               cssPopupButtons(
                 this._popupMinimizeButtonElement = cssPopupHeaderButton(
+                  { type: "button" },
                   isMinimized ? icon("Maximize") : icon("Minimize"),
                   hoverTooltip(isMinimized ? t("Maximize") : t("Minimize"), {
                     key: FLOATING_POPUP_TOOLTIP_KEY,
@@ -375,10 +379,12 @@ export class FloatingPopup extends Disposable {
                   this._testId("popup-minimize-maximize"),
                 ),
                 cssPopupHeaderButton(
+                  { type: "button" },
                   icon(this._options.closeButtonIcon ?? "CrossBig"),
                   this._options.closeButtonHover && hoverTooltip(this._options.closeButtonHover(), {
                     key: FLOATING_POPUP_TOOLTIP_KEY,
                   }),
+                  !this._options.closeButtonHover ? dom.attr("aria-label", t("Close")) : null,
                   dom.on("click", () => {
                     this._options.onClose?.();
                     this._closePopup();
@@ -619,11 +625,12 @@ export const cssPopupBody = styled("div", `
   overflow: auto;
 `);
 
-const cssPopupHeaderButton = styled("div", `
+const cssPopupHeaderButton = styled(unstyledButton, `
   padding: 4px;
   border-radius: 4px;
   cursor: pointer;
   z-index: 1000;
+  line-height: 0;
 
   &:hover {
     background-color: ${theme.hover};

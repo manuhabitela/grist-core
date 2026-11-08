@@ -5,6 +5,7 @@ import { cssHideForNarrowScreen, mediaNotSmall, testId, theme } from "app/client
 import { editableLabel } from "app/client/ui2018/editableLabel";
 import { icon } from "app/client/ui2018/icons";
 import { cssLink } from "app/client/ui2018/links";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { tokens } from "app/common/ThemePrefs";
 
 import { BindableValue, dom, DomContents, Observable, styled } from "grainjs";
@@ -12,7 +13,7 @@ import { tooltip } from "popweasel";
 
 const t = makeT("breadcrumbs");
 
-export const cssBreadcrumbs = styled("div", `
+export const cssBreadcrumbs = styled("nav", `
   color: ${theme.lightText};
   white-space: nowrap;
   cursor: default;
@@ -117,6 +118,11 @@ const cssAlertTag = styled(cssTag, `
   }
 `);
 
+const cssRecoveryExitButton = styled(unstyledButton, `
+  cursor: pointer;
+  line-height: 0;
+`);
+
 interface PartialWorkspace {
   id: number;
   name: string;
@@ -155,6 +161,7 @@ export function docBreadcrumbs(
 ): Element {
   const shouldShowWorkspace = !(options.isTemplate && options.isAnonymous);
   return cssBreadcrumbs(
+    dom.attr("aria-label", t("Breadcrumbs")),
     !shouldShowWorkspace ? null : dom.domComputed<[boolean, PartialWorkspace | null]>(
       use => [use(options.isBareFork), use(workspace)],
       ([isBareFork, ws]) => {
@@ -184,6 +191,7 @@ export function docBreadcrumbs(
       save: options.docNameSave,
       inputArgs: [
         testId("bc-doc"),
+        dom.attr("aria-label", t("Document name")),
         kbJumperAnchor,
         cssEditableName.cls(""),
         dom.boolAttr("disabled", options.isDocNameReadOnly || false),
@@ -203,8 +211,12 @@ export function docBreadcrumbs(
       }
       if (use(options.isRecoveryMode)) {
         return cssAlertTag(t("recovery mode"),
-          dom("a", dom.on("click", () => options.cancelRecoveryMode()),
-            icon("CrossSmall")),
+          cssRecoveryExitButton(
+            { type: "button" },
+            dom.attr("aria-label", t("Exit recovery mode")),
+            icon("CrossSmall"),
+            dom.on("click", () => options.cancelRecoveryMode()),
+          ),
           testId("recovery-mode-tag"));
       }
       if (use(options.isFiddle)) {
@@ -237,6 +249,7 @@ not affect the original document.`) }), testId("fiddle-tag"));
       save: options.pageNameSave,
       inputArgs: [
         testId("bc-page"),
+        dom.attr("aria-label", t("Page name")),
         cssEditableName.cls(""),
         dom.boolAttr("disabled", options.isPageNameReadOnly || false),
         dom.cls(cssHideForNarrowScreen.className),

@@ -416,6 +416,8 @@ export class UserManager extends Disposable {
             member.isRemoved ? cssUndoIcon("Undo", testId("um-member-undo")) :
               cssRemoveIcon("Remove", testId("um-member-delete")),
             cssMemberBtn.cls("-disabled", disableRemove),
+            { type: "button",
+              "aria-label": member.isRemoved ? t("Undo") : t("Remove") },
             // Click handler.
             dom.on("click", () => disableRemove.get() ||
               (member.isRemoved ? this._model.add(member.email, member.access.get()) :
@@ -512,6 +514,7 @@ export class UserManager extends Disposable {
           cssMemberBtn(
             cssMemberBtn.cls("-disabled", this._options.isReadonly),
             cssRemoveIcon("Remove", testId("um-member-delete")),
+            { type: "button", "aria-label": t("Remove") },
             dom.on("click", () => publicMember.access.set(null)),
           ),
           testId("um-public-member"),

@@ -11,6 +11,7 @@ import { isNarrowScreenObs, theme, vars } from "app/client/ui2018/cssVars";
 import { IconName } from "app/client/ui2018/IconList";
 import { icon } from "app/client/ui2018/icons";
 import { menuCssClass } from "app/client/ui2018/menus";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { Memo, MemoKind } from "app/common/ACLPermissions";
 import { commonUrls } from "app/common/gristUrls";
 
@@ -136,7 +137,9 @@ function buildNotificationDom(item: Notification, options: IBeaconOpenOptions) {
       item.options.memos.length ? buildMemos(item.options.memos) : null,
     ),
     dom.maybe(item.options.canUserClose, () =>
-      cssToastClose(testId("toast-close"),
+      cssToastClose(
+        { type: "button", "aria-label": t("Dismiss") },
+        testId("toast-close"),
         "✕",
         dom.on("click", () => item.dispose()),
       ),
@@ -387,7 +390,7 @@ const cssToastTitle = styled(cssToastText, `
   margin-bottom: 8px;
 `);
 
-const cssToastClose = styled("div", `
+const cssToastClose = styled(unstyledButton, `
   cursor: pointer;
   user-select: none;
   width: 16px;

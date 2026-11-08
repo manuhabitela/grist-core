@@ -5,6 +5,7 @@ import { testId, theme, vars } from "app/client/ui2018/cssVars";
 import { textInput } from "app/client/ui2018/editableLabel";
 import { IconName } from "app/client/ui2018/IconList";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { gristFloatingMenuClass } from "app/client/ui2018/menus";
 import { cssSelectBtn } from "app/client/ui2018/select";
 import { isValidHex } from "app/common/gutil";
@@ -365,6 +366,8 @@ class PickerComponent extends Disposable {
           ),
         ),
         cssEmptyBox(
+          { type: "button" },
+          dom.attr("aria-label", t("Clear color")),
           cssEmptyBox.cls("-selected", use => !use(this._colorHex)),
           dom.on("click", () => this._setValue(undefined)),
           dom.hide(!this._options.allowsNone),
@@ -411,8 +414,17 @@ class FontComponent extends Disposable {
   }
 
   public buildDom() {
+    const fontOptionAriaLabels: Partial<Record<IconName, string>> = {
+      FontBold: t("Bold"),
+      FontUnderline: t("Underline"),
+      FontItalic: t("Italic"),
+      FontStrikethrough: t("Strikethrough"),
+    };
     function option(iconName: IconName, model: BooleanModel) {
       return cssFontOption(
+        { type: "button" },
+        dom.attr("aria-label", fontOptionAriaLabels[iconName] ?? iconName),
+        dom.attr("aria-pressed", use => String(use(model.obs) ?? false)),
         cssFontIcon(iconName),
         dom.on("click", () => model.setValue(!model.obs.get())),
         cssFontOption.cls("-selected", use => use(model.obs) ?? false),
@@ -437,7 +449,7 @@ const cssFontOptions = styled("div", `
   }
 `);
 
-const cssFontOption = styled("div", `
+const cssFontOption = styled(unstyledButton, `
   display: grid;
   place-items: center;
   flex-grow: 1;
@@ -549,7 +561,13 @@ const cssColorSquare = styled("div", `
   }
 `);
 
-const cssEmptyBox = styled(cssColorSquare, `
+const cssEmptyBox = styled(unstyledButton, `
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
   --icon-color: ${theme.iconError};
   border: 1px solid #D9D9D9;
   &-selected {

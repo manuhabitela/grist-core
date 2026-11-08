@@ -268,7 +268,9 @@ class ColumnListPicker extends Disposable {
         testId("ref-select-label"),
       ),
       cssRemoveIcon(
-        "Remove",
+        { type: "button" },
+        dom.attr("aria-label", t("Remove")),
+        icon("Remove"),
         dom.on("click", () => this._remove(field)),
         testId("ref-select-remove"),
       ),
@@ -738,11 +740,12 @@ const cssAddIcon = styled(icon, `
   margin-right: 4px;
 `);
 
-const cssRemoveIcon = styled(icon, `
+const cssRemoveIcon = styled(unstyledButton, `
   display: none;
   cursor: pointer;
   flex: none;
   margin-left: 8px;
+  line-height: 0;
   .${cssFieldEntry.className}:hover & {
     display: block;
   }

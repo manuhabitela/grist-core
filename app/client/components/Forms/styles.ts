@@ -4,6 +4,7 @@ import { basicButton, basicButtonLink, primaryButtonLink, textButton } from "app
 import { cssLabel } from "app/client/ui2018/checkbox";
 import { colors, theme } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { numericSpinner } from "app/client/widgets/NumericSpinner";
 
 import { BindableValue, dom, DomElementArg, IDomArgs, Observable, styled } from "grainjs";
@@ -583,7 +584,7 @@ export const cssSwitcherMessageBody = styled("div", `
   padding: 8px 16px;
 `);
 
-export const cssSwitcherMessageDismissButton = styled("div", `
+export const cssSwitcherMessageDismissButton = styled(unstyledButton, `
   align-self: flex-start;
   flex-shrink: 0;
   padding: 0px;
@@ -658,7 +659,7 @@ export const cssShareMenuBody = styled("div", `
   min-height: 160px;
 `);
 
-export const cssShareMenuCloseButton = styled("div", `
+export const cssShareMenuCloseButton = styled(unstyledButton, `
   flex-shrink: 0;
   border-radius: 4px;
   cursor: pointer;

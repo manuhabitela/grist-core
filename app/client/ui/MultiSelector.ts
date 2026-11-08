@@ -20,10 +20,14 @@
  * TODO: Optionally omit selected items from list
  */
 
+import { makeT } from "app/client/lib/localization";
 import { button1 } from "app/client/ui/buttons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 
 import { computed, MutableObsArray, ObsArray, observable, Observable } from "grainjs";
 import { Disposable, dom, makeTestId, select, styled } from "grainjs";
+
+const t = makeT("MultiSelector");
 
 export interface BaseItem {
   value: any;
@@ -99,7 +103,9 @@ export abstract class MultiItemSelector<Item extends BaseItem> extends Disposabl
   }
 
   protected buildRemoveButton(removeCb: () => void): Element {
-    return cssItemRemove(testId("remove-btn"),
+    return cssItemRemove(
+      { type: "button", "aria-label": t("Remove") },
+      testId("remove-btn"),
       dom.on("click", removeCb),
       "✖",
     );
@@ -150,7 +156,7 @@ const cssItemList = styled("ul", `
   list-style-type: none;
 `);
 
-const cssItemRemove = styled("span", `
+const cssItemRemove = styled(unstyledButton, `
   padding: 0 .5rem;
   vertical-align: middle;
   cursor: pointer;

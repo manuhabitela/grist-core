@@ -12,6 +12,7 @@ import { COLOR_OPTION_NONE_TEXTS, ColorOption, colorSelect } from "app/client/ui
 import { theme, vars } from "app/client/ui2018/cssVars";
 import { cssDragger } from "app/client/ui2018/draggableList";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { setupEditorCleanup } from "app/client/widgets/FieldEditor";
 import { cssError, openFormulaEditor } from "app/client/widgets/FormulaEditor";
 import { isRaisedException, isValidRuleValue } from "app/common/gristTypes";
@@ -182,7 +183,9 @@ export class ConditionalStyle extends Disposable {
           ),
         ),
         cssRemoveButton(
-          "Remove",
+          { type: "button" },
+          dom.attr("aria-label", t("Remove")),
+          icon("Remove"),
           testId(`remove-rule-${index}`),
           dom.on("click", () => this._ruleOwner.removeRule(index)),
         ),
@@ -286,12 +289,13 @@ const cssRow = styled("div", `
   }
 `);
 
-const cssRemoveButton = styled(cssIcon, `
+const cssRemoveButton = styled(unstyledButton, `
   flex: none;
   margin: 6px;
   margin-right: 0px;
   transform: translateY(4px);
   cursor: pointer;
+  line-height: 0;
   --icon-color: ${theme.controlSecondaryFg};
   &:hover {
     --icon-color: ${theme.controlFg};

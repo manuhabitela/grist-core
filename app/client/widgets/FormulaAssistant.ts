@@ -12,6 +12,7 @@ import { theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { cssLink } from "app/client/ui2018/links";
 import { menu, menuItem } from "app/client/ui2018/menus";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { Assistant, cssAiImage, cssAiMessage, cssAvatar } from "app/client/widgets/Assistant";
 import { FormulaEditor } from "app/client/widgets/FormulaEditor";
 import { AssistanceState } from "app/common/Assistance";
@@ -248,6 +249,8 @@ export class FormulaAssistant extends Disposable {
       ),
       cssChatPanelHeaderButtons(
         cssChatPanelHeaderButton(
+          { type: "button" },
+          dom.attr("aria-label", use => use(this._assistantExpanded) ? t("Collapse") : t("Expand")),
           dom.domComputed(this._assistantExpanded, isExpanded => isExpanded ?
             icon("Dropdown") : icon("DropdownUp")),
           dom.on("click", () => {
@@ -260,6 +263,8 @@ export class FormulaAssistant extends Disposable {
           testId("ai-assistant-expand-collapse"),
         ),
         cssChatPanelHeaderButton(
+          { type: "button" },
+          dom.attr("aria-label", t("Options")),
           icon("Dots"),
           menu(() => [
             menuItem(
@@ -676,12 +681,13 @@ const cssChatPanelHeaderButtons = styled("div", `
   column-gap: 8px;
 `);
 
-const cssChatPanelHeaderButton = styled("div", `
+const cssChatPanelHeaderButton = styled(unstyledButton, `
   --icon-color: ${theme.controlSecondaryFg};
   border-radius: 3px;
   padding: 3px;
   cursor: pointer;
   user-select: none;
+  line-height: 0;
   &:hover, &.weasel-popup-open {
     background-color: ${theme.hover};
   }

@@ -13,6 +13,7 @@ import { colors, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { menu, menuGroup, menuItem, menuItemLink } from "app/client/ui2018/menus";
 import { unstyledButton } from "app/client/ui2018/unstyled";
+import { visuallyHidden } from "app/client/ui2018/visuallyHidden";
 import { commonUrls } from "app/common/gristUrls";
 import * as roles from "app/common/roles";
 import { getGristConfig } from "app/common/urlUtils";
@@ -138,7 +139,13 @@ export class AppHeader extends Disposable {
     } else {
       return cssOrg(
         dom.cls("_cssOrg"),
-        cssOrgName(dom.text(this._appLogoOrgName), testId("orgname")),
+        // Visible org name is hidden from assistive tools…
+        cssOrgName(dom.text(this._appLogoOrgName), testId("orgname"), { "aria-hidden": "true" }),
+        // … Because we use a more detailed text to help users of assistive tools understand
+        visuallyHidden(dom.text(use => t(
+          "{{- organizationName }} - Switch site",
+          { organizationName: use(this._appLogoOrgName) },
+        ))),
         productPill(this._currentOrg),
         dom.maybe(this._appLogoOrgName, () => [
           cssSpacer(),

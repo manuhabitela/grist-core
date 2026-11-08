@@ -77,6 +77,7 @@ export function showWelcomeCoachingCall(triggerElement: Element, appModel: AppMo
           cssName("Grist"),
         ),
         cssPopupCloseButton(
+          { type: "button", "aria-label": t("Close") },
           cssCloseIcon("CrossBig"),
           dom.on("click", () => dismissPopup(true)),
           testId("popup-close-button"),

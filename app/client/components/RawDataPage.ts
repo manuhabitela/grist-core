@@ -5,14 +5,18 @@ import { DocumentUsage } from "app/client/components/DocumentUsage";
 import { GristDoc } from "app/client/components/GristDoc";
 import { printViewSection } from "app/client/components/Printing";
 import { ViewSectionHelper } from "app/client/components/ViewLayout";
+import { makeT } from "app/client/lib/localization";
 import { logTelemetryEvent } from "app/client/lib/telemetry";
 import { ViewSectionRec } from "app/client/models/DocModel";
 import { reportError } from "app/client/models/errors";
 import { getTelemetryWidgetTypeFromVS } from "app/client/ui/widgetTypesMap";
 import { mediaSmall, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 
 import { Computed, Disposable, dom, fromKo, makeTestId, Observable, styled } from "grainjs";
+
+const t = makeT("RawDataPage");
 
 const testId = makeTestId("test-raw-data-");
 
@@ -110,7 +114,9 @@ export class RawDataPopup extends Disposable {
           renamable: !this._viewSection.isRecordCard.peek(),
         }),
       ),
-      cssCloseButton("CrossBig",
+      cssCloseButton(
+        { type: "button", "aria-label": t("Close") },
+        icon("CrossBig"),
         testId("close-button"),
         dom.on("click", () => this._onClose()),
       ),
@@ -172,7 +178,7 @@ const cssSectionWrapper = styled("div", `
   }
 `);
 
-export const cssCloseButton = styled(icon, `
+export const cssCloseButton = styled(unstyledButton, `
   position: absolute;
   top: 16px;
   right: 16px;

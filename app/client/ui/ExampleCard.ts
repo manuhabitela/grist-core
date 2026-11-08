@@ -1,11 +1,15 @@
+import { makeT } from "app/client/lib/localization";
 import { IExampleInfo } from "app/client/ui/ExampleInfo";
 import { AutomaticHelpToolInfo } from "app/client/ui/Tools";
 import { prepareForTransition, TransitionWatcher } from "app/client/ui/transitions";
 import { mediaXSmall, testId, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { cssLink } from "app/client/ui2018/links";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 
 import { dom, styled } from "grainjs";
+
+const t = makeT("ExampleCard");
 
 let prevCardClose: (() => void) | null = null;
 
@@ -38,7 +42,9 @@ export function showExampleCard(
         // cssLinkBtn(cssLinkIcon('Video'), 'Grist Video Tour'),
       ),
     ),
-    cssCloseButton(cssBigIcon("CrossBig"),
+    cssCloseButton(
+      { type: "button", "aria-label": t("Close") },
+      cssBigIcon("CrossBig"),
       dom.on("click", close),
       testId("example-card-close"),
     ),
@@ -160,7 +166,7 @@ export const cssLinkIcon = styled(icon, `
   margin-top: -2px;
 `);
 
-export const cssCloseButton = styled("div", `
+export const cssCloseButton = styled(unstyledButton, `
   position: absolute;
   top: 8px;
   right: 8px;

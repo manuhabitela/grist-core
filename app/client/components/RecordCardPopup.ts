@@ -3,12 +3,16 @@ import * as commands from "app/client/components/commands";
 import { GristDoc } from "app/client/components/GristDoc";
 import { cssCloseButton, cssOverlay } from "app/client/components/RawDataPage";
 import { ViewSectionHelper } from "app/client/components/ViewLayout";
+import { makeT } from "app/client/lib/localization";
 import { ViewSectionRec } from "app/client/models/DocModel";
 import { ChangeType, RowList } from "app/client/models/rowset";
 import { theme } from "app/client/ui2018/cssVars";
+import { icon } from "app/client/ui2018/icons";
 import { DisposableWithEvents } from "app/common/DisposableWithEvents";
 
 import { dom, makeTestId, styled } from "grainjs";
+
+const t = makeT("RecordCardPopup");
 
 const testId = makeTestId("test-record-card-popup-");
 
@@ -53,7 +57,9 @@ export class RecordCardPopup extends DisposableWithEvents {
         }),
         testId("wrapper"),
       ),
-      cssCloseButton("CrossBig",
+      cssCloseButton(
+        { "type": "button", "aria-label": t("Close") },
+        icon("CrossBig"),
         dom.on("click", () => this._handleClose()),
         testId("close"),
       ),

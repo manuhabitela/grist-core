@@ -219,7 +219,9 @@ export class RightPanel extends Disposable {
 
   private _buildToolHeader(tool: IExtraTool) {
     return cssTopBarItem(cssTopBarIcon(tool.icon), tool.label,
-      cssHoverCircle(cssHoverIcon("CrossBig"),
+      cssHoverCircle(
+        { type: "button", "aria-label": t("Close tool panel") },
+        cssHoverIcon("CrossBig"),
         dom.on("click", () => this._gristDoc.showTool("none")),
         testId("right-tool-close"),
       ),
@@ -1297,7 +1299,7 @@ const cssTopBarIcon = styled(icon, `
   background-color: var(--icon-color);
 `);
 
-const cssHoverCircle = styled("div", `
+const cssHoverCircle = styled(unstyledButton, `
   margin-left: auto;
   margin-right: 8px;
   width: 32px;

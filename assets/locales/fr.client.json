@@ -135,7 +135,9 @@
         "Site settings": "Paramètres du site",
         "Account settings": "Paramètres du compte",
         "Audit Logs": "Journal d'audit",
-        "New": "Nouveau"
+        "New": "Nouveau",
+        "User account menu - {{userInitials}}": "Menu du compte utilisateur - {{userInitials}}",
+        "User account menu": "Menu du compte utilisateur"
     },
     "ActionLog": {
         "Action Log failed to load": "Impossible de charger le journal des actions",
@@ -176,7 +178,8 @@
         "Grist Templates": "Modèles Grist",
         "Billing account": "Compte de facturation",
         "Manage team": "Gestion de l'équipe",
-        "{{- organizationName }} - Back to home": "{{- organizationName }} - Retour à l'accueil"
+        "{{- organizationName }} - Back to home": "{{- organizationName }} - Retour à l'accueil",
+        "{{- organizationName }} - Switch site": "{{- organizationName }} - Changer d'espace"
     },
     "AppModel": {
         "This team site is suspended. Documents can be read, but not modified.": "Cet espace d'équipe est suspendu. Les documents peuvent être lus, mais pas modifiés."
@@ -259,7 +262,12 @@
         "default": "défaut",
         "fill": "remplir",
         "none": "aucun",
-        "text": "texte"
+        "text": "texte",
+        "Bold": "Gras",
+        "Clear color": "Effacer la couleur",
+        "Italic": "Italique",
+        "Strikethrough": "Barré",
+        "Underline": "Souligné"
     },
     "ColumnFilterMenu": {
         "Filter by Range": "Filtrer par intervalle",
@@ -283,7 +291,8 @@
         "Pin filter": "Épingler le filtre",
         "Sort alphabetically (current: sorted by number of occurrences)": "Trier par ordre alphabétique (actuellement : trié par nombre d'occurrences)",
         "Sort by number of occurrences (current: sorted alphabetically)": "Trier par nombre d'occurrences (actuellement : trié par ordre alphabétique)",
-        "Unpin filter": "Désépingler le filtre"
+        "Unpin filter": "Désépingler le filtre",
+        "Remove": "Supprimer"
     },
     "CustomSectionConfig": {
         "Add": "Ajouter",
@@ -312,7 +321,8 @@
         "Last updated:": "Dernière mise à jour :",
         "Reject": "Refuser",
         "Widget": "Widget",
-        "Change custom widget": "Changer la vue personnalisée"
+        "Change custom widget": "Changer la vue personnalisée",
+        "Remove": "Supprimer"
     },
     "DataTables": {
         "Raw Data Tables": "Données sources",
@@ -326,7 +336,8 @@
         "{{action}} Record Card": "{{action}} la vue fiche",
         "Record Card": "Vue fiche",
         "Remove table": "Supprimer la table",
-        "Record Card Disabled": "Vue fiche désactivée"
+        "Record Card Disabled": "Vue fiche désactivée",
+        "context menu - {{- tableName }}": "menu contextuel - {{- tableName }}"
     },
     "DocHistory": {
         "Activity": "Activité",
@@ -336,7 +347,8 @@
         "Compare to previous": "Comparer au précédent",
         "Beta": "Bêta",
         "Snapshots are unavailable.": "Les sauvegardes ne sont pas disponibles.",
-        "Only owners have access to snapshots for documents with access rules.": "Seuls les propriétaires ont accès aux instantanés des documents soumis à des règles d'accès."
+        "Only owners have access to snapshots for documents with access rules.": "Seuls les propriétaires ont accès aux instantanés des documents soumis à des règles d'accès.",
+        "Snapshot menu": "Menu du snapshot"
     },
     "DocMenu": {
         "Other Sites": "Autres espaces",
@@ -384,7 +396,8 @@
         "personal site": "espace personnel",
         "Grid view": "Vue icônes",
         "List view": "Vue liste",
-        "Documents": "Documents"
+        "Documents": "Documents",
+        "context menu - {{- documentName }}": "menu contextuel - {{- documentName }}"
     },
     "DocPageModel": {
         "Error accessing document": "Erreur lors de l'accès au document",
@@ -576,7 +589,8 @@
     "FilterBar": {
         "SearchColuns": "Rechercher",
         "SearchColumns": "Rechercher dans les colonnes",
-        "Search Columns": "Chercher des colonnes"
+        "Search Columns": "Chercher des colonnes",
+        "Add filter": "Ajouter un filtre"
     },
     "GridOptions": {
         "Grid Options": "Options de la grille",
@@ -701,6 +715,7 @@
         "To use Grist, please either sign up or sign in.": "Pour utiliser Grist, connectez-vous ou créez-vous un compte.",
         "Learn more in our {{helpCenterLink}}.": "Pour en savoir plus, consultez notre {{helpCenterLink}}.",
         "Only show documents": "Afficher des documents seulement",
+        "Welcome menu": "Menu d'accueil",
         "Create a document": "Créer un document"
     },
     "HomeLeftPane": {
@@ -807,17 +822,20 @@
         "No notifications": "Aucune notification",
         "Manage billing": "Gérer la facturation",
         "What's blocking you": "Ce qui vous bloque",
-        "How you could gain access": "Comment vous pourriez obtenir l'accès"
+        "How you could gain access": "Comment vous pourriez obtenir l'accès",
+        "Dismiss": "Ignorer"
     },
     "OnBoardingPopups": {
         "Finish": "Terminer",
         "Next": "Suivant",
-        "Previous": "Précédent"
+        "Previous": "Précédent",
+        "Close": "Fermer"
     },
     "OpenVideoTour": {
         "YouTube video player": "Lecteur vidéo YouTube",
         "Grist Video Tour": "Visite guidée de Grist en vidéo",
-        "Video Tour": "Visite guidée en vidéo"
+        "Video Tour": "Visite guidée en vidéo",
+        "Close": "Fermer"
     },
     "PageWidgetPicker": {
         "Building {{- label}} widget": "Vue {{- label}} en construction",
@@ -863,7 +881,8 @@
     },
     "RefSelect": {
         "Add column": "Ajouter une colonne",
-        "No columns to add": "Aucune colonne à ajouter"
+        "No columns to add": "Aucune colonne à ajouter",
+        "Remove": "Supprimer"
     },
     "RightPanel": {
         "columns_one": "Colonne",
@@ -880,6 +899,7 @@
         "DATA TABLE NAME": "NOM DE LA TABLE",
         "WIDGET TITLE": "TITRE DE LA VUE",
         "Change widget": "Modifier la vue",
+        "Close tool panel": "Fermer le panneau d'outil",
         "Theme": "Thème",
         "Row style": "Aspect de la ligne",
         "CHART TYPE": "TYPE DE GRAPHIQUE",
@@ -1102,7 +1122,9 @@
         "SORT": "TRI",
         "FILTER": "FILTRE",
         "Sort and filter": "Trier et filtrer",
-        "Calendar view": "Vue Calendrier"
+        "Calendar view": "Vue Calendrier",
+        "Remove custom options": "Supprimer les options personnalisées",
+        "context menu - {{title}} widget": "menu contextuel - vue {{title}}"
     },
     "VisibleFieldsConfig": {
         "Hidden Fields cannot be reordered": "Les champs masqués ne peuvent pas être réordonnés",
@@ -1134,7 +1156,11 @@
         "fiddle": "bac à sable",
         "You may make edits,\nbut they will not affect the original document.\nYou can propose them as suggestions.": "Vous pouvez apporter des modifications,\nmais elles n'affecteront pas le document original.\nVous pouvez les soumettre à titre de suggestions.",
         "editing": "édition",
-        "suggesting": "suggestion"
+        "suggesting": "suggestion",
+        "Exit recovery mode": "Quitter le mode récupération",
+        "Breadcrumbs": "Fil d'Ariane",
+        "Document name": "Document name",
+        "Page name": "Page name"
     },
     "duplicatePage": {
         "Note that this does not copy data, but creates another view of the same data.": "Notez que cette opération ne duplique pas les données, mais crée une autre page avec les mêmes données.",
@@ -1226,7 +1252,8 @@
         "Are you sure you want to delete these records?": "Êtes-vous sûr de vouloir supprimer ces enregistrements ?",
         "Are you sure you want to delete this record?": "Êtes-vous sûr de vouloir supprimer cet enregistrement ?",
         "TIP": "CONSEIL",
-        "Confirm": "Confirmer"
+        "Confirm": "Confirmer",
+        "Close": "Fermer"
     },
     "pages": {
         "Rename": "Renommer",
@@ -1374,7 +1401,8 @@
         "Rule must return True or False": "La règle doit retourner Vrai ou Faux",
         "Conditional Style": "Style conditionnel",
         "IF...": "SI...",
-        "Row Style": "Style de ligne"
+        "Row Style": "Style de ligne",
+        "Remove": "Supprimer"
     },
     "CurrencyPicker": {
         "Invalid currency": "Devise invalide"
@@ -1616,7 +1644,10 @@
         "For higher limits, {{upgradeNudge}}.": "Pour augmenter le plafond, {{upgradeNudge}}.",
         "For more help with formulas, check out our {{functionList}} and {{formulaCheatSheet}}, or visit our {{community}} for more help.": "Pour plus d'informations sur les formules, consultez notre {{functionList}} et notre {{formulaCheatSheet}}, ou visitez notre {{community}}.",
         "When you talk to me, your questions and your document structure (visible in {{codeView}}) are sent to OpenAI. {{learnMore}}.": "Lorsque vous me parlez, vos questions et la structure de votre document (visible dans {{codeView}}) sont envoyées à OpenAI. {{learnMore}}.",
-        "Talk to me like a person. No need to specify tables and column names. For example, you can ask \"Please calculate the total invoice amount.\"": "Parlez-moi comme à une personne. Inutile de préciser les noms de tables et de colonnes. Par exemple, vous pouvez demander : « Veuillez calculer le montant total de la facture. »"
+        "Talk to me like a person. No need to specify tables and column names. For example, you can ask \"Please calculate the total invoice amount.\"": "Parlez-moi comme à une personne. Inutile de préciser les noms de tables et de colonnes. Par exemple, vous pouvez demander : « Veuillez calculer le montant total de la facture. »",
+        "Collapse": "Replier",
+        "Expand": "Déplier",
+        "Options": "Options"
     },
     "SupportGristNudge": {
         "Help Center": "Centre d'aide",
@@ -1662,7 +1693,8 @@
         "No data": "Aucune donnée",
         "No row selected in {{title}}": "Aucune ligne sélectionnée dans {{title}}",
         "Not all data is shown": "Toute la donnée n'est pas visible",
-        "{{title}} widget header": "En-tête de la vue {{title}}"
+        "{{title}} widget header": "En-tête de la vue {{title}}",
+        "context menu - {{title}} widget": "menu contextuel - vue {{title}}"
     },
     "UserManager": {
         "Allow anyone with the link to open.": "Permettre à toute personne possédant le lien de l'ouvrir.",
@@ -1715,7 +1747,9 @@
         "Configure notifications": "Configurer les notifications",
         "Invitation emails are not enabled on this installation.": "Les mails d'invitation ne sont pas activés sur cette installation.",
         "Invitation emails are not sent on Grist Community edition.": "Les mails d'invitation ne sont pas envoyés dans la version communautaire de Grist.",
-        "Owner-like data access": "Droits d'accès aux données identiques à ceux du Propriétaire du document"
+        "Owner-like data access": "Droits d'accès aux données identiques à ceux du Propriétaire du document",
+        "Remove": "Supprimer",
+        "Undo": "Annuler"
     },
     "SearchModel": {
         "Search all tables": "Rechercher toutes les tables",
@@ -1733,7 +1767,8 @@
     },
     "FloatingPopup": {
         "Maximize": "Maximiser",
-        "Minimize": "Minimiser"
+        "Minimize": "Minimiser",
+        "Close": "Fermer"
     },
     "WelcomeSitePicker": {
         "Welcome back": "Bon retour parmi nous",
@@ -1765,7 +1800,8 @@
         "Grist 101": "Les fondamentaux de Grist",
         "You may also check out our introductory webinar, {{ourWeeklyWebinars}}, designed to help new users                navigate the fundamentals of Grist.": "Vous pouvez également suivre notre webinaire d'introduction, {{ourWeeklyWebinars}}, qui a été spécialement créé afin d'aider les nouveaux utilisateurs à maitriser les fondamentaux de Grist.",
         "Free coaching call": "appel de coaching gratuit",
-        "You may also check out our introductory webinar, {{ourWeeklyWebinars}}, designed to help new users navigate the fundamentals of Grist.": "Vous pouvez aussi jeter un œil à notre webinaire d'introduction, {{ourWeeklyWebinars}}, conçu pour aider les nouveaux utilisateurs à découvrir les fondamentaux de Grist."
+        "You may also check out our introductory webinar, {{ourWeeklyWebinars}}, designed to help new users navigate the fundamentals of Grist.": "Vous pouvez aussi jeter un œil à notre webinaire d'introduction, {{ourWeeklyWebinars}}, conçu pour aider les nouveaux utilisateurs à découvrir les fondamentaux de Grist.",
+        "Close": "Fermer"
     },
     "FormView": {
         "Publish": "Publier",
@@ -1791,7 +1827,9 @@
         "Publishing your form will generate a share link. Anyone with the link can see the empty form and submit a response.": "La publication de votre formulaire générera un lien de partage. Toute personne disposant du lien pourra accéder au formulaire et soumettre une réponse.",
         "Unpublishing the form will disable the share link so that users accessing your form via that link will see an error.": "La dépublication du formulaire désactivera le lien de partage. Les utilisateurs accédant au formulaire via ce lien verront une erreur.",
         "Users are limited to submitting entries (records in your table) and reading pre-set values in designated fields, such as reference and choice columns.": "Les utilisateurs sont limités à la soumission d'entrées (enregistrements dans votre table) et à la lecture de valeurs prédéfinies dans des champs tels que les colonnes de référence et de choix.",
-        "Your form is published. Every change is live and visible to users with access to the form. If you want to make changes in draft, unpublish the form.": "Votre formulaire est publié. Chaque modification est visible par les utilisateurs ayant accès au formulaire. Si vous souhaitez apporter des modifications en \"mode brouillon\", dépubliez le formulaire."
+        "Your form is published. Every change is live and visible to users with access to the form. If you want to make changes in draft, unpublish the form.": "Votre formulaire est publié. Chaque modification est visible par les utilisateurs ayant accès au formulaire. Si vous souhaitez apporter des modifications en \"mode brouillon\", dépubliez le formulaire.",
+        "Close": "Fermer",
+        "Dismiss": "Ignorer"
     },
     "HiddenQuestionConfig": {
         "Hidden fields": "Champs cachés"
@@ -2064,7 +2102,8 @@
         "Team url": "Url de l'espace d'équipe",
         "Work as a Team": "Travailler en équipe",
         "Billing is not supported in grist-core": "La facturation n'est pas prise en charge dans un Grist auto-hébergé",
-        "Team name is required": "Le nom de l'espace d'équipe est requis"
+        "Team name is required": "Le nom de l'espace d'équipe est requis",
+        "Close": "Fermer"
     },
     "Toggle": {
         "Field Format": "Format du champ",
@@ -2134,7 +2173,8 @@
         "End tutorial": "Fin du tutoriel",
         "Do you want to restart the tutorial? All progress will be lost.": "Voulez-vous recommencer le tutoriel ? Tous les progrès seront perdus.",
         "Previous": "Précédent",
-        "Finish": "Finir"
+        "Finish": "Finir",
+        "Close": "Fermer"
     },
     "OnboardingCards": {
         "Complete our basics tutorial": "Complétez notre tutoriel des bases",
@@ -2169,7 +2209,8 @@
         "Sales": "Ventes",
         "Education": "Éducation",
         "HR & Management": "RH et Gestion",
-        "Other": "Autres"
+        "Other": "Autres",
+        "Close": "Fermer"
     },
     "ToggleEnterpriseWidget": {
         "Disable Grist Enterprise": "Désactiver Grist Entreprise",
@@ -2214,7 +2255,8 @@
         "Delete data and this widget.": "Supprimer les données et la vue.",
         "Keep data and delete widget. Table will remain available in {{rawDataLink}}": "Garder les données et supprimer la vue. La table restera disponible dans {{rawDataLink}}",
         "Table {{tableName}} will no longer be visible": "La table {{tableName}} ne sera plus visible",
-        "Raw Data page": "la page de données source"
+        "Raw Data page": "la page de données source",
+        "Close": "Fermer"
     },
     "CustomWidgetGallery": {
         "(Missing info)": "(Information manquante)",
@@ -2290,7 +2332,8 @@
         "Support Grist": "Soutenir Grist",
         "Thank you! Your trust and support is greatly appreciated. Opt out any time from the {{link}} in the user menu.": "Nous vous remercions ! Votre confiance et votre soutien sont très appréciés. Vous pouvez vous désinscrire à tout moment en cliquant sur le {{link}} dans le menu utilisateur.",
         "Opt in to telemetry to help us understand how the product is used, so that we can prioritize future improvements.": "Activez la télémétrie pour nous aider à comprendre comment le produit est utilisé, afin que nous puissions prioriser les améliorations futures.",
-        "We only collect usage statistics, as detailed in our {{helpCenterLink}}, never document contents. Opt out any time from the {{supportGristLink}} in the user menu.": "Nous collectons uniquement des statistiques d'utilisation, comme détaillé dans notre {{helpCenterLink}} - jamais le contenu des documents. Vous pouvez désactivez la fonctionnalité à tout moment via {{supportGristLink}} dans le menu."
+        "We only collect usage statistics, as detailed in our {{helpCenterLink}}, never document contents. Opt out any time from the {{supportGristLink}} in the user menu.": "Nous collectons uniquement des statistiques d'utilisation, comme détaillé dans notre {{helpCenterLink}} - jamais le contenu des documents. Vous pouvez désactivez la fonctionnalité à tout moment via {{supportGristLink}} dans le menu.",
+        "Dismiss": "Ignorer"
     },
     "buildReassignModal": {
         "Cancel": "Annuler",
@@ -2325,7 +2368,8 @@
         "URL": "URL",
         "Cancel": "Abandonner",
         "Edit streaming destination": "Modifier la destination de streaming",
-        "Set up streaming of audit events from Grist to an external security information and event management (SIEM) system like Splunk. {{learnMoreLink}}.": "Configurez la diffusion en continu des événements d'audit de Grist vers un système externe de gestion des informations et des événements de sécurité (SIEM) comme Splunk. {{learnMoreLink}}."
+        "Set up streaming of audit events from Grist to an external security information and event management (SIEM) system like Splunk. {{learnMoreLink}}.": "Configurez la diffusion en continu des événements d'audit de Grist vers un système externe de gestion des informations et des événements de sécurité (SIEM) comme Splunk. {{learnMoreLink}}.",
+        "Destination options": "Options de destination"
     },
     "AuditLogsPage": {
         "Audit logs for {{siteName}}": "Journaux d'audit pour {{siteName}}",
@@ -2426,7 +2470,9 @@
         "Apply": "Appliquer",
         "The conversation has become too long and I can no longer respond effectively. Please {{startANewChatButton}} to continue receiving assistance.": "La conversation est devenue trop longue et je ne peux plus répondre efficacement. Veuillez {{startANewChatButton}} pour continuer à recevoir de l'aide.",
         "The session has become too long and I can no longer respond effectively. Please {{startANewSessionButton}} to continue receiving assistance.": "La session est devenue trop longue et je ne peux plus répondre efficacement. Veuillez {{startANewSessionButton}} pour continuer à recevoir de l'aide.",
-        "start a new session": "Commencer une nouvelle session"
+        "start a new session": "Commencer une nouvelle session",
+        "Cancel": "Annuler",
+        "Send message": "Envoyer le message"
     },
     "apiconsole": {
         "Type DELETE here if you wish to proceed.": "Tapez DELETE si vous souhaitez continuer.",
@@ -3703,11 +3749,13 @@
         "Templates": "Modèles"
     },
     "startDocGristImport": {
-        "Copy data from another document": "Copier les données depuis un autre document Grist"
+        "Copy data from another document": "Copier les données depuis un autre document Grist",
+        "Close": "Fermer"
     },
     "startHomeGristImport": {
         "Copy data from another document": "Copier les données d'un autre document Grist",
-        "Data can't be copied to the current workspace.": "Impossible de copier les données dans l'espace d'équipe actuel."
+        "Data can't be copied to the current workspace.": "Impossible de copier les données dans l'espace d'équipe actuel.",
+        "Close": "Fermer"
     },
     "TopProblems": {
         "{{count}} problems need attention_one": "{{count}} problème nécessite votre attention",
@@ -3763,5 +3811,35 @@
         "or": "ou",
         "write it yourself": "Rédigez-le vous-même",
         "{{ask}}, or {{write}}": "{{ask}}, ou {{write}}"
+    },
+    "Banner": {
+        "Expand": "Développer",
+        "Collapse": "Réduire",
+        "Dismiss": "Ignorer"
+    },
+    "PinnedDocs": {
+        "context menu - {{- documentName }}": "menu contextuel - {{- documentName }}"
+    },
+    "ExampleCard": {
+        "Close": "Fermer"
+    },
+    "tooltips": {
+        "Close": "Fermer"
+    },
+    "BillingLogoEditor": {
+        "Close": "Fermer",
+        "Select logo": "Sélectionner un logo"
+    },
+    "RawDataPage": {
+        "Close": "Fermer"
+    },
+    "ACLColumnList": {
+        "Remove column": "Supprimer la colonne"
+    },
+    "popups": {
+        "Close": "Fermer"
+    },
+    "MultiSelector": {
+        "Remove": "Supprimer"
     }
 }

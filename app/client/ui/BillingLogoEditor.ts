@@ -1,12 +1,16 @@
 import { get as getBrowserGlobals } from "app/client/lib/browserGlobals";
+import { makeT } from "app/client/lib/localization";
 import { selectPicker } from "app/client/lib/uploads";
 import { UserError } from "app/client/models/errors";
 import { basicButton, cssButtonGroup } from "app/client/ui2018/buttons";
 import { testId as globalTestId, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { IModalControl, modal } from "app/client/ui2018/modals";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 
 import { Disposable, dom, makeTestId, MultiHolder, Observable, styled } from "grainjs";
+
+const t = makeT("BillingLogoEditor");
 
 const G = getBrowserGlobals("window") as { window: Window };
 const testId = makeTestId("test-bp-");
@@ -45,6 +49,7 @@ export class BillingLogoEditor extends Disposable {
         );
       }
       return cssWidgetPlaceholder(
+        { type: "button", "aria-label": t("Select logo") },
         icon("Public", dom.cls(cssWidgetIcon.className)),
         dom.on("click", () => this._openModal()),
         testId("logo-placeholder"),
@@ -105,8 +110,12 @@ export class BillingLogoEditor extends Disposable {
               ),
             ],
           ),
-          cssCloseButton(cssBigIcon("CrossBig"), dom.on("click", () => this._close(ctl)),
-            globalTestId("pw-close")),
+          cssCloseButton(
+            { type: "button", "aria-label": t("Close") },
+            cssBigIcon("CrossBig"),
+            dom.on("click", () => this._close(ctl)),
+            globalTestId("pw-close"),
+          ),
         ),
       ),
       dom.domComputed(this._selected, selected => renderContent(selected, this._readonly)),
@@ -280,7 +289,7 @@ const cssHeader = styled("div", `
   color: white;
 `);
 
-const cssCloseButton = styled("div", `
+const cssCloseButton = styled(unstyledButton, `
   padding: 6px;
   border-radius: 32px;
   cursor: pointer;
@@ -423,7 +432,7 @@ const cssWidgetPreview = styled("img", `
   }
 `);
 
-const cssWidgetPlaceholder = styled("div", `
+const cssWidgetPlaceholder = styled(unstyledButton, `
   aspect-ratio: 1;
   color: ${theme.inputPlaceholderFg};
   border: 1px solid ${theme.inputBorder};

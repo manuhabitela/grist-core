@@ -36,6 +36,7 @@ export async function startDocGristImport(gristDoc: GristDoc) {
     return [
       cssImportModal.cls(""),
       cssImportModalCloseButton(
+        { type: "button", "aria-label": t("Close") },
         icon("CrossBig"),
         dom.on("click", () => ctl.close()),
         testId("import-grist-close"),

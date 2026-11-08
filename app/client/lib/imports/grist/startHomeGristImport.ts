@@ -41,6 +41,7 @@ export async function startHomeGristImport(home: HomeModel) {
     return [
       cssImportModal.cls(""),
       cssImportModalCloseButton(
+        { type: "button", "aria-label": t("Close") },
         icon("CrossBig"),
         dom.on("click", () => ctl.close()),
         testId("import-grist-close"),

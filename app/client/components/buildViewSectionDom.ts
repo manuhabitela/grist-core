@@ -45,6 +45,7 @@ export function buildCollapsedSectionDom(options: {
       ),
     ),
     cssMenu(
+      dom.attr("aria-label", use => t("context menu - {{title}} widget", { title: use(vs.titleDef) })),
       testId("section-menu-viewLayout"),
       cssDotsIconWrapper(cssIcon("Dots")),
       menu(_ctl => makeCollapsedLayoutMenu(vs, gristDoc), {

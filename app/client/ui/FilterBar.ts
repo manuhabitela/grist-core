@@ -8,6 +8,7 @@ import { dropdownWithSearch } from "app/client/ui/searchDropdown";
 import { cssButton } from "app/client/ui2018/buttons";
 import { testId, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 
 import { dom, IDisposableOwner, IDomArgs, styled } from "grainjs";
 import { IPopupOptions, PopupControl } from "popweasel";
@@ -114,11 +115,15 @@ function makePlusButton(viewSectionRec: ViewSectionRec, popupControls: WeakMap<C
   return dom.domComputed((use) => {
     const filters = use(viewSectionRec.filters);
     return cssPlusButton(
+      cssButton.cls(""),
+      cssButton.cls("-primary"),
+      cssBtn.cls(""),
       cssBtn.cls("-grayed"),
       cssPlusIcon("Plus"),
       addFilterMenu(filters, popupControls, {
         allowedColumns: "unpinned-or-unfiltered",
       }),
+      { type: "button", "aria-label": t("Add filter") },
       testId("add-filter-btn"),
     );
   });
@@ -181,6 +186,6 @@ const cssFilterBarItemButton = (...args: IDomArgs<HTMLDivElement>) => (
   dom("div", cssButton.cls(""), cssButton.cls("-primary"),
     cssBtn.cls(""), ...args)
 );
-const cssPlusButton = styled(cssFilterBarItemButton, `
+const cssPlusButton = styled(unstyledButton, `
   padding: 3px 3px
 `);

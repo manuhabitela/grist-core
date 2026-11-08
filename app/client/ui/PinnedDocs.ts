@@ -1,3 +1,4 @@
+import { makeT } from "app/client/lib/localization";
 import { getTimeFromNow } from "app/client/lib/timeUtils";
 import { docUrl, urlState } from "app/client/models/gristUrlState";
 import { HomeModel } from "app/client/models/HomeModel";
@@ -6,12 +7,14 @@ import { makeRemovedDocOptionsMenu } from "app/client/ui/DocMenu";
 import { colors, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { menu } from "app/client/ui2018/menus";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import * as roles from "app/common/roles";
 import { Document, Workspace } from "app/common/UserAPI";
 
 import { dom, makeTestId, Observable, styled } from "grainjs";
 
 const testId = makeTestId("test-dm-");
+const t = makeT("PinnedDocs");
 
 /**
  * Builds a list of pinned documents, or nothing if there are no pinned docs.
@@ -70,9 +73,12 @@ export function buildPinnedDoc(home: HomeModel, doc: Document, workspace: Worksp
         // "Dots" icon just to clarify that there are options.
         menu(() => makeRemovedDocOptionsMenu(home, doc, workspace),
           { placement: "right-start" }),
-        pinnedDocOptions(icon("Dots"), testId("pinned-doc-options")),
+        pinnedDocOptionsIcon(icon("Dots"), testId("pinned-doc-options")),
       ] :
-      pinnedDocOptions(icon("Dots"),
+      pinnedDocOptions(
+        { type: "button",
+          "aria-label": t("context menu - {{- documentName }}", { documentName: `"${doc.name}"` }) },
+        icon("Dots"),
         menu(() => makeDocOptionsMenu(home, doc),
           { placement: "bottom-start" }),
         // Clicks on the menu trigger shouldn't follow the link that it's contained in.
@@ -186,7 +192,7 @@ const cssDocInitials = styled("div", `
   text-align: center;
 `);
 
-const pinnedDocOptions = styled("div", `
+const pinnedDocOptionsCss = `
   position: absolute;
   top: 12px;
   right: 12px;
@@ -203,7 +209,12 @@ const pinnedDocOptions = styled("div", `
   .${pinnedDocWrapper.className}:hover &, &.weasel-popup-open {
     visibility: visible;
   }
-`);
+`;
+
+const pinnedDocOptions = styled(unstyledButton, pinnedDocOptionsCss);
+
+// Decorative only: menu is on the parent for removed docs.
+const pinnedDocOptionsIcon = styled("div", pinnedDocOptionsCss);
 
 const pinnedDocFooter = styled("div", `
   width: 100%;

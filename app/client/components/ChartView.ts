@@ -849,7 +849,9 @@ export class ChartConfig extends GrainJSDisposable {
     return cssFieldEntry(
       cssFieldLabel(dom.text(col.label)),
       cssRemoveIcon(
-        "Remove",
+        { type: "button" },
+        dom.attr("aria-label", t("Remove")),
+        icon("Remove"),
         dom.on("click", () => this._configFieldsHelper.removeField(col)),
         testId("ref-select-remove"),
       ),
@@ -1331,11 +1333,12 @@ const cssAddYAxis = styled(unstyledButton, `
   }
 `);
 
-const cssRemoveIcon = styled(icon, `
+const cssRemoveIcon = styled(unstyledButton, `
   display: none;
   cursor: pointer;
   flex: none;
   margin-left: 8px;
+  line-height: 0;
   .${cssFieldEntry.className}:hover & {
     display: block;
   }

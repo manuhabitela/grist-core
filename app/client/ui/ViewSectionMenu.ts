@@ -160,6 +160,7 @@ export function viewSectionMenu(
       dom.hide(viewSection.isRecordCard),
     ),
     cssMenu(
+      dom.attr("aria-label", use => t("context menu - {{title}} widget", { title: use(viewSection.titleDef) })),
       dom.hide(viewSection.hideViewMenu),
       testId("viewLayout"),
       cssDotsIconWrapper(cssIcon("Dots")),
@@ -222,9 +223,9 @@ function makeCustomOptions(section: ViewSectionRec) {
       cssSpacer(),
       dom.maybe(use => Boolean(use(section.activeCustomOptions)), () =>
         cssMenuIconWrapper(
-          cssIcon("Remove", testId("btn-remove-options"), dom.on("click", () =>
-            section.activeCustomOptions(null),
-          )),
+          { "type": "button", "aria-label": t("Remove custom options") },
+          cssIcon("Remove", testId("btn-remove-options")),
+          dom.on("click", () => section.activeCustomOptions(null)),
         ),
       ),
       testId("custom-options"),
@@ -261,7 +262,11 @@ const cssIconWrapper = styled("div", `
   user-select: none;
 `);
 
-const cssMenuIconWrapper = styled(cssIconWrapper, `
+const cssMenuIconWrapper = styled(unstyledButton, `
+  padding: 3px;
+  border-radius: 3px;
+  cursor: pointer;
+  user-select: none;
   display: flex;
   margin: -3px 0;
   width: 22px;

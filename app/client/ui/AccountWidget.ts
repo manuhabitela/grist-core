@@ -8,7 +8,7 @@ import { urlState } from "app/client/models/gristUrlState";
 import { getAdminPanelName } from "app/client/ui/AdminPanelName";
 import { manageTeamUsers } from "app/client/ui/OpenUserManager";
 import { maybeAddSiteSwitcherSection } from "app/client/ui/SiteSwitcher";
-import { createUserImage } from "app/client/ui/UserImage";
+import { createUserImage, getInitials } from "app/client/ui/UserImage";
 import * as viewport from "app/client/ui/viewport";
 import { bigPrimaryButtonLink, primaryButtonLink } from "app/client/ui2018/buttons";
 import { mediaDeviceNotSmall, testId, theme, vars } from "app/client/ui2018/cssVars";
@@ -62,8 +62,12 @@ export class AccountWidget extends Disposable {
   }
 
   private _buildAccountMenuButton(user: FullUser | null) {
+    const userInitials = user && !user.picture ? getInitials(user) : null;
     return cssUserIcon(
       kbJumperAnchor,
+      { "aria-label": userInitials ?
+        t("User account menu - {{userInitials}}", { userInitials }) :
+        t("User account menu") },
       createUserImage(user, "medium", testId("user-icon")),
       menu(() => this._makeAccountMenu(user), { placement: "bottom-end" }),
     );

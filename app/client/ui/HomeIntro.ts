@@ -127,6 +127,7 @@ function buildPreferencesMenu(homeModel: HomeModel) {
   const { onlyShowDocuments } = homeModel;
 
   return cssDotsMenu(
+    { "aria-label": t("Welcome menu") },
     cssDots(icon("Dots")),
     menu(
       () => [

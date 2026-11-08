@@ -1,5 +1,6 @@
 import { colors, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 
 import { input, styled } from "grainjs";
 import { cssMenuItem } from "popweasel";
@@ -102,7 +103,7 @@ export const cssMemberTypeProblem = styled("span", `
   }
 `);
 
-export const cssMemberBtn = styled("div", `
+export const cssMemberBtn = styled(unstyledButton, `
   width: 16px;
   height: 16px;
   cursor: pointer;

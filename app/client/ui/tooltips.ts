@@ -5,6 +5,7 @@
  * - to be shown briefly, as a transient notification next to some action element.
  */
 
+import { makeT } from "app/client/lib/localization";
 import { logTelemetryEvent } from "app/client/lib/telemetry";
 import { GristTooltips, Tooltip } from "app/client/ui/GristTooltips";
 import { prepareForTransition } from "app/client/ui/transitions";
@@ -12,9 +13,12 @@ import { colors, testId, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { makeLinks } from "app/client/ui2018/links";
 import { menuCssClass } from "app/client/ui2018/menus";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { tokens } from "app/common/ThemePrefs";
 
 import { BindableValue, dom, DomContents, DomElementArg, DomElementMethod, Observable, styled } from "grainjs";
+
+const t = makeT("tooltips");
 import merge from "lodash/merge";
 import Popper from "popper.js";
 import { cssMenu, cssMenuItem, defaultMenuOptions, IPopupOptions, setPopupToCreateDom } from "popweasel";
@@ -378,6 +382,7 @@ function buildClickableInfoTooltip(
 
             return cssInfoTooltipPopup(
               cssInfoTooltipPopupCloseButton(
+                { type: "button", "aria-label": t("Close") },
                 icon("CrossSmall"),
                 dom.on("click", () => ctl.close()),
                 testId("info-tooltip-close"),
@@ -630,7 +635,7 @@ const cssInfoTooltipPopupBody = styled("div", `
   padding: 0px 16px 16px 16px;
 `);
 
-const cssInfoTooltipPopupCloseButton = styled("div", `
+const cssInfoTooltipPopupCloseButton = styled(unstyledButton, `
   flex-shrink: 0;
   align-self: flex-end;
   cursor: pointer;

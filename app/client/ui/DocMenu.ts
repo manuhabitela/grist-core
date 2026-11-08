@@ -216,7 +216,7 @@ function buildAllDocsBlock(
         (ws.removedAt ?
           [
             css.docRowUpdatedAt(t("Deleted {{at}}", { at: getTimeFromNow(ws.removedAt) })),
-            css.docMenuTrigger(icon("Dots")),
+            css.docMenuDotsDecorative(icon("Dots")),
             menu(() => makeRemovedWsOptionsMenu(home, ws),
               { placement: "bottom-end", parentSelectorToMark: "." + css.docRowWrapper.className }),
           ] :
@@ -309,6 +309,25 @@ function buildWorkspaceDocBlock(
       }
       // TODO: Introduce a "SwitchSelector" pattern to avoid the need for N computeds (and N
       // recalculations) to select one of N items.
+      const docMenuTriggerArgs: DomContents = doc.removedAt || doc.disabledAt ?
+        [
+          // For deleted documents, attach the menu to the entire doc row, and include the
+          // "Dots" icon just to clarify that there are options.
+          menu(() => makeRemovedDocOptionsMenu(home, doc, workspace),
+            { placement: "bottom-end", parentSelectorToMark: "." + css.docRowWrapper.className }),
+          css.docMenuDotsDecorative(icon("Dots"), testId("doc-options")),
+        ] :
+        [
+          css.docMenuTrigger(
+            icon("Dots"),
+            menu(() => makeDocOptionsMenu(home, doc),
+              { placement: "bottom-start", parentSelectorToMark: "." + css.docRowWrapper.className }),
+            dom.on("click", (ev) => { ev.stopPropagation(); ev.preventDefault(); }),
+            { type: "button",
+              "aria-label": t("context menu - {{- documentName }}", { documentName: `"${doc.name}"` }) },
+            testId("doc-options"),
+          ),
+        ];
       return css.docRowWrapper(
         css.docRowLink(
           doc.removedAt ? null : urlState().setLinkUrl(docUrl(doc)),
@@ -319,23 +338,9 @@ function buildWorkspaceDocBlock(
             doc.public ? css.docPublicIcon("Public", testId("public")) : null,
           ),
           css.docRowUpdatedAt(getUpdatedAt(doc), testId("doc-time")),
-          (doc.removedAt || doc.disabledAt ?
-            [
-              // For deleted documents, attach the menu to the entire doc row, and include the
-              // "Dots" icon just to clarify that there are options.
-              menu(() => makeRemovedDocOptionsMenu(home, doc, workspace),
-                { placement: "bottom-end", parentSelectorToMark: "." + css.docRowWrapper.className }),
-              css.docMenuTrigger(icon("Dots"), testId("doc-options")),
-            ] :
-            css.docMenuTrigger(icon("Dots"),
-              menu(() => makeDocOptionsMenu(home, doc),
-                { placement: "bottom-start", parentSelectorToMark: "." + css.docRowWrapper.className }),
-              // Clicks on the menu trigger shouldn't follow the link that it's contained in.
-              dom.on("click", (ev) => { ev.stopPropagation(); ev.preventDefault(); }),
-              testId("doc-options"),
-            )
-          ),
+          ...(doc.removedAt || doc.disabledAt ? docMenuTriggerArgs : []),
         ),
+        ...(doc.removedAt || doc.disabledAt ? [] : docMenuTriggerArgs),
         testId("doc"),
       );
     });
