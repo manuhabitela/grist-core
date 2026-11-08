@@ -4,6 +4,7 @@ import { GristImport } from "app/client/lib/imports/grist/GristImportUI";
 import { cssImportModal, cssImportModalCloseButton } from "app/client/lib/imports/ImportCss";
 import { makeT } from "app/client/lib/localization";
 import { reportError } from "app/client/models/errors";
+import { altWithTooltip } from "app/client/ui/altText";
 import { testId } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { cssModalTitle, modal } from "app/client/ui2018/modals";
@@ -36,6 +37,8 @@ export async function startDocGristImport(gristDoc: GristDoc) {
     return [
       cssImportModal.cls(""),
       cssImportModalCloseButton(
+        { type: "button" },
+        altWithTooltip(t("Close")),
         icon("CrossBig"),
         dom.on("click", () => ctl.close()),
         testId("import-grist-close"),

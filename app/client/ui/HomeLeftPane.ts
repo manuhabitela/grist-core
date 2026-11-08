@@ -11,6 +11,7 @@ import { HomeModel } from "app/client/models/HomeModel";
 import { getWorkspaceInfo, workspaceName } from "app/client/models/WorkspaceInfo";
 import { addNewButton, cssAddNewButton } from "app/client/ui/AddNewButton";
 import { getAdminPanelName } from "app/client/ui/AdminPanelName";
+import { altWithTooltip } from "app/client/ui/altText";
 import { buildHomeGristImportMenuItem } from "app/client/ui/GristImportEntryPoints";
 import {
   createAccessibilityTools,
@@ -120,7 +121,7 @@ export function createHomeLeftPane(leftPanelOpen: Observable<boolean>, home: Hom
 
                 // Clicks on the menu trigger shouldn't follow the link that it's contained in.
                 dom.on("click", (ev) => { ev.stopPropagation(); ev.preventDefault(); }),
-                { "aria-label": t("context menu - {{- workspaceName }}", { workspaceName: `"${ws.name}"` }) },
+                altWithTooltip(t("context menu - {{- workspaceName }}", { workspaceName: `"${ws.name}"` })),
                 testId("dm-workspace-options"),
               ),
               testId("dm-workspace"),

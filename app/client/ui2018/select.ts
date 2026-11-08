@@ -37,10 +37,10 @@ export const cssSelectBtn = styled(unstyledButton, `
   user-select: none;
   -moz-user-select: none;
   outline: none;
+  outline-offset: -3px;
 
   &:focus {
-    outline: none;
-    box-shadow: 0px 0px 2px 2px #5E9ED6;
+    box-shadow: none;
   }
 
   &.disabled, &-disabled {

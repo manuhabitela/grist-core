@@ -4,11 +4,13 @@ import { getTimeFromNow } from "app/client/lib/timeUtils";
 import { DocPageModel } from "app/client/models/DocPageModel";
 import { reportError } from "app/client/models/errors";
 import { urlState } from "app/client/models/gristUrlState";
+import { altWithTooltip } from "app/client/ui/altText";
 import { buildConfigContainer } from "app/client/ui/RightPanelUtils";
 import { buttonSelect } from "app/client/ui2018/buttonSelect";
 import { testId, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { menu, menuItemLink } from "app/client/ui2018/menus";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { buildUrlId, parseUrlId } from "app/common/gristUrls";
 import { StringUnion } from "app/common/StringUnion";
 import { DocSnapshot } from "app/common/UserAPI";
@@ -117,6 +119,8 @@ export class DocHistory extends Disposable implements IDomComponent {
               ],
               { placement: "bottom-end", parentSelectorToMark: "." + cssSnapshotCard.className },
               ),
+              { type: "button" },
+              altWithTooltip(t("Snapshot menu")),
               testId("doc-history-snapshot-menu"),
             ),
             testId("doc-history-card"),
@@ -171,7 +175,7 @@ const cssDatePart = styled("span", `
   display: inline-block;
 `);
 
-const cssMenuDots = styled("div", `
+const cssMenuDots = styled(unstyledButton, `
   flex: none;
   margin: 0 4px 0 auto;
   height: 24px;

@@ -21,6 +21,7 @@ import { logTelemetryEvent } from "app/client/lib/telemetry";
 import { ViewRec, ViewSectionRec } from "app/client/models/DocModel";
 import { reportError } from "app/client/models/errors";
 import { urlState } from "app/client/models/gristUrlState";
+import { altWithTooltip } from "app/client/ui/altText";
 import { getAssistantViewOptions } from "app/client/ui/assistant/AssistantDocBlock";
 import { getTelemetryWidgetTypeFromVS } from "app/client/ui/widgetTypesMap";
 import { cssRadioCheckboxOptions, radioCheckboxOption } from "app/client/ui2018/checkbox";
@@ -28,6 +29,7 @@ import { isNarrowScreen, mediaSmall, testId, theme } from "app/client/ui2018/css
 import { icon } from "app/client/ui2018/icons";
 import { cssLink } from "app/client/ui2018/links";
 import { ISaveModalOptions, saveModal } from "app/client/ui2018/modals";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { BoxSpec } from "app/common/BoxSpec";
 import { DisposableWithEvents } from "app/common/DisposableWithEvents";
 
@@ -264,7 +266,10 @@ export class ViewLayout extends DisposableWithEvents implements IDomComponent {
         ),
       ),
       dom.maybe(use => !!use(this.maximized), () =>
-        cssCloseButton("CrossBig",
+        cssCloseButton(
+          { type: "button" },
+          altWithTooltip(t("Close")),
+          icon("CrossBig"),
           testId("close-button"),
           dom.on("click", () => close()),
         ),
@@ -568,7 +573,7 @@ const cssOverlay = styled("div", `
   }
 `);
 
-const cssCloseButton = styled(icon, `
+const cssCloseButton = styled(unstyledButton, `
   position: absolute;
   top: 16px;
   right: 16px;

@@ -4,10 +4,10 @@ import { FocusLayer } from "app/client/lib/FocusLayer";
 import { makeT } from "app/client/lib/localization";
 import { reportError } from "app/client/models/AppModel";
 import { DocModel, ViewSectionRec } from "app/client/models/DocModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { FilterConfig } from "app/client/ui/FilterConfig";
 import { cssLabel, cssSaveButtonsRow } from "app/client/ui/RightPanelStyles";
 import { SortConfig } from "app/client/ui/SortConfig";
-import { hoverTooltip } from "app/client/ui/tooltips";
 import { makeViewLayoutMenu } from "app/client/ui/ViewLayoutMenu";
 import { basicButton, primaryButton } from "app/client/ui2018/buttons";
 import { isNarrowScreenObs, theme, vars } from "app/client/ui2018/cssVars";
@@ -93,8 +93,8 @@ export function viewSectionMenu(
           // Fill background when there are some filters. Ignore sort options.
           cssFilterIconWrapper.cls("-any", anyFilter),
           cssFilterIcon("Filter"),
-          hoverTooltip(t("Sort and filter"), { key: "sortFilterBtnTooltip" }),
         ),
+        altWithTooltip(t("Sort and filter")),
       ),
       // [Save] [Revert] buttons when there are unsaved options.
       dom.maybe(displaySaveObs, () => cssSectionSaveButtonsWrapper(
@@ -102,14 +102,14 @@ export function viewSectionMenu(
           t("Save"),
           cssSaveTextButton.cls("-accent"),
           dom.on("click", save),
-          hoverTooltip("Save sort & filter settings", { key: "sortFilterBtnTooltip" }),
+          altWithTooltip(t("Save sort & filter settings")),
           testId("small-btn-save"),
           dom.hide(isReadonly),
         ),
         cssRevertIconButton(
           cssRevertIcon("Revert", cssRevertIcon.cls("-normal")),
           dom.on("click", revert),
-          hoverTooltip("Revert sort & filter settings", { key: "sortFilterBtnTooltip" }),
+          altWithTooltip(t("Revert sort & filter settings")),
           testId("small-btn-revert"),
         ),
       )),
@@ -160,6 +160,7 @@ export function viewSectionMenu(
       dom.hide(viewSection.isRecordCard),
     ),
     cssMenu(
+      altWithTooltip(use => t("context menu - {{title}} widget", { title: use(viewSection.titleDef) })),
       dom.hide(viewSection.hideViewMenu),
       testId("viewLayout"),
       cssDotsIconWrapper(cssIcon("Dots")),
@@ -173,7 +174,7 @@ export function viewSectionMenu(
         cssSmallIcon("Grow"),
         testId("expandSection"),
         dom.on("click", () =>  allCommands.expandSection.run()),
-        hoverTooltip("Expand section", { key: "expandSection" }),
+        altWithTooltip(t("Expand section")),
       ),
     ),
   ];
@@ -222,9 +223,10 @@ function makeCustomOptions(section: ViewSectionRec) {
       cssSpacer(),
       dom.maybe(use => Boolean(use(section.activeCustomOptions)), () =>
         cssMenuIconWrapper(
-          cssIcon("Remove", testId("btn-remove-options"), dom.on("click", () =>
-            section.activeCustomOptions(null),
-          )),
+          { type: "button" },
+          altWithTooltip(t("Remove custom options")),
+          cssIcon("Remove", testId("btn-remove-options")),
+          dom.on("click", () => section.activeCustomOptions(null)),
         ),
       ),
       testId("custom-options"),
@@ -261,7 +263,11 @@ const cssIconWrapper = styled("div", `
   user-select: none;
 `);
 
-const cssMenuIconWrapper = styled(cssIconWrapper, `
+const cssMenuIconWrapper = styled(unstyledButton, `
+  padding: 3px;
+  border-radius: 3px;
+  cursor: pointer;
+  user-select: none;
   display: flex;
   margin: -3px 0;
   width: 22px;
@@ -378,7 +384,7 @@ const cssSaveButton = styled(primaryButton, `
   margin-right: 8px;
 `);
 
-const cssSaveTextButton = styled("div", `
+const cssSaveTextButton = styled(unstyledButton, `
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -388,7 +394,7 @@ const cssSaveTextButton = styled("div", `
   border-right: ${theme.controlBorder};
 `);
 
-const cssRevertIconButton = styled("div", `
+const cssRevertIconButton = styled(unstyledButton, `
   display: flex;
   justify-content: center;
   align-items: center;

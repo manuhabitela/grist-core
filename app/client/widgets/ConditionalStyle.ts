@@ -4,6 +4,7 @@ import { makeT } from "app/client/lib/localization";
 import { ColumnRec } from "app/client/models/DocModel";
 import { KoSaveableObservable } from "app/client/models/modelUtil";
 import { RuleOwner } from "app/client/models/RuleOwner";
+import { altWithTooltip } from "app/client/ui/altText";
 import { buildHighlightedCode } from "app/client/ui/CodeHighlight";
 import { cssFieldFormula } from "app/client/ui/RightPanelStyles";
 import { withInfoTooltip } from "app/client/ui/tooltips";
@@ -12,6 +13,7 @@ import { COLOR_OPTION_NONE_TEXTS, ColorOption, colorSelect } from "app/client/ui
 import { theme, vars } from "app/client/ui2018/cssVars";
 import { cssDragger } from "app/client/ui2018/draggableList";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { setupEditorCleanup } from "app/client/widgets/FieldEditor";
 import { cssError, openFormulaEditor } from "app/client/widgets/FormulaEditor";
 import { isRaisedException, isValidRuleValue } from "app/common/gristTypes";
@@ -182,7 +184,9 @@ export class ConditionalStyle extends Disposable {
           ),
         ),
         cssRemoveButton(
-          "Remove",
+          { type: "button" },
+          altWithTooltip(t("Remove")),
+          icon("Remove"),
           testId(`remove-rule-${index}`),
           dom.on("click", () => this._ruleOwner.removeRule(index)),
         ),
@@ -263,10 +267,6 @@ export class ConditionalStyle extends Disposable {
   }
 }
 
-const cssIcon = styled(icon, `
-  flex: 0 0 auto;
-`);
-
 const cssLabel = styled("div", `
   text-transform: uppercase;
   margin: 16px 16px 12px 0px;
@@ -286,12 +286,15 @@ const cssRow = styled("div", `
   }
 `);
 
-const cssRemoveButton = styled(cssIcon, `
+const cssRemoveButton = styled(unstyledButton, `
   flex: none;
   margin: 6px;
   margin-right: 0px;
   transform: translateY(4px);
   cursor: pointer;
+  line-height: 0;
+  border-radius: 3px;
+  outline-offset: 1px;
   --icon-color: ${theme.controlSecondaryFg};
   &:hover {
     --icon-color: ${theme.controlFg};

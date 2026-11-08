@@ -1,5 +1,6 @@
 import { makeT } from "app/client/lib/localization";
 import { TreeItem, TreeModel, TreeNode, walkTree } from "app/client/models/TreeModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { mouseDrag, MouseDragHandler, MouseDragStart } from "app/client/ui/mouseDrag";
 import * as css from "app/client/ui/TreeViewComponentCss";
 
@@ -325,7 +326,7 @@ export class TreeViewComponent extends Disposable {
             dom.style("top", use => use(deltaY) + "px"),
           ),
           arrowElement = css.arrow(
-            dom.attr("aria-label", use => use(collapsed) ? t("Expand") : t("Collapse")),
+            altWithTooltip(use => use(collapsed) ? t("Expand") : t("Collapse")),
             css.dropdown("Dropdown"),
             testId("itemArrow"),
             dom.style("transform", use => use(collapsed) ? "rotate(-90deg)" : ""),

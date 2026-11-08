@@ -9,13 +9,13 @@ import { urlState } from "app/client/models/gristUrlState";
 import { workspaceName } from "app/client/models/WorkspaceInfo";
 import { AccountWidget } from "app/client/ui/AccountWidget";
 import { buildActiveUserList } from "app/client/ui/ActiveUserList";
+import { altWithTooltip } from "app/client/ui/altText";
 import { buildLanguageMenu } from "app/client/ui/LanguageMenu";
 import { buildNotifyMenuButton } from "app/client/ui/NotifyUI";
 import { manageTeamUsersApp } from "app/client/ui/OpenUserManager";
 import { UpgradeButton } from "app/client/ui/ProductUpgrades";
 import { buildShareMenuButton } from "app/client/ui/ShareMenu";
 import { SupportGristButton } from "app/client/ui/SupportGristButton";
-import { hoverTooltip } from "app/client/ui/tooltips";
 import { cssHoverCircle, cssTopBarBtn } from "app/client/ui/TopBarCss";
 import { docBreadcrumbs } from "app/client/ui2018/breadcrumbs";
 import { basicButton } from "app/client/ui2018/buttons";
@@ -133,19 +133,17 @@ export function createTopBarDoc(owner: MultiHolder, appModel: AppModel, pageMode
       topBarUndoBtn("Undo",
         dom.on("click", () => state.isUndoDisabled.get() || allCommands.undo.run()),
         dom.hide(use => use(isSearchOpen)),
-        hoverTooltip(t("Undo"), { key: "topBarBtnTooltip" }),
         cssHoverCircle.cls("-disabled", use => use(state.isUndoDisabled) || !use(isUndoRedoAvailable)),
         ariaDisabled(state.isUndoDisabled),
-        dom.attr("aria-label", t("Undo")),
+        altWithTooltip(t("Undo"), { instantTooltip: true }),
         testId("undo"),
       ),
       topBarUndoBtn("Redo",
         dom.on("click", () => state.isRedoDisabled.get() || allCommands.redo.run()),
         dom.hide(use => use(isSearchOpen)),
-        hoverTooltip(t("Redo"), { key: "topBarBtnTooltip" }),
         cssHoverCircle.cls("-disabled", use => use(state.isRedoDisabled) || !use(isUndoRedoAvailable)),
         ariaDisabled(state.isRedoDisabled),
-        dom.attr("aria-label", t("Redo")),
+        altWithTooltip(t("Redo"), { instantTooltip: true }),
         testId("redo"),
       ),
       cssSpacer(),
@@ -170,7 +168,7 @@ export function createTopBarDoc(owner: MultiHolder, appModel: AppModel, pageMode
 function buildShowDiscussionButton(gristDoc: GristDoc) {
   return cssHoverCircle({ style: `margin: 5px; position: relative;` },
     cssTopBarBtn("Chat", dom.cls("tour-share-icon")),
-    hoverTooltip("Comments", { key: "topBarBtnTooltip" }),
+    altWithTooltip(t("Comments"), { instantTooltip: true }),
     testId("open-discussion"),
     dom.on("click", () => {
       gristDoc.showTool("discussion");

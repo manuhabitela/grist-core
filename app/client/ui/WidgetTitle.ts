@@ -2,6 +2,7 @@ import * as commands from "app/client/components/commands";
 import { FocusLayer } from "app/client/lib/FocusLayer";
 import { makeT } from "app/client/lib/localization";
 import { ViewSectionRec } from "app/client/models/entities/ViewSectionRec";
+import { altWithTooltip } from "app/client/ui/altText";
 import { autoGrow } from "app/client/ui/forms";
 import { cssInput, cssLabel, cssRenamePopup, cssTextArea } from "app/client/ui/RenamePopupStyles";
 import { descriptionInfoTooltip } from "app/client/ui/tooltips";
@@ -9,6 +10,7 @@ import { basicButton, cssButton, primaryButton } from "app/client/ui2018/buttons
 import { theme } from "app/client/ui2018/cssVars";
 import { menuCssClass } from "app/client/ui2018/menus";
 import { ModalControl } from "app/client/ui2018/modals";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 
 import { Computed, dom, DomElementArg, makeTestId, Observable, styled } from "grainjs";
 import { IOpenController, IPopupOptions, PopupControl, setPopupToCreateDom } from "popweasel";
@@ -72,6 +74,7 @@ function buildRenamableTitle(
     cssTitle(
       testId("text"),
       dom.text(title),
+      dom.attr("aria-label", use => t("{{widgetTitle}} - Edit widget title", { widgetTitle: use(title) })),
       dom.on("click", () => {
         // The popup doesn't close if `openOnClick` is false and the title is
         // clicked. Make sure that it does.
@@ -343,9 +346,10 @@ const cssTitleContainer = styled("div", `
   }
 `);
 
-const cssTitle = styled("div", `
+const cssTitle = styled(unstyledButton, `
   overflow: hidden;
   border-radius: 3px;
+  outline-offset: -2px;
   margin: -4px;
   padding: 4px;
   text-overflow: ellipsis;

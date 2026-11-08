@@ -24,9 +24,11 @@ export function rowHeightConfigColumn(viewSection: ViewSectionRec): DomContents 
       dom("b", dom.text(use => String(use(optionsObs).rowHeight || "auto")),
         testId("row-height-label"),
       ),
+      { id: "max-row-height" },
     ),
     textButton(t("Change"), dom.on("click", allCommands.viewTabOpen.run),
       testId("row-height-change-link"),
+      { "aria-describedby": "max-row-height" },
     ),
   ]);
 }

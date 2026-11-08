@@ -7,6 +7,7 @@ import { AppModel, reportError } from "app/client/models/AppModel";
 import { DocInfo, DocPageModel } from "app/client/models/DocPageModel";
 import { reportWarning } from "app/client/models/errors";
 import { docUrl, urlState } from "app/client/models/gristUrlState";
+import { altWithTooltip } from "app/client/ui/altText";
 import { cssChangeDot } from "app/client/ui/LeftPanelCommon";
 import {
   downloadAttachmentsModal,
@@ -15,7 +16,7 @@ import {
   replaceTrunkWithFork,
 } from "app/client/ui/MakeCopyMenu";
 import { sendToDrive } from "app/client/ui/sendToDrive";
-import { hoverTooltip, withInfoTooltip } from "app/client/ui/tooltips";
+import { withInfoTooltip } from "app/client/ui/tooltips";
 import { cssHoverCircle, cssTopBarBtn } from "app/client/ui/TopBarCss";
 import { primaryButton } from "app/client/ui2018/buttons";
 import { mediaXSmall, testId, theme } from "app/client/ui2018/cssVars";
@@ -138,7 +139,7 @@ function shareButton(buttonText: DomContents | null, menuCreateFunc: MenuCreateF
     return cssHoverCircle({ style: `margin: 5px;` },
       cssTopBarBtn("Share", dom.cls("tour-share-icon")),
       menu(menuCreateFunc, { placement: "bottom-end" }),
-      hoverTooltip(t("Share"), { key: "topBarBtnTooltip" }),
+      altWithTooltip(t("Share"), { instantTooltip: true }),
       testId("tb-share"),
     );
   } else if (options.buttonAction) {
@@ -151,7 +152,7 @@ function shareButton(buttonText: DomContents | null, menuCreateFunc: MenuCreateF
       cssShareCircle(
         cssShareIcon("Share"),
         menu(menuCreateFunc, { placement: "bottom-end" }),
-        hoverTooltip(t("Share"), { key: "topBarBtnTooltip" }),
+        altWithTooltip(t("Share"), { instantTooltip: true }),
         testId("tb-share"),
       ),
     );
@@ -162,9 +163,9 @@ function shareButton(buttonText: DomContents | null, menuCreateFunc: MenuCreateF
       cssShareAction(buttonText),
       cssShareCircle(
         cssShareIcon("Share"),
+        altWithTooltip(t("Share"), { instantTooltip: true }),
       ),
       menu(menuCreateFunc, { placement: "bottom-end" }),
-      hoverTooltip(t("Share"), { key: "topBarBtnTooltip" }),
       testId("tb-share"),
     );
   }

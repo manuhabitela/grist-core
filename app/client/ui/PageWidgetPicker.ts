@@ -10,6 +10,7 @@ import { focusAdjacentFocusable, kbFocusHighlighterClass, trapTabKey } from "app
 import { makeT } from "app/client/lib/localization";
 import { reportError } from "app/client/models/AppModel";
 import { ColumnRec, TableRec, ViewSectionRec } from "app/client/models/DocModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { linkId, NoLink } from "app/client/ui/selectBy";
 import { overflowTooltip, withInfoTooltip } from "app/client/ui/tooltips";
 import { getWidgetTypes } from "app/client/ui/widgetTypesMap";
@@ -474,7 +475,7 @@ export class PageWidgetSelect extends Disposable {
               cssPivot(
                 dom.attr("data-kb-zone", "pivot"),
                 dom.data("pivot-tid", String(table.id())),
-                dom.attr("aria-label", use =>
+                altWithTooltip(use =>
                   t("{{table}} grouped by… (press to select fields)", {
                     table: use(table.tableNameDef),
                   }),

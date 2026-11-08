@@ -4,6 +4,7 @@ import { makeT } from "app/client/lib/localization";
 import { reportError } from "app/client/models/errors";
 import { urlState } from "app/client/models/gristUrlState";
 import { HomeModel } from "app/client/models/HomeModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { testId } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { cssModalTitle, modal } from "app/client/ui2018/modals";
@@ -41,6 +42,8 @@ export async function startHomeGristImport(home: HomeModel) {
     return [
       cssImportModal.cls(""),
       cssImportModalCloseButton(
+        { type: "button" },
+        altWithTooltip(t("Close")),
         icon("CrossBig"),
         dom.on("click", () => ctl.close()),
         testId("import-grist-close"),

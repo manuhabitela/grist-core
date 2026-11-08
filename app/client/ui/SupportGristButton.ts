@@ -1,13 +1,14 @@
 import { makeT } from "app/client/lib/localization";
-import { tokenFieldStyles } from "app/client/lib/TokenField";
 import { AppModel } from "app/client/models/AppModel";
 import { urlState } from "app/client/models/gristUrlState";
 import { TelemetryModel, TelemetryModelImpl } from "app/client/models/TelemetryModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { basicButton, basicButtonLink, bigPrimaryButton } from "app/client/ui2018/buttons";
 import { colors, testId, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { cssLink } from "app/client/ui2018/links";
 import { modal } from "app/client/ui2018/modals";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { commonUrls, isFeatureEnabled } from "app/common/gristUrls";
 import { getGristConfig } from "app/common/urlUtils";
 
@@ -57,6 +58,8 @@ export class SupportGristButton extends Disposable {
           ),
 
           cssContributeButtonCloseButton(
+            { type: "button" },
+            altWithTooltip(t("Dismiss")),
             icon("CrossSmall"),
             dom.on("click", (ev) => {
               ev.stopPropagation();
@@ -78,6 +81,8 @@ export class SupportGristButton extends Disposable {
       return [
         cssModal.cls(""),
         cssCloseButton(
+          { type: "button" },
+          altWithTooltip(t("Close")),
           icon("CrossBig"),
           dom.on("click", () => ctl.close()),
           testId("support-nudge-close"),
@@ -172,7 +177,7 @@ const cssCenteredFlex = styled("div", `
 
 const cssContributeButton = styled("div", ``);
 
-const cssContributeButtonCloseButton = styled(tokenFieldStyles.cssDeleteButton, `
+const cssContributeButtonCloseButton = styled(unstyledButton, `
   margin-left: 4px;
   vertical-align: bottom;
   line-height: 1;
@@ -230,7 +235,7 @@ const cssFullWidthButton = styled(cssPrimaryButton, `
   width: 100%;
 `);
 
-const cssCloseButton = styled("div", `
+const cssCloseButton = styled(unstyledButton, `
   position: absolute;
   top: 8px;
   right: 8px;

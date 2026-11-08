@@ -6,6 +6,7 @@ import * as kf from "app/client/lib/koForm";
 import { makeT } from "app/client/lib/localization";
 import { localStorageBoolObs } from "app/client/lib/localStorageObs";
 import { ColumnRec, ViewSectionRec } from "app/client/models/DocModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import {
   cssDeveloperLink,
   cssWidgetMetadata,
@@ -268,7 +269,9 @@ class ColumnListPicker extends Disposable {
         testId("ref-select-label"),
       ),
       cssRemoveIcon(
-        "Remove",
+        { type: "button" },
+        altWithTooltip(t("Remove")),
+        icon("Remove"),
         dom.on("click", () => this._remove(field)),
         testId("ref-select-remove"),
       ),
@@ -738,11 +741,12 @@ const cssAddIcon = styled(icon, `
   margin-right: 4px;
 `);
 
-const cssRemoveIcon = styled(icon, `
+const cssRemoveIcon = styled(unstyledButton, `
   display: none;
   cursor: pointer;
   flex: none;
   margin-left: 8px;
+  line-height: 0;
   .${cssFieldEntry.className}:hover & {
     display: block;
   }

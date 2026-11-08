@@ -6,6 +6,7 @@ import { getTimeFromNow } from "app/client/lib/timeUtils";
 import { docUrl, urlState } from "app/client/models/gristUrlState";
 import { HomeModel, ViewSettings } from "app/client/models/HomeModel";
 import { workspaceName } from "app/client/models/WorkspaceInfo";
+import { altWithTooltip } from "app/client/ui/altText";
 import { contextMenu } from "app/client/ui/contextMenu";
 import { buildDocIcon, stripIconFromName } from "app/client/ui/DocIcon";
 import { STICKY_HEADER_HEIGHT_PX } from "app/client/ui/DocMenuCss";
@@ -230,7 +231,7 @@ export class DocList extends Disposable {
                         parentSelectorToMark: "." + cssDocRow.className,
                       }),
                       dom.on("click", ev => stopEvent(ev)),
-                      { "aria-label": t("context menu - {{- documentName }}", { documentName: `"${doc.name}"` }) },
+                      altWithTooltip(t("context menu - {{- documentName }}", { documentName: `"${doc.name}"` })),
                       testId("doc-options"),
                     ),
                     contextMenu(() => makeDocOptionsMenu(this._home, doc), {

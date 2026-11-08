@@ -3,6 +3,7 @@ import { fixOutlineOverflow } from "app/client/components/KeyboardFocusHighlight
 import { kbJumperAnchor } from "app/client/components/RegionFocusSwitcher";
 import { makeT } from "app/client/lib/localization";
 import { ColumnRec, ViewSectionRec } from "app/client/models/DocModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { basicButton, cssButton, primaryButton } from "app/client/ui2018/buttons";
 import { squareCheckbox } from "app/client/ui2018/checkbox";
 import { theme, vars } from "app/client/ui2018/cssVars";
@@ -172,7 +173,7 @@ export class MappedFieldsConfig extends Disposable {
           dom.on("click", () => {
             allCommands.showColumns.run([column.colId.peek()]);
           }),
-          dom.attr("aria-label", use => t("Unmap {{label}}", { label: use(column.label) })),
+          altWithTooltip(use => t("Unmap {{label}}", { label: use(column.label) })),
         ),
         cssSquareCheckbox(
           props.selected,
@@ -194,7 +195,7 @@ export class MappedFieldsConfig extends Disposable {
         cssHideIconButton(
           icon("EyeHide"),
           testId("hide"),
-          dom.attr("aria-label", use => t("Hide {{label}}", { label: use(column.label) })),
+          altWithTooltip(use => t("Hide {{label}}", { label: use(column.label) })),
           dom.on("click", () => {
             allCommands.hideFields.run([column.colId.peek()]);
           }),
@@ -262,6 +263,8 @@ const cssHideIconButton = styled(unstyledButton, `
   line-height: 1;
   flex: none;
   margin-right: 8px;
+  cursor: pointer;
+  border-radius: 2px;
   &:not(:focus, :focus-within, .${cssFieldEntry.className}:hover &) {
     ${visuallyHiddenStyles}
   }

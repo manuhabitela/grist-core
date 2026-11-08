@@ -13,6 +13,7 @@ import { AppModel } from "app/client/models/AppModel";
 import { ChatHistory, ChatMessage, ChatMessageError } from "app/client/models/ChatHistory";
 import { constructUrl, urlState } from "app/client/models/gristUrlState";
 import { showEnterpriseToggle } from "app/client/ui/ActivationPage";
+import { altWithTooltip } from "app/client/ui/altText";
 import { buildCodeHighlighter } from "app/client/ui/CodeHighlight";
 import { autoGrow } from "app/client/ui/forms";
 import { sanitizeHTML } from "app/client/ui/sanitizeHTML";
@@ -23,6 +24,7 @@ import { icon } from "app/client/ui2018/icons";
 import { cssLink, gristIconLink } from "app/client/ui2018/links";
 import { loadingDots } from "app/client/ui2018/loaders";
 import { gristThemeObs } from "app/client/ui2018/theme";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { ApiError } from "app/common/ApiError";
 import { AssistanceResponse } from "app/common/Assistance";
 import { AsyncCreate } from "app/common/AsyncCreate";
@@ -261,6 +263,8 @@ export class Assistant extends Disposable {
         this._input,
         cssInputButtonsRow(
           cssSendButton(
+            { type: "button" },
+            altWithTooltip(t("Send message")),
             icon("FieldAny"),
             dom.on("click", this._ask.bind(this)),
             dom.show(use => !use(this._conversation.thinking)),
@@ -271,6 +275,8 @@ export class Assistant extends Disposable {
             testId("send"),
           ),
           cssCancelButton(
+            { type: "button" },
+            altWithTooltip(t("Cancel")),
             cssCancelIcon("Stop"),
             dom.on("click", this._cancel.bind(this)),
             dom.show(this._conversation.thinking),
@@ -819,7 +825,7 @@ const cssTypography = styled("div", `
   color: ${theme.inputFg};
 `);
 
-const cssButton = styled("div", `
+const cssButton = styled(unstyledButton, `
   border-radius: 4px;
   display: flex;
   align-self: flex-end;

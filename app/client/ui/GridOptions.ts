@@ -89,5 +89,7 @@ const cssModeLink = styled(unstyledButton, `
   margin-left: 4px;
   color: ${theme.controlFg};
   --icon-color: ${theme.controlFg};
+  border-radius: 2px;
+  outline-offset: 1px;
   cursor: pointer;
 `);

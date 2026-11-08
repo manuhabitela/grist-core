@@ -8,6 +8,7 @@ import { makeT } from "app/client/lib/localization";
 import { addToSort, updatePositions } from "app/client/lib/sortUtil";
 import { ViewSectionRec } from "app/client/models/DocModel";
 import { ObjObservable } from "app/client/models/modelUtil";
+import { altWithTooltip } from "app/client/ui/altText";
 import { cssIcon, cssRow, cssSortFilterColumn } from "app/client/ui/RightPanelStyles";
 import { dropdownWithSearch } from "app/client/ui/searchDropdown";
 import { textButton } from "app/client/ui2018/buttons";
@@ -208,7 +209,10 @@ export class SortConfig extends Disposable {
         testId("column"),
       ),
       cssMenu(
-        { "aria-label": t("Sort options - {{- columnName }} column", { columnName: column!.label }) },
+        altWithTooltip(
+          t("Sort options - {{- columnName }} column", { columnName: column!.label }),
+          { tooltipText: t("Sort options") },
+        ),
         cssBigIconWrapper(
           cssIcon("Dots", dom.cls(cssBgAccent.className, hasSpecs)),
           testId("options-icon"),
@@ -224,7 +228,10 @@ export class SortConfig extends Disposable {
         ], menuOptions),
       ),
       cssSortIconBtn(
-        { "aria-label": t("Remove sort setting - {{- columnName }} column", { columnName: column!.label }) },
+        altWithTooltip(
+          t("Remove sort setting - {{- columnName }} column", { columnName: column!.label }),
+          { tooltipText: t("Remove") },
+        ),
         cssIcon("Remove"),
         dom.on("click", () => {
           const specs = sortSpec.peek();
@@ -326,6 +333,8 @@ const cssSortIconBtn = styled(unstyledButton, `
   flex: none;
   margin: 0 6px;
   cursor: pointer;
+  border-radius: 3px;
+  outline-offset: 2px;
   & .${cssIcon.className} {
     background-color: ${theme.controlSecondaryFg};
   }

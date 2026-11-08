@@ -2,6 +2,7 @@ import * as css from "app/client/components/FormRendererCss";
 import { bindMarkdown } from "app/client/components/Forms/styles";
 import { getBrowserGlobals } from "app/client/lib/browserGlobals";
 import { makeT } from "app/client/lib/localization";
+import { altWithTooltip } from "app/client/ui/altText";
 import { FormField, FormOptionsSortOrder, getFormOptionsLimit } from "app/client/ui/FormAPI";
 import { dropdownWithSearch } from "app/client/ui/searchDropdown";
 import { isXSmallScreenObs, theme, vars } from "app/client/ui2018/cssVars";
@@ -582,7 +583,7 @@ class ChoiceRenderer extends BaseFieldRenderer  {
           }),
           css.resetSelectButton(
             icon("CrossSmall"),
-            dom.attr("aria-label", t("Clear selection for: {{-inputLabel}}", { inputLabel: this.field.question })),
+            altWithTooltip(t("Clear selection for: {{-inputLabel}}", { inputLabel: this.field.question })),
             dom.hide(use => !use(this.value)),
             dom.on("click", (ev) => {
               this.value.set("");
@@ -946,7 +947,7 @@ class RefRenderer extends BaseFieldRenderer {
           }),
           css.resetSelectButton(
             icon("CrossSmall"),
-            dom.attr("aria-label", t("Clear selection for: {{-inputLabel}}", { inputLabel: this.field.question })),
+            altWithTooltip(t("Clear selection for: {{-inputLabel}}", { inputLabel: this.field.question })),
             dom.hide(use => !use(this.value)),
             dom.on("click", (ev) => {
               this.value.set("");

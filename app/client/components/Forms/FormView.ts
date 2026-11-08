@@ -17,6 +17,7 @@ import { InsertColOptions } from "app/client/models/entities/ViewSectionRec";
 import { reportError } from "app/client/models/errors";
 import { docUrl, urlState } from "app/client/models/gristUrlState";
 import { jsonObservable, SaveableObjObservable } from "app/client/models/modelUtil";
+import { altWithTooltip } from "app/client/ui/altText";
 import { hoverTooltip, showTransientTooltip } from "app/client/ui/tooltips";
 import { cssButton } from "app/client/ui2018/buttons";
 import { icon } from "app/client/ui2018/icons";
@@ -785,6 +786,8 @@ your form via that link will see an error.",
       dom.cls(menuCssClass),
       style.cssShareMenuHeader(
         style.cssShareMenuCloseButton(
+          { type: "button" },
+          altWithTooltip(t("Close")),
           icon("CrossBig"),
           dom.on("click", () => ctl.close()),
         ),
@@ -899,6 +902,8 @@ with access to the form. If you want to make changes in draft, unpublish the for
           ),
         ),
         style.cssSwitcherMessageDismissButton(
+          { type: "button" },
+          altWithTooltip(t("Dismiss")),
           icon("CrossSmall"),
           dom.on("click", () => {
             this._showPublishedMessage.set(false);

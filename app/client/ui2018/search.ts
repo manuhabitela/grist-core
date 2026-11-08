@@ -8,7 +8,7 @@ import { modKeyProp } from "app/client/lib/browserInfo";
 import { makeT } from "app/client/lib/localization";
 import { reportError } from "app/client/models/AppModel";
 import { SearchModel } from "app/client/models/SearchModel";
-import { hoverTooltip } from "app/client/ui/tooltips";
+import { altWithTooltip } from "app/client/ui/altText";
 import { cssHoverCircle, cssTopBarBtn } from "app/client/ui/TopBarCss";
 import { labeledSquareCheckbox } from "app/client/ui2018/checkbox";
 import { mediaSmall, theme, vars } from "app/client/ui2018/cssVars";
@@ -220,10 +220,11 @@ export function searchBar(model: SearchModel, testId: TestId = noTestId, regionF
   }, 100);
 
   const buttonElem = cssHoverCircle(
+    altWithTooltip(t("Search"), { instantTooltip: true }),
+    dom.attr("aria-expanded", use => use(model.isOpen) ? "true" : "false"),
     dom.on("click", () => toggleMenu(true)),
     cssTopBarBtn("Search",
       testId("icon"),
-      hoverTooltip(t("Search"), { key: "topBarBtnTooltip" }),
     ),
   );
 
@@ -329,12 +330,15 @@ export function searchBar(model: SearchModel, testId: TestId = noTestId, regionF
               focusedSearchElement = event.target as HTMLElement;
             }),
             dom.on("click", () => model.findNext()),
-            hoverTooltip(
-              [
-                t("Find Next "),
-                cssShortcut(`(${["Enter", allCommands.findNext.humanKeys].join(", ")})`),
-              ],
-              { key: "searchArrowBtnTooltip" },
+            altWithTooltip(
+              `${t("Find Next ")} (${["Enter", allCommands.findNext.humanKeys].join(", ")})`,
+              {
+                forceAriaHiddenTooltip: true,
+                tooltipText: [
+                  t("Find Next "),
+                  cssShortcut(`(${["Enter", allCommands.findNext.humanKeys].join(", ")})`),
+                ],
+              },
             ),
           ),
           cssArrowBtn(
@@ -346,19 +350,22 @@ export function searchBar(model: SearchModel, testId: TestId = noTestId, regionF
               focusedSearchElement = event.target as HTMLElement;
             }),
             dom.on("click", () => model.findPrev()),
-            hoverTooltip(
-              [
-                t("Find Previous "),
-                cssShortcut(`(${["Shift + Enter", allCommands.findPrev.humanKeys].join(", ")})`),
-              ],
-              { key: "searchArrowBtnTooltip" },
+            altWithTooltip(
+              `${t("Find Previous ")} (${["Shift + Enter", allCommands.findPrev.humanKeys].join(", ")})`,
+              {
+                forceAriaHiddenTooltip: true,
+                tooltipText: [
+                  t("Find Previous "),
+                  cssShortcut(`(${["Shift + Enter", allCommands.findPrev.humanKeys].join(", ")})`),
+                ],
+              },
             ),
           ),
         ];
       }),
       cssCloseBtnContainer(
         testId("close"),
-        { "aria-label": t("Close search bar") },
+        altWithTooltip(t("Close search bar")),
         dom.on("click", () => toggleMenu(false)),
         cssCloseBtn("CrossSmall"),
       ),

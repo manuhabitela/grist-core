@@ -1,6 +1,7 @@
 import { makeT } from "app/client/lib/localization";
 import { logTelemetryEvent } from "app/client/lib/telemetry";
 import { getMainOrgUrl } from "app/client/models/gristUrlState";
+import { altWithTooltip } from "app/client/ui/altText";
 import { cssLinkText, cssPageButton, cssPageEntry, cssPageIcon } from "app/client/ui/LeftPanelCommon";
 import { YouTubePlayer } from "app/client/ui/YouTubePlayer";
 import { theme } from "app/client/ui2018/cssVars";
@@ -45,6 +46,8 @@ export function openVideoTour(refElement: HTMLElement) {
       return [
         cssModal.cls(""),
         cssModalCloseButton(
+          { type: "button" },
+          altWithTooltip(t("Close")),
           cssCloseIcon("CrossBig"),
           dom.on("click", () => ctl.close()),
           testId("close"),

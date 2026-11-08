@@ -146,6 +146,7 @@ const cssNumInput = styled("input", `
   color: ${theme.inputFg};
   background-color: transparent;
   border: none;
+  border-radius: 3px;
   outline: none;
   -moz-appearance: textfield;
 

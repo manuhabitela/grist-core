@@ -1,6 +1,7 @@
 import { isDesktop } from "app/client/lib/browserInfo";
 import { ariaDisabled } from "app/client/lib/domUtils";
 import { makeT } from "app/client/lib/localization";
+import { altWithTooltip } from "app/client/ui/altText";
 import { cssEditorInput } from "app/client/ui/HomeLeftPane";
 import { hoverTooltip, overflowTooltip } from "app/client/ui/tooltips";
 import { itemHeader, itemHeaderWrapper, treeViewContainer } from "app/client/ui/TreeViewComponentCss";
@@ -157,6 +158,7 @@ export function buildPageDom(name: Observable<string>, options: PageOptions, ...
               href,
               cssPageInitial(
                 testId("initial"),
+                { "aria-hidden": "true" },
                 dom.text(use => use(splitName).initial),
                 cssPageInitial.cls("-emoji", use => use(splitName).hasEmoji),
               ),
@@ -168,7 +170,10 @@ export function buildPageDom(name: Observable<string>, options: PageOptions, ...
               ),
             ),
             cssPageMenuTrigger(
-              dom.attr("aria-label", use => t("context menu - {{- pageName }}", { pageName: use(name) })),
+              altWithTooltip(
+                use => t("context menu - {{- pageName }}", { pageName: use(name) }),
+                { tooltipText: t("Context menu") },
+              ),
               cssPageMenuIcon("Dots"),
               menu(pageMenu, { placement: "bottom-start", parentSelectorToMark: "." + itemHeader.className }),
               dom.on("click", (ev) => { ev.stopPropagation(); ev.preventDefault(); }),

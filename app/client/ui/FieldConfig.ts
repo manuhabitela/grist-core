@@ -2,6 +2,7 @@ import { GristDoc } from "app/client/components/GristDoc";
 import { ariaDisabled } from "app/client/lib/domUtils";
 import { makeT } from "app/client/lib/localization";
 import { BEHAVIOR, ColumnRec } from "app/client/models/entities/ColumnRec";
+import { altWithTooltip } from "app/client/ui/altText";
 import { buildHighlightedCode, cssCodeBlock } from "app/client/ui/CodeHighlight";
 import { cssBlockedCursor, cssFieldFormula, cssLabel, cssRow } from "app/client/ui/RightPanelStyles";
 import { withInfoTooltip } from "app/client/ui/tooltips";
@@ -60,7 +61,7 @@ export function buildNameConfig(
   };
 
   return [
-    cssLabel(t("COLUMN LABEL AND ID")),
+    cssLabel(t("COLUMN LABEL AND ID"), { id: "column-label-and-id" }),
     cssRow(
       dom.cls(cssBlockedCursor.className, origColumn.disableModify),
       cssColLabelBlock(
@@ -70,6 +71,8 @@ export function buildNameConfig(
             .finally(() => editedLabel.set("")),
           dom.on("input", (ev, elem) => { if (!untieColId.peek()) { editedLabel.set(elem.value); } }),
           dom.boolAttr("readonly", use => use(origColumn.disableModify) || use(disabled)),
+          dom.attr("aria-label", t("Column label")),
+          dom.attr("aria-describedby", "column-label-and-id"),
           testId("field-label"),
           setEditor(0),
         ),
@@ -79,6 +82,8 @@ export function buildNameConfig(
             use => use(disabled) || use(origColumn.disableModify) || !use(origColumn.untieColIdFromLabel)),
           cssCodeBlock.cls(""),
           { style: "margin-top: 8px" },
+          dom.attr("aria-label", t("Column ID")),
+          dom.attr("aria-describedby", "column-label-and-id"),
           testId("field-col-id"),
           setEditor(1),
         ),
@@ -90,6 +95,8 @@ export function buildNameConfig(
             isUntied ? icon("FieldReferenceDisabled") : icon("FieldReference"),
           ),
           cssToggleButton.cls("-selected", use => !use(untieColId)),
+          dom.attr("aria-pressed", use => !use(untieColId) ? "true" : "false"),
+          altWithTooltip(t("Keep label and ID in sync")),
           dom.on("click", toggleUntieColId),
           cssToggleButton.cls("-disabled", use => use(origColumn.disableModify) || use(disabled)),
           testId("field-derive-id"),
@@ -225,7 +232,7 @@ export function buildFormulaConfig(
   );
 
   // Menu helper that will show normal menu with some default options
-  const menu = (label: DomContents, options: DomElementArg[]) =>
+  const menu = (label: DomContents, options: DomElementArg[], ...args: DomElementArg[]) =>
     cssRow(
       selectMenu(
         label,
@@ -239,7 +246,8 @@ export function buildFormulaConfig(
         // will not dispose the formula editor when menu is clicked.
         el => el.removeAttribute("tabindex"),
         dom.cls(cssBlockedCursor.className, disableModify),
-        dom.cls("disabled", disableModify)),
+        dom.cls("disabled", disableModify),
+        ...args),
     );
 
   // Behavior label
@@ -368,16 +376,17 @@ export function buildFormulaConfig(
   ];
 
   return dom.maybe(behavior, (type: BEHAVIOR) => [
-    cssLabel(t("COLUMN BEHAVIOR")),
+    cssLabel(t("COLUMN BEHAVIOR"), { id: "column-behavior-label" }),
     ...(type === "empty" ? [
       menu(behaviorLabel(), [
         convertToDataOption(),
-      ]),
+      ], { "aria-describedby": "column-behavior-label" }),
       cssEmptySeparator(),
       cssRow(textButton(
         t("Set formula"),
         dom.on("click", setFormula),
         dom.prop("disabled", disableOtherActions),
+        { "aria-describedby": "column-behavior-label" },
         testId("field-set-formula"),
       )),
       cssRow(withInfoTooltip(
@@ -385,6 +394,7 @@ export function buildFormulaConfig(
           t("Set trigger formula"),
           dom.on("click", setTrigger),
           dom.prop("disabled", use => use(isSummaryTable) || use(disableOtherActions)),
+          { "aria-describedby": "column-behavior-label" },
           testId("field-set-trigger"),
         ),
         "setTriggerFormula",
@@ -393,13 +403,14 @@ export function buildFormulaConfig(
         t("Make into data column"),
         dom.on("click", convertToData),
         dom.prop("disabled", use => use(isSummaryTable) || use(disableOtherActions)),
+        { "aria-describedby": "column-behavior-label" },
         testId("field-set-data"),
       )),
     ] : type === "formula" ? [
       menu(behaviorLabel(), [
         convertToDataOption(),
         clearAndResetOption(),
-      ]),
+      ], { "aria-describedby": "column-behavior-label" }),
       formulaBuilder(onSaveConvertToFormula),
       cssEmptySeparator(),
       cssRow(textButton(
@@ -407,6 +418,7 @@ export function buildFormulaConfig(
         dom.on("click", convertFormulaToTrigger),
         dom.hide(maybeFormula),
         dom.prop("disabled", use => use(isSummaryTable) || use(disableOtherActions)),
+        { "aria-describedby": "column-behavior-label" },
         testId("field-set-trigger"),
       )),
     ] : /* type == 'data' */ [
@@ -420,10 +432,11 @@ export function buildFormulaConfig(
           ),
           clearAndResetOption(),
         ],
+        { "aria-describedby": "column-behavior-label" },
       ),
       // If data column is or wants to be a trigger formula:
       dom.maybe(use => use(maybeTrigger) || use(origColumn.hasTriggerFormula), () => [
-        cssLabel(t("TRIGGER FORMULA")),
+        cssLabel(t("TRIGGER FORMULA"), { id: "trigger-formula-label" }),
         formulaBuilder(onSaveConvertToTrigger, false),
         dom.create(buildFormulaTriggers, origColumn, {
           disabled: disableOtherActions,

@@ -11,6 +11,7 @@ import { ColumnRec, ViewFieldRec, ViewSectionRec } from "app/client/models/DocMo
 import { ChartOptions, ViewSectionOptions } from "app/client/models/entities/ViewSectionRec";
 import { reportError } from "app/client/models/errors";
 import { KoSaveableObservable, ObjObservable, setSaveValue } from "app/client/models/modelUtil";
+import { altWithTooltip } from "app/client/ui/altText";
 import { IPageWidget, toPageWidget } from "app/client/ui/PageWidgetPicker";
 import { cssGroupLabel, cssRow, cssSeparator } from "app/client/ui/RightPanelStyles";
 import { cssFieldEntry, cssFieldLabel, IField, VisibleFieldsConfig } from "app/client/ui/VisibleFieldsConfig";
@@ -849,7 +850,9 @@ export class ChartConfig extends GrainJSDisposable {
     return cssFieldEntry(
       cssFieldLabel(dom.text(col.label)),
       cssRemoveIcon(
-        "Remove",
+        { type: "button" },
+        altWithTooltip(t("Remove")),
+        icon("Remove"),
         dom.on("click", () => this._configFieldsHelper.removeField(col)),
         testId("ref-select-remove"),
       ),
@@ -1331,11 +1334,12 @@ const cssAddYAxis = styled(unstyledButton, `
   }
 `);
 
-const cssRemoveIcon = styled(icon, `
+const cssRemoveIcon = styled(unstyledButton, `
   display: none;
   cursor: pointer;
   flex: none;
   margin-left: 8px;
+  line-height: 0;
   .${cssFieldEntry.className}:hover & {
     display: block;
   }

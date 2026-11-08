@@ -1,6 +1,7 @@
 import { lockFocusUntilRemoved } from "app/client/lib/focusUtils";
 import { makeT } from "app/client/lib/localization";
 import { UserPresenceModel } from "app/client/models/UserPresenceModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { hoverTooltip } from "app/client/ui/tooltips";
 import { createUserImage, cssUserImage } from "app/client/ui/UserImage";
 import { cssHideForNarrowScreen } from "app/client/ui2018/cssVars";
@@ -128,7 +129,7 @@ function createRemainingUsersIndicator(
         return buildRemainingUsersList(ctl, usersObs);
       }, defaultMenuOptions);
     },
-    { "aria-label": t("open full active user list") },
+    altWithTooltip(t("open full active user list")),
     dom.attr("aria-expanded", use => use(isRemainingUsersMenuOpen) ? "true" : "false"),
     testId("all-users-button"),
   );

@@ -1,6 +1,7 @@
 import { handleFormError, handleSubmit } from "app/client/lib/formUtils";
 import { makeT } from "app/client/lib/localization";
 import { AuditLogsModel } from "app/client/models/AuditLogsModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { textInput } from "app/client/ui/inputs";
 import { bigBasicButton, bigPrimaryButton } from "app/client/ui2018/buttons";
 import { theme, vars } from "app/client/ui2018/cssVars";
@@ -9,6 +10,7 @@ import { cssLink } from "app/client/ui2018/links";
 import { loadingSpinner } from "app/client/ui2018/loaders";
 import { menu, menuItem } from "app/client/ui2018/menus";
 import { confirmModal, modal } from "app/client/ui2018/modals";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import {
   AuditLogStreamingDestination,
   AuditLogStreamingDestinationName,
@@ -85,6 +87,8 @@ Splunk. {{learnMoreLink}}.",
                         ev.stopPropagation();
                         ev.preventDefault();
                       }),
+                      { type: "button" },
+                      altWithTooltip(t("Destination options")),
                       testId("streaming-destination-options"),
                     ),
                     testId("streaming-destination"),
@@ -332,7 +336,7 @@ const cssDestinationUrl = styled("div", `
   font-weight: normal;
 `);
 
-const cssDestinationOptions = styled("div", `
+const cssDestinationOptions = styled(unstyledButton, `
   flex-shrink: 0;
   margin: 0 4px 0 auto;
   height: 24px;

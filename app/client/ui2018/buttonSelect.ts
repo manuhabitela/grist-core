@@ -1,4 +1,5 @@
-import { hoverTooltip } from "app/client/ui/tooltips";
+import { makeT } from "app/client/lib/localization";
+import { altWithTooltip } from "app/client/ui/altText";
 import { colors, testId, theme, vars } from "app/client/ui2018/cssVars";
 import { IconName } from "app/client/ui2018/IconList";
 import { icon } from "app/client/ui2018/icons";
@@ -8,6 +9,8 @@ import { components } from "app/common/ThemePrefs";
 
 import { dom, DomElementArg, Observable, styled } from "grainjs";
 import debounce from "lodash/debounce";
+
+const t = makeT("buttonSelect");
 
 export interface ISelectorOptionFull<T> {
   value: T;
@@ -70,9 +73,9 @@ export function buttonToggleSelect<T>(
  */
 export function alignmentSelect(obs: Observable<string>, ...domArgs: DomElementArg[]) {
   const alignments: ISelectorOption<string>[] = [
-    { value: "left",   icon: "LeftAlign" },
-    { value: "center", icon: "CenterAlign" },
-    { value: "right",  icon: "RightAlign" },
+    { value: "left",   icon: "LeftAlign", tooltip: t("Align left") },
+    { value: "center", icon: "CenterAlign", tooltip: t("Align center") },
+    { value: "right",  icon: "RightAlign", tooltip: t("Align right") },
   ];
   return buttonSelect(obs, alignments, {}, testId("alignment-select"), ...domArgs);
 }
@@ -118,11 +121,13 @@ export function makeButtonSelect<T>(
       const value = getOptionValue(option);
       const label = getOptionLabel(option);
       const tooltip = isFullOption(option) && option.tooltip;
-      const screenReaderLabel = !label && tooltip;
       return cssSelectorBtn(
-        tooltip ? hoverTooltip(tooltip) : null,
-        screenReaderLabel ? { "aria-label": screenReaderLabel } : null,
+        (label || tooltip) ? altWithTooltip(
+          String(label || tooltip),
+          { tooltipText: tooltip || undefined },
+        ) : null,
         cssSelectorBtn.cls("-selected", use => use(obs) === value),
+        dom.attr("aria-pressed", use => use(obs) === value ? "true" : "false"),
         dom.on("click", () => onClick(value)),
         isFullOption(option) && option.icon ? icon(option.icon) : null,
         label ? cssSelectorLabel(label) : null,

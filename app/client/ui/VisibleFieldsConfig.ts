@@ -8,6 +8,7 @@ import * as kf from "app/client/lib/koForm";
 import { makeT } from "app/client/lib/localization";
 import * as tableUtil from "app/client/lib/tableUtil";
 import { ColumnRec, ViewFieldRec, ViewSectionRec } from "app/client/models/DocModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { getFieldType } from "app/client/ui/RightPanelUtils";
 import { basicButton, primaryButton, textButton } from "app/client/ui2018/buttons";
 import * as checkbox from "app/client/ui2018/checkbox";
@@ -405,7 +406,10 @@ export class VisibleFieldsConfig extends Disposable {
         focusFallbackOnDispose(),
         testId("hide"),
         dom.boolAttr("disabled", this._disabled),
-        dom.attr("aria-label", use => t("Show {{label}}", { label: use(column.label) })),
+        altWithTooltip(
+          use => t("Show {{label}}", { label: use(column.label) }),
+          { tooltipText: t("Show"), tooltipPlacement: "left" },
+        ),
       ),
       buildCheckbox(
         dom.prop("checked", selection.has(id)),
@@ -436,7 +440,10 @@ export class VisibleFieldsConfig extends Disposable {
         focusFallbackOnDispose(),
         testId("hide"),
         dom.boolAttr("disabled", this._disabled),
-        dom.attr("aria-label", use => t("Hide {{label}}", { label: use(field.label) })),
+        altWithTooltip(
+          use => t("Hide {{label}}", { label: use(field.label) }),
+          { tooltipText: t("Hide"), tooltipPlacement: "left" },
+        ),
       ),
       buildCheckbox(
         dom.prop("checked", selection.has(id)),
@@ -547,6 +554,8 @@ const cssHideIconButton = styled(unstyledButton, `
   margin-right: 8px;
   line-height: 1;
   --icon-color: ${theme.lightText};
+  cursor: pointer;
+  border-radius: 2px;
   &:not(:focus, :focus-within, .kf_draggable:hover &) {
     ${visuallyHiddenStyles}
   }

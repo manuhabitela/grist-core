@@ -3,11 +3,13 @@ import { makeT } from "app/client/lib/localization";
 import { NEW_FILTER_JSON } from "app/client/models/ColumnFilter";
 import { ColumnRec, ViewSectionRec } from "app/client/models/DocModel";
 import { FilterInfo } from "app/client/models/entities/ViewSectionRec";
+import { altWithTooltip } from "app/client/ui/altText";
 import { attachColumnFilterMenu } from "app/client/ui/ColumnFilterMenu";
 import { dropdownWithSearch } from "app/client/ui/searchDropdown";
 import { cssButton } from "app/client/ui2018/buttons";
 import { testId, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 
 import { dom, IDisposableOwner, IDomArgs, styled } from "grainjs";
 import { IPopupOptions, PopupControl } from "popweasel";
@@ -114,11 +116,16 @@ function makePlusButton(viewSectionRec: ViewSectionRec, popupControls: WeakMap<C
   return dom.domComputed((use) => {
     const filters = use(viewSectionRec.filters);
     return cssPlusButton(
+      cssButton.cls(""),
+      cssButton.cls("-primary"),
+      cssBtn.cls(""),
       cssBtn.cls("-grayed"),
       cssPlusIcon("Plus"),
       addFilterMenu(filters, popupControls, {
         allowedColumns: "unpinned-or-unfiltered",
       }),
+      { type: "button" },
+      altWithTooltip(t("Add filter")),
       testId("add-filter-btn"),
     );
   });
@@ -177,10 +184,10 @@ const cssBtn = styled("div", `
     border-color: ${theme.filterBarButtonSavedHoverBg};
   }
 `);
-const cssFilterBarItemButton = (...args: IDomArgs<HTMLDivElement>) => (
-  dom("div", cssButton.cls(""), cssButton.cls("-primary"),
+const cssFilterBarItemButton = (...args: IDomArgs<HTMLButtonElement>) => (
+  unstyledButton(cssButton.cls(""), cssButton.cls("-primary"),
     cssBtn.cls(""), ...args)
 );
-const cssPlusButton = styled(cssFilterBarItemButton, `
+const cssPlusButton = styled(unstyledButton, `
   padding: 3px 3px
 `);

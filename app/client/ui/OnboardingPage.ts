@@ -4,6 +4,7 @@ import { AppModel } from "app/client/models/AppModel";
 import { logError } from "app/client/models/errors";
 import { getMainOrgUrl, urlState } from "app/client/models/gristUrlState";
 import { getUserPrefObs } from "app/client/models/UserPrefs";
+import { altWithTooltip } from "app/client/ui/altText";
 import { textInput } from "app/client/ui/inputs";
 import { PlayerState, YouTubePlayer } from "app/client/ui/YouTubePlayer";
 import { bigBasicButton, bigPrimaryButton, bigPrimaryButtonLink } from "app/client/ui2018/buttons";
@@ -11,6 +12,7 @@ import { colors, mediaMedium, mediaXSmall, theme } from "app/client/ui2018/cssVa
 import { IconName } from "app/client/ui2018/IconList";
 import { icon } from "app/client/ui2018/icons";
 import { modal } from "app/client/ui2018/modals";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { BaseAPI } from "app/common/BaseAPI";
 import { commonUrls, getPageTitleSuffix } from "app/common/gristUrls";
 import { UserPrefs } from "app/common/Prefs";
@@ -292,7 +294,13 @@ function buildVideo(_owner: IDisposableOwner, incrementStep: IncrementStep, stat
         }),
         cssModalHeader(
           cssModalCloseButton(
+            { type: "button" },
+            altWithTooltip(t("Close")),
             cssCloseIcon("CrossBig"),
+            dom.on("click", (ev) => {
+              ev.stopPropagation();
+              ctl.close();
+            }),
           ),
         ),
         cssModalBody(
@@ -710,7 +718,7 @@ const cssVideoPlayerModal = styled("div", `
   box-shadow: none;
 `);
 
-const cssModalCloseButton = styled("div", `
+const cssModalCloseButton = styled(unstyledButton, `
   margin-bottom: 8px;
   padding: 4px;
   border-radius: 4px;

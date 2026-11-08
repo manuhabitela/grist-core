@@ -22,6 +22,7 @@ import { IEditableMember, IMemberSelectOption, IOrgMemberSelectOption,
   Resource } from "app/client/models/UserManagerModel";
 import { UserManagerModel, UserManagerModelImpl } from "app/client/models/UserManagerModel";
 import { getResourceParent, ResourceType } from "app/client/models/UserManagerModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { buildAskTheAdmin } from "app/client/ui/AskTheAdmin";
 import { getAutomationsStatus } from "app/client/ui/FeatureStatus";
 import { computeSetupSteps, setupFeatureNeeds, SetupStep } from "app/client/ui/SetupSteps";
@@ -416,6 +417,8 @@ export class UserManager extends Disposable {
             member.isRemoved ? cssUndoIcon("Undo", testId("um-member-undo")) :
               cssRemoveIcon("Remove", testId("um-member-delete")),
             cssMemberBtn.cls("-disabled", disableRemove),
+            { type: "button" },
+            altWithTooltip(member.isRemoved ? t("Undo") : t("Remove")),
             // Click handler.
             dom.on("click", () => disableRemove.get() ||
               (member.isRemoved ? this._model.add(member.email, member.access.get()) :
@@ -512,6 +515,8 @@ export class UserManager extends Disposable {
           cssMemberBtn(
             cssMemberBtn.cls("-disabled", this._options.isReadonly),
             cssRemoveIcon("Remove", testId("um-member-delete")),
+            { type: "button" },
+            altWithTooltip(t("Remove")),
             dom.on("click", () => publicMember.access.set(null)),
           ),
           testId("um-public-member"),

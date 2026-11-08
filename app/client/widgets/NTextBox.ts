@@ -52,7 +52,7 @@ export class NTextBox extends NewAbstractWidget {
         dom("div", { style: "margin-left: 8px;" },
           makeButtonSelect(
             fromKo(this.field.config.wrap),
-            [{ value: true, icon: "Wrap" }],
+            [{ value: true, icon: "Wrap", tooltip: t("Wrap text") }],
             toggle,
             cssButtonSelect.cls("-disabled", wrapDisabled),
           ),

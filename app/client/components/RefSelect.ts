@@ -4,10 +4,12 @@ import { makeT } from "app/client/lib/localization";
 import * as tableUtil from "app/client/lib/tableUtil";
 import { ColumnRec, DocModel, ViewFieldRec } from "app/client/models/DocModel";
 import { KoSaveableObservable } from "app/client/models/modelUtil";
+import { altWithTooltip } from "app/client/ui/altText";
 import { cssFieldEntry, cssFieldLabel } from "app/client/ui/VisibleFieldsConfig";
 import { testId, theme } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { menu, menuItem, menuText } from "app/client/ui2018/menus";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { FieldBuilder } from "app/client/widgets/FieldBuilder";
 import * as gutil from "app/common/gutil";
 
@@ -90,7 +92,10 @@ export class RefSelect extends Disposable {
       dom.forEach(fromKo(this._added.getObservable()), col =>
         cssFieldEntry(
           cssColumnLabel(dom.text(col.label)),
-          cssRemoveIcon("Remove",
+          cssRemoveIcon(
+            { type: "button" },
+            altWithTooltip(t("Remove")),
+            icon("Remove"),
             dom.on("click", () => this._removeFormulaField(col)),
             testId("ref-select-remove"),
           ),
@@ -249,11 +254,12 @@ const cssAddIcon = styled(icon, `
   margin-right: 4px;
 `);
 
-const cssRemoveIcon = styled(icon, `
+const cssRemoveIcon = styled(unstyledButton, `
   display: none;
   cursor: pointer;
   flex: none;
   margin-left: 8px;
+  line-height: 0;
   .${cssFieldEntry.className}:hover & {
     display: block;
   }

@@ -13,6 +13,7 @@ import { reportError } from "app/client/models/AppModel";
 import { reportWarning } from "app/client/models/errors";
 import { urlState } from "app/client/models/gristUrlState";
 import { KoSaveableObservable } from "app/client/models/modelUtil";
+import { altWithTooltip } from "app/client/ui/altText";
 import { openFilePicker } from "app/client/ui/FileDialog";
 import { buildNotificationsConfig } from "app/client/ui/Notifications";
 import { cssSettingsPage, SectionCard, SectionItem } from "app/client/ui/SettingsLayout";
@@ -25,6 +26,7 @@ import { cssLink } from "app/client/ui2018/links";
 import { loadingSpinner } from "app/client/ui2018/loaders";
 import { select } from "app/client/ui2018/menus";
 import { confirmModal, cssModalButtons, cssModalTitle, cssSpinner, modal } from "app/client/ui2018/modals";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { buildCurrencyPicker } from "app/client/widgets/CurrencyPicker";
 import { buildTZAutocomplete } from "app/client/widgets/TZAutocomplete";
 import { EngineCode } from "app/common/DocumentSettings";
@@ -210,9 +212,7 @@ document is first opened, or when a document responds to changes.",
             cssInput(docPageModel.currentDocId.get(), { tabIndex: "-1" }, clickToSelect(), readonly()),
             cssCopyButton(
               cssIcon("Copy"),
-              hoverTooltip(t("Copy to clipboard"), {
-                key: TOOLTIP_KEY,
-              }),
+              altWithTooltip(t("Copy to clipboard"), { instantTooltip: true }),
               copyHandler(() => docPageModel.currentDocId.get()!, t("Document ID copied to clipboard")),
             ),
           ),
@@ -788,7 +788,7 @@ const cssContainer = styled(cssSettingsPage, `
   font-size: revert;
 `);
 
-const cssCopyButton = styled("div", `
+const cssCopyButton = styled(unstyledButton, `
   position: absolute;
   display: flex;
   align-items: center;
@@ -797,6 +797,7 @@ const cssCopyButton = styled("div", `
   width: 24px;
   right: 0;
   top: 0;
+  outline-offset: -3px;
   --icon-color: ${theme.lightText};
   &:hover {
     --icon-color: ${colors.lightGreen};
@@ -813,8 +814,8 @@ const cssInput = styled("div", `
   width: 100%;
   min-width: 180px;
   height: 100%;
-  padding: 5px;
-  padding-right: 20px;
+  padding: 5px 10px;
+  padding-right: 28px;
   overflow: hidden;
   text-overflow: ellipsis;
 `);

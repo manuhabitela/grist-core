@@ -1,5 +1,6 @@
 import { makeT } from "app/client/lib/localization";
 import { HomeModel } from "app/client/models/HomeModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { productPill } from "app/client/ui/AppHeader";
 import { buildHomeAssistantComposer, hasHomeAssistantComposer } from "app/client/ui/assistant/HomeAssistant";
 import * as css from "app/client/ui/DocMenuCss";
@@ -127,6 +128,7 @@ function buildPreferencesMenu(homeModel: HomeModel) {
   const { onlyShowDocuments } = homeModel;
 
   return cssDotsMenu(
+    altWithTooltip(t("Welcome menu")),
     cssDots(icon("Dots")),
     menu(
       () => [

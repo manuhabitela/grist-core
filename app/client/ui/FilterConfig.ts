@@ -1,6 +1,7 @@
 import { kbJumperAnchor } from "app/client/components/RegionFocusSwitcher";
 import { makeT } from "app/client/lib/localization";
 import { ViewSectionRec } from "app/client/models/DocModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { attachColumnFilterMenu } from "app/client/ui/ColumnFilterMenu";
 import { addFilterMenu } from "app/client/ui/FilterBar";
 import { cssIcon, cssPinButton, cssRow, cssSortFilterColumn } from "app/client/ui/RightPanelStyles";
@@ -71,9 +72,14 @@ export class FilterConfig extends Disposable {
           ),
           cssPinFilterButton(
             icon("PinTilted"),
-            dom.attr("aria-label", use => use(isPinned) ?
+            altWithTooltip(use => use(isPinned) ?
               t("Unpin filter - {{- columnName}} column (current: pinned)", { columnName: use(fieldOrColumn.label) }) :
               t("Pin filter - {{- columnName}} column (current: unpinned)", { columnName: use(fieldOrColumn.label) }),
+            {
+              tooltipText: use => use(isPinned) ?
+                t("Unpin", { columnName: use(fieldOrColumn.label) }) :
+                t("Pin", { columnName: use(fieldOrColumn.label) }),
+            },
             ),
             dom.on("click", () => this._section.setFilter(fieldOrColumn.origCol().origColRef(), {
               pinned: !isPinned.peek(),
@@ -84,8 +90,9 @@ export class FilterConfig extends Disposable {
           cssIconWrapper(
             cssRemoveFilterButton(
               cssIcon("Remove"),
-              dom.attr("aria-label", use =>
+              altWithTooltip(use =>
                 t("remove filter - {{- columnName}} column", { columnName: use(fieldOrColumn.label) }),
+              { tooltipText: t("Remove") },
               ),
               dom.on("click",
                 () => this._section.setFilter(fieldOrColumn.origCol().origColRef(), {
@@ -144,6 +151,8 @@ const cssRemoveFilterButton = styled(unstyledButton, `
   flex: none;
   margin: 0 6px;
   cursor: pointer;
+  border-radius: 3px;
+  outline-offset: 2px;
   & .${cssIcon.className} {
     background-color: ${theme.controlSecondaryFg};
   }

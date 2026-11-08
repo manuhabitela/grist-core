@@ -5,6 +5,7 @@ import { ariaDisabled, makeTestId } from "app/client/lib/domUtils";
 import { makeT } from "app/client/lib/localization";
 import { setTestState } from "app/client/lib/testState";
 import { TableRec } from "app/client/models/DocModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { docListHeader, docMenuTrigger } from "app/client/ui/DocMenuCss";
 import { duplicateTable, DuplicateTableResponse } from "app/client/ui/DuplicateTable";
 import { hoverTooltip, showTransientTooltip } from "app/client/ui/tooltips";
@@ -14,6 +15,7 @@ import { icon } from "app/client/ui2018/icons";
 import { loadingDots } from "app/client/ui2018/loaders";
 import { menu, menuDivider, menuIcon, menuItem, menuItemAsync, menuText } from "app/client/ui2018/menus";
 import { confirmModal } from "app/client/ui2018/modals";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 
 import { Computed, Disposable, dom, fromKo, observable, Observable, styled } from "grainjs";
 import * as weasel from "popweasel";
@@ -115,6 +117,13 @@ export class DataTables extends Disposable {
                   icon("Dots"),
                   menu(() => this._menuItems(tableRec, isEditingName), { placement: "bottom-start" }),
                   dom.on("click", (ev) => { ev.stopPropagation(); ev.preventDefault(); }),
+                  { type: "button" },
+                  altWithTooltip((use) => {
+                    const name = [
+                      use(tableRec.tableNameDef), use(tableRec.summarySourceTable) !== 0 ? use(tableRec.groupDesc) : "",
+                    ].filter(p => Boolean(p?.trim())).join(" ");
+                    return t("context menu - {{- tableName }}", { tableName: `"${name}"` });
+                  }),
                 ),
               ),
               dom.on("click", () => {
@@ -156,6 +165,8 @@ export class DataTables extends Disposable {
               isEditing.set(true);
             }),
             cssRenameTableButton.cls("-active", isEditing),
+            { type: "button" },
+            altWithTooltip(t("Rename table")),
           ),
         );
       }
@@ -457,7 +468,7 @@ const cssDotsButton = styled(docMenuTrigger, `
   }
 `);
 
-const cssRenameTableButton = styled("div", `
+const cssRenameTableButton = styled(unstyledButton, `
   flex-shrink: 0;
   width: 16px;
   visibility: hidden;

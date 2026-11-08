@@ -2,6 +2,7 @@ import BaseView from "app/client/components/BaseView";
 import { GristDoc } from "app/client/components/GristDoc";
 import { makeT } from "app/client/lib/localization";
 import { ViewRec, ViewSectionRec } from "app/client/models/DocModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { filterBar } from "app/client/ui/FilterBar";
 import { maybeShowNewRecordExperiment } from "app/client/ui/NewRecordButton";
 import { cssIcon } from "app/client/ui/RightPanelStyles";
@@ -45,6 +46,7 @@ export function buildCollapsedSectionDom(options: {
       ),
     ),
     cssMenu(
+      altWithTooltip(use => t("context menu - {{title}} widget", { title: use(vs.titleDef) })),
       testId("section-menu-viewLayout"),
       cssDotsIconWrapper(cssIcon("Dots")),
       menu(_ctl => makeCollapsedLayoutMenu(vs, gristDoc), {

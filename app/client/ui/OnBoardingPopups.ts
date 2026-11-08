@@ -27,6 +27,7 @@ import { makeT } from "app/client/lib/localization";
 import * as Mousetrap from "app/client/lib/Mousetrap";
 import { reportError } from "app/client/models/errors";
 import { urlState } from "app/client/models/gristUrlState";
+import { altWithTooltip } from "app/client/ui/altText";
 import { cssBigIcon, cssCloseButton } from "app/client/ui/ExampleCard";
 import { bigBasicButton, bigPrimaryButton } from "app/client/ui2018/buttons";
 import { theme, vars } from "app/client/ui2018/cssVars";
@@ -284,7 +285,10 @@ class OnBoardingPopupsCtl extends Disposable {
       { tabindex: "-1" },
       this._arrowEl,
       ContentWrapper(
-        cssCloseButton(cssBigIcon("CrossBig"),
+        cssCloseButton(
+          { type: "button" },
+          altWithTooltip(t("Close")),
+          cssBigIcon("CrossBig"),
           dom.on("click", () => this._finish(ctlIndex)),
           testId("close"),
         ),

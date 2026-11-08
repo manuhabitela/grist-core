@@ -1,6 +1,6 @@
 import { detectCurrentLang, makeT, setAnonymousLocale } from "app/client/lib/localization";
 import { AppModel } from "app/client/models/AppModel";
-import { hoverTooltip } from "app/client/ui/tooltips";
+import { altWithTooltip } from "app/client/ui/altText";
 import { cssHoverCircle } from "app/client/ui/TopBarCss";
 import { theme } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
@@ -50,7 +50,7 @@ export function buildLanguageMenu(appModel: AppModel) {
         placement: "bottom-end",
       },
     ),
-    hoverTooltip(t("Language"), { key: "topBarBtnTooltip" }),
+    altWithTooltip(t("Language"), { instantTooltip: true }),
     testId("button"),
   );
 }

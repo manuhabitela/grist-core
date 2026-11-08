@@ -107,6 +107,7 @@
   --icon-color: var(--grist-theme-control-secondary-fg, #929299);
   padding: 3px;
   border-radius: 4px;
+  outline-offset: -1px;
 }
 
 .detail-left.disabled, .detail-right.disabled, .detail-add-btn.disabled {

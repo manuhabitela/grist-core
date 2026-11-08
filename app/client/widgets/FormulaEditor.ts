@@ -7,7 +7,7 @@ import { DataRowModel } from "app/client/models/DataRowModel";
 import { ColumnRec } from "app/client/models/DocModel";
 import { ViewFieldRec } from "app/client/models/entities/ViewFieldRec";
 import { reportError } from "app/client/models/errors";
-import { hoverTooltip } from "app/client/ui/tooltips";
+import { altWithTooltip } from "app/client/ui/altText";
 import { textButton } from "app/client/ui2018/buttons";
 import { colors, testId, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
@@ -211,7 +211,7 @@ export class FormulaEditor extends NewBaseEditor {
         this.focus();
       }),
       !this._canDetach ? null : createDetachedIcon(
-        hoverTooltip(t("Expand Editor")),
+        altWithTooltip(t("Expand Editor")),
         dom.hide(this.isDetached),
       ),
       cssFormulaEditor.cls("-detached", this.isDetached),

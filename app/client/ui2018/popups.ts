@@ -1,5 +1,6 @@
 import { cssButton } from "app/client/ui2018/buttons";
 import { mediaSmall, testId, theme, vars } from "app/client/ui2018/cssVars";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 
 import { Disposable, dom, DomElementArg, styled } from "grainjs";
 
@@ -106,7 +107,7 @@ export const cssPopupButtons = styled("div", `
   }
 `);
 
-export const cssPopupCloseButton = styled("div", `
+export const cssPopupCloseButton = styled(unstyledButton, `
   align-self: flex-end;
   border-radius: 4px;
   cursor: pointer;

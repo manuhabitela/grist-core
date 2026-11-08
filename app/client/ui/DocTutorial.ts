@@ -4,6 +4,7 @@ import { sessionStorageJsonObs } from "app/client/lib/localStorageObs";
 import { logTelemetryEvent } from "app/client/lib/telemetry";
 import { getWelcomeHomeUrl } from "app/client/lib/urlUtils";
 import { urlState } from "app/client/models/gristUrlState";
+import { altWithTooltip } from "app/client/ui/altText";
 import { renderer } from "app/client/ui/DocTutorialRenderer";
 import { cssPopupBody, FLOATING_POPUP_TOOLTIP_KEY, FloatingPopup, PopupPosition } from "app/client/ui/FloatingPopup";
 import { sanitizeTutorialHTML } from "app/client/ui/sanitizeHTML";
@@ -13,6 +14,7 @@ import { mediaXSmall, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { loadingSpinner } from "app/client/ui2018/loaders";
 import { confirmModal, modal } from "app/client/ui2018/modals";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { parseUrlId } from "app/common/gristUrls";
 
 import { Disposable, dom, Holder, makeTestId, Observable, styled } from "grainjs";
@@ -395,7 +397,10 @@ export class DocTutorial extends Disposable {
       this.onDispose(ctl.close);
       return [
         cssFullScreenModal.cls(""),
-        cssModalCloseButton("CrossBig",
+        cssModalCloseButton(
+          { type: "button" },
+          altWithTooltip(t("Close")),
+          icon("CrossBig"),
           dom.on("click", () => ctl.close()),
           testId("lightbox-close"),
         ),
@@ -480,7 +485,7 @@ const cssFullScreenModal = styled("div", `
   padding: 0px;
 `);
 
-const cssModalCloseButton = styled(icon, `
+const cssModalCloseButton = styled(unstyledButton, `
   align-self: flex-end;
   flex-shrink: 0;
   height: 24px;

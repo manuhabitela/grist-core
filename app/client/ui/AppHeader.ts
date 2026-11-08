@@ -4,6 +4,7 @@ import { getWelcomeHomeUrl } from "app/client/lib/urlUtils";
 import { AppModel } from "app/client/models/AppModel";
 import { DocPageModel } from "app/client/models/DocPageModel";
 import { urlState } from "app/client/models/gristUrlState";
+import { altWithTooltip } from "app/client/ui/altText";
 import { getTheme } from "app/client/ui/CustomThemes";
 import { manageTeamUsersApp } from "app/client/ui/OpenUserManager";
 import { cssLeftPane } from "app/client/ui/PagePanels";
@@ -109,13 +110,14 @@ export class AppHeader extends Disposable {
       null :
       image();
 
-    const altText = t("{{- organizationName }} - Back to home", { organizationName: this._appLogoOrg.get().name });
-
     return cssAppHeader(
       cssAppHeader.cls("-widelogo", productFlavor.wideLogo || false),
       cssAppHeaderBox(
         dom.domComputed(this._appLogoOrgLink, orgLink => cssAppLogo(
-          { "aria-label": altText },
+          altWithTooltip(
+            t("{{- organizationName }} - Back to home", { organizationName: this._appLogoOrg.get().name }),
+            { tooltipText: t("Back to home") },
+          ),
           this._setHomePageUrl(orgLink),
           content(),
           testId("logo"),
@@ -138,6 +140,10 @@ export class AppHeader extends Disposable {
     } else {
       return cssOrg(
         dom.cls("_cssOrg"),
+        altWithTooltip(use => t(
+          "{{- organizationName }} - Switch site",
+          { organizationName: use(this._appLogoOrgName) },
+        ), { tooltipText: t("Switch site") }),
         cssOrgName(dom.text(this._appLogoOrgName), testId("orgname")),
         productPill(this._currentOrg),
         dom.maybe(this._appLogoOrgName, () => [

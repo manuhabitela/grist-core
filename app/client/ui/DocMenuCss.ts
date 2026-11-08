@@ -4,6 +4,7 @@ import { transientInput } from "app/client/ui/transientInput";
 import { bigBasicButton } from "app/client/ui2018/buttons";
 import { mediaSmall, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { components } from "app/common/ThemePrefs";
 
 import { styled } from "grainjs";
@@ -231,6 +232,8 @@ export const wsLeft = styled("div", `
 
 export const docRowWrapper = styled("div", `
   position: relative;
+  display: flex;
+  align-items: center;
   margin: 0px -16px 8px -16px;
   border-radius: 3px;
   font-size: ${vars.mediumFontSize};
@@ -245,6 +248,8 @@ export const docRowWrapper = styled("div", `
 export const docRowLink = styled("a", `
   display: flex;
   align-items: center;
+  flex: 1;
+  min-width: 0;
   height: 40px;
   line-height: 40px;
   border-radius: 3px;
@@ -306,7 +311,7 @@ export const docRowUpdatedAt = styled("div", `
   font-weight: normal;
 `);
 
-export const docMenuTrigger = styled("div", `
+const docMenuDotsBase = `
   flex: none;
   margin: 0 4px 0 auto;
   height: 24px;
@@ -314,9 +319,20 @@ export const docMenuTrigger = styled("div", `
   padding: 4px;
   line-height: 0px;
   border-radius: 3px;
-  cursor: default;
   --icon-color: ${theme.docMenuDocOptionsFg};
+`;
+
+export const docMenuDotsDecorative = styled("div", `
+  ${docMenuDotsBase}
   .${docRowLink.className}:hover > & {
+    --icon-color: ${theme.docMenuDocOptionsHoverFg};
+  }
+`);
+
+export const docMenuTrigger = styled(unstyledButton, `
+  ${docMenuDotsBase}
+  cursor: default;
+  .${docRowWrapper.className}:hover & {
     --icon-color: ${theme.docMenuDocOptionsHoverFg};
   }
   &:hover, &.weasel-popup-open {

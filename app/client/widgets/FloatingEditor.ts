@@ -6,6 +6,7 @@ import { makeT } from "app/client/lib/localization";
 import { FloatingPopup, PopupPosition } from "app/client/ui/FloatingPopup";
 import { theme } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 
 import { Disposable, dom, Holder, IDisposableOwner, IDomArgs,
   makeTestId, MultiHolder, Observable, styled } from "grainjs";
@@ -148,7 +149,7 @@ export class FloatingEditor extends Disposable {
   }
 }
 
-export function createDetachedIcon(...args: IDomArgs<HTMLDivElement>) {
+export function createDetachedIcon(...args: IDomArgs<HTMLButtonElement>) {
   return cssResizeIconWrapper(
     cssSmallIcon("Maximize"),
     dom.on("click", (e) => {
@@ -170,7 +171,7 @@ const cssSmallIcon = styled(icon, `
   height: 14px;
 `);
 
-const cssResizeIconWrapper = styled("div", `
+const cssResizeIconWrapper = styled(unstyledButton, `
   position: absolute;
   right: -2px;
   top: -20px;

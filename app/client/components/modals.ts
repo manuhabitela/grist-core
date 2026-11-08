@@ -2,11 +2,13 @@ import * as commands from "app/client/components/commands";
 import { GristDoc } from "app/client/components/GristDoc";
 import { makeT } from "app/client/lib/localization";
 import { reportSuccess } from "app/client/models/errors";
+import { altWithTooltip } from "app/client/ui/altText";
 import { basicButton, bigPrimaryButton, primaryButton } from "app/client/ui2018/buttons";
 import { labeledSquareCheckbox } from "app/client/ui2018/checkbox";
 import { mediaXSmall, testId, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { cssModalTooltip, modalTooltip } from "app/client/ui2018/modals";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 
 import { dom, DomContents, keyframes, observable, styled, svg } from "grainjs";
 import merge from "lodash/merge";
@@ -224,6 +226,8 @@ export function showNewsPopup(
       cssNewsPopupContainer(
         testId("behavioral-prompt"),
         cssNewsPopupCloseButton(
+          { type: "button" },
+          altWithTooltip(t("Close")),
           icon("CrossBig"),
           dom.on("click", () => ctl.close()),
           testId("behavioral-prompt-dismiss"),
@@ -468,7 +472,7 @@ const cssNewsPopupTitle = styled("div", `
   line-height: 32px;
 `);
 
-const cssNewsPopupCloseButton = styled("div", `
+const cssNewsPopupCloseButton = styled(unstyledButton, `
   position: absolute;
   top: 8px;
   right: 8px;

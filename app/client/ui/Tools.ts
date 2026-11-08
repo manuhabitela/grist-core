@@ -5,6 +5,7 @@ import { kbJumperAnchor } from "app/client/components/RegionFocusSwitcher";
 import { makeT } from "app/client/lib/localization";
 import { urlState } from "app/client/models/gristUrlState";
 import { getUserOrgPrefObs, markAsSeen } from "app/client/models/UserPrefs";
+import { altWithTooltip } from "app/client/ui/altText";
 import { buildOpenAssistantButton } from "app/client/ui/assistant/AssistantPanel";
 import { createAutomationsPageEntry } from "app/client/ui/AutomationsPageEntry";
 import { showExampleCard } from "app/client/ui/ExampleCard";
@@ -92,7 +93,7 @@ export function tools(owner: Disposable, gristDoc: GristDoc, leftPanelOpen: Obse
               placement: "bottom-start",
               parentSelectorToMark: "." + cssPageEntry.className,
             }),
-            { "aria-label": t("context menu - Access Rules") },
+            altWithTooltip(t("context menu - Access Rules")),
             testId("access-rules-trigger"),
             dom.show(use => use(aclUsers.isInitialized) && _canViewAccessRules),
           ),
@@ -165,7 +166,7 @@ export function tools(owner: Disposable, gristDoc: GristDoc, leftPanelOpen: Obse
             { href: ex.tutorialUrl, target: "_blank" },
           ),
           cssExampleCardOpener(
-            { "aria-label": t("Preview the tutorial") },
+            altWithTooltip(t("Preview the tutorial")),
             icon("TypeDetails"),
             testId("welcome-opener"),
             automaticHelpTool(
@@ -190,7 +191,7 @@ export function tools(owner: Disposable, gristDoc: GristDoc, leftPanelOpen: Obse
         ),
         !isDocOwner ? null : cssPageEntrySmall(
           cssPageButton(cssPageIcon("Remove"),
-            { "aria-label": t("Delete document tour") },
+            altWithTooltip(t("Delete document tour")),
             dom.on("click", () => confirmModal(t("Delete document tour?"), t("Delete"), () =>
               gristDoc.docData.sendAction(["RemoveTable", "GristDocTour"])),
             ),

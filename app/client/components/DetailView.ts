@@ -20,11 +20,13 @@ import { DataRowModel } from "app/client/models/DataRowModel";
 import { isSyntheticRowId } from "app/client/models/DataTableModelWithDiff";
 import { ViewFieldRec } from "app/client/models/entities/ViewFieldRec";
 import { ViewSectionRec } from "app/client/models/entities/ViewSectionRec";
+import { altWithTooltip } from "app/client/ui/altText";
 import { CardContextMenu } from "app/client/ui/CardContextMenu";
 import { FieldContextMenu } from "app/client/ui/FieldContextMenu";
 import { descriptionInfoTooltip } from "app/client/ui/tooltips";
 import { isNarrowScreen } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { indexOf } from "app/common/gutil";
 import { UIRowId } from "app/plugin/GristAPI";
 
@@ -448,17 +450,26 @@ export default class DetailView extends BaseView {
             `${this.cursor.rowIndex()! + 1} of ${this.getLastDataRowIndex() + 1}`),
         ),
         dom("div.detail-buttons",
-          dom("div.detail-button.detail-left",
+          unstyledButton(
+            altWithTooltip(t("Previous record")),
+            dom.cls("detail-button"),
+            dom.cls("detail-left"),
             icon("ArrowLeft"),
             dom.on("click", () => { this.cursor.rowIndex(this.cursor.rowIndex()! - 1); }),
             dom.cls("disabled", use => use(this.cursor.rowIndex) === 0),
           ),
-          dom("div.detail-button.detail-right",
+          unstyledButton(
+            altWithTooltip(t("Next record")),
+            dom.cls("detail-button"),
+            dom.cls("detail-right"),
             icon("ArrowRight"),
             dom.on("click", () => { this.cursor.rowIndex(this.cursor.rowIndex()! + 1); }),
             dom.cls("disabled", use => use(this.cursor.rowIndex)! >= this.viewData.all().length - 1),
           ),
-          dom("div.detail-button.detail-add-btn",
+          unstyledButton(
+            altWithTooltip(t("Add record")),
+            dom.cls("detail-button"),
+            dom.cls("detail-add-btn"),
             icon("Plus"),
             dom.on("click", () => {
               const addRowIndex = this.viewData.getRowIndex("new");

@@ -22,6 +22,7 @@ import { cssBlockedCursor, cssLabel, cssRow } from "app/client/ui/RightPanelStyl
 import { textButton } from "app/client/ui2018/buttons";
 import { buttonSelect, cssButtonSelect } from "app/client/ui2018/buttonSelect";
 import { IOptionFull, menu, select } from "app/client/ui2018/menus";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { DiffBox } from "app/client/widgets/DiffBox";
 import { CommentPopup, DiscussionModelImpl } from "app/client/widgets/DiscussionEditor";
 import { buildErrorDom } from "app/client/widgets/ErrorDom";
@@ -555,7 +556,8 @@ export class FieldBuilder extends Disposable {
               kf.row(
                 kd.toggleClass("fieldbuilder_settings_header", true),
                 kf.label(
-                  dom("div.fieldbuilder_settings_button",
+                  unstyledButton(
+                    grainjsDom.cls("fieldbuilder_settings_button"),
                     dom.testId("FieldBuilder_settings"),
                     kd.text(() => this.field.useColOptions() ? t("Common") : t("Separate")), " ▾",
                     menu(() => FieldSettingsMenu(

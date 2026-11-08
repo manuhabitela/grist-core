@@ -1,6 +1,7 @@
 import { makeT } from "app/client/lib/localization";
 import { logTelemetryEvent } from "app/client/lib/telemetry";
 import { AppModel } from "app/client/models/AppModel";
+import { altWithTooltip } from "app/client/ui/altText";
 import { bigBasicButton, bigPrimaryButtonLink } from "app/client/ui2018/buttons";
 import { testId, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
@@ -77,6 +78,8 @@ export function showWelcomeCoachingCall(triggerElement: Element, appModel: AppMo
           cssName("Grist"),
         ),
         cssPopupCloseButton(
+          { type: "button" },
+          altWithTooltip(t("Close")),
           cssCloseIcon("CrossBig"),
           dom.on("click", () => dismissPopup(true)),
           testId("popup-close-button"),

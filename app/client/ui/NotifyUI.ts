@@ -5,12 +5,13 @@ import { AppModel } from "app/client/models/AppModel";
 import { ConnectState } from "app/client/models/ConnectState";
 import { urlState } from "app/client/models/gristUrlState";
 import { Expirable, IAppError, Notification, Notifier, NotifyAction, Progress } from "app/client/models/NotifyModel";
-import { hoverTooltip } from "app/client/ui/tooltips";
+import { altWithTooltip } from "app/client/ui/altText";
 import { cssHoverCircle, cssTopBarBtn } from "app/client/ui/TopBarCss";
 import { isNarrowScreenObs, theme, vars } from "app/client/ui2018/cssVars";
 import { IconName } from "app/client/ui2018/IconList";
 import { icon } from "app/client/ui2018/icons";
 import { menuCssClass } from "app/client/ui2018/menus";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { Memo, MemoKind } from "app/common/ACLPermissions";
 import { commonUrls } from "app/common/gristUrls";
 
@@ -136,7 +137,10 @@ function buildNotificationDom(item: Notification, options: IBeaconOpenOptions) {
       item.options.memos.length ? buildMemos(item.options.memos) : null,
     ),
     dom.maybe(item.options.canUserClose, () =>
-      cssToastClose(testId("toast-close"),
+      cssToastClose(
+        { type: "button" },
+        altWithTooltip(t("Dismiss")),
+        testId("toast-close"),
         "✕",
         dom.on("click", () => item.dispose()),
       ),
@@ -169,7 +173,7 @@ export function buildNotifyMenuButton(notifier: Notifier, appModel: AppModel | n
         setPopupToCreateDom(elem, ctl => buildNotifyDropdown(ctl, notifier, appModel),
           { ...defaultMenuOptions, placement: "bottom-end" });
       },
-      hoverTooltip("Notifications", { key: "topBarBtnTooltip" }),
+      altWithTooltip(t("Notifications"), { instantTooltip: true }),
       testId("menu-btn"),
     ),
   );
@@ -387,7 +391,7 @@ const cssToastTitle = styled(cssToastText, `
   margin-bottom: 8px;
 `);
 
-const cssToastClose = styled("div", `
+const cssToastClose = styled(unstyledButton, `
   cursor: pointer;
   user-select: none;
   width: 16px;

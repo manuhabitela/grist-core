@@ -4,9 +4,9 @@ import { watchElementForBlur } from "app/client/lib/FocusLayer";
 import { makeT } from "app/client/lib/localization";
 import { SessionObs } from "app/client/lib/sessionObs";
 import { urlState } from "app/client/models/gristUrlState";
+import { altWithTooltip } from "app/client/ui/altText";
 import { App } from "app/client/ui/App";
 import { resizeFlexVHandle } from "app/client/ui/resizeHandle";
-import { hoverTooltip } from "app/client/ui/tooltips";
 import { prepareForTransition, transition, TransitionWatcher } from "app/client/ui/transitions";
 import { cssHideForNarrowScreen, isScreenResizing, mediaNotSmall, mediaSmall, theme } from "app/client/ui2018/cssVars";
 import { isNarrowScreenObs } from "app/client/ui2018/cssVars";
@@ -407,9 +407,16 @@ export function pagePanels(page: PageContents) {
           regionFocusSwitcher?.panelAttrs("top", t("Document header")),
           (!left || left.hideOpener ? null :
             unstyledButton(
-              { "aria-label": left.panelOpen.get() ?
-                t("Close navigation panel (left panel)") :
-                t("Open navigation panel (left panel)") },
+              altWithTooltip(
+                use => use(left.panelOpen) ?
+                  t("Close navigation panel (left panel)") :
+                  t("Open navigation panel (left panel)"),
+                {
+                  tooltipText: use => use(left.panelOpen) ?
+                    t("Close navigation panel") :
+                    t("Open navigation panel"),
+                },
+              ),
               dom.on("click", () => toggleObs(left.panelOpen)),
               cssPanelOpener(
                 "PanelRight",
@@ -424,17 +431,15 @@ export function pagePanels(page: PageContents) {
 
           (!right || right.hideOpener ? null :
             unstyledButton(
-              { "aria-label": right.panelOpen.get() ? t("Close Creator Panel") : t("Open creator panel") },
+              altWithTooltip(
+                use => use(right.panelOpen) ? t("Close Creator Panel") : t("Open creator panel"),
+              ),
               dom.on("click", () => toggleObs(right.panelOpen)),
               cssPanelOpener(
                 "PanelLeft",
                 cssPanelOpener.cls("-open", right.panelOpen),
                 testId("right-opener"),
                 dom.cls("tour-creator-panel"),
-                hoverTooltip(
-                  () => (right.panelOpen.get() ? t("Close Creator Panel") : t("Open creator panel")),
-                  { key: "topBarBtnTooltip" },
-                ),
                 cssHideForNarrowScreen.cls(""),
               ),
             )

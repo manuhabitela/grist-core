@@ -4,10 +4,12 @@ import { ValidationGroup, Validator } from "app/client/lib/Validator";
 import { AppModel, getHomeUrl } from "app/client/models/AppModel";
 import { reportError, UserError } from "app/client/models/errors";
 import { urlState } from "app/client/models/gristUrlState";
+import { altWithTooltip } from "app/client/ui/altText";
 import { bigBasicButton, bigPrimaryButton, bigPrimaryButtonLink } from "app/client/ui2018/buttons";
 import { mediaSmall, theme, vars } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { cssModalTitle, IModalControl, modal } from "app/client/ui2018/modals";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { PlanSelection } from "app/common/BillingAPI";
 import { TEAM_PLAN } from "app/common/Features";
 import { checkSubdomainValidity } from "app/common/orgNameUtils";
@@ -201,7 +203,13 @@ function showModal(
     });
     return [
       cssCreateTeamModal.cls(""),
-      cssCloseButton(testId("close-modal"), cssBigIcon("CrossBig"), dom.on("click", () => ctrl.close())),
+      cssCloseButton(
+        { type: "button" },
+        altWithTooltip(t("Close")),
+        testId("close-modal"),
+        cssBigIcon("CrossBig"),
+        dom.on("click", () => ctrl.close()),
+      ),
       content(modalScope, ctrl),
     ];
   }, { backerDomArgs: args });
@@ -304,7 +312,7 @@ const cssButtonsRow = styled("div", `
   }
 `);
 
-const cssCloseButton = styled("div", `
+const cssCloseButton = styled(unstyledButton, `
   position: absolute;
   top: 8px;
   right: 8px;
