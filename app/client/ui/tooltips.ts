@@ -164,6 +164,7 @@ export function showTooltip(
   const content = cssTooltip({ role: "tooltip" },
     options.cssClass ? dom.cls(options.cssClass) : null,
     tipContent(ctl),
+    cssTooltipArrow({ "x-arrow": "" }),
     testId(`tooltip`));
   // Prepending instead of appending allows better text selection, as this element is on top.
   document.body.prepend(content);
@@ -171,7 +172,10 @@ export function showTooltip(
   // Create a popper for positioning the tooltip content relative to refElem.
   const popperOptions: Popper.PopperOptions = {
     modifiers: merge(
-      { preventOverflow: { boundariesElement: "viewport" } },
+      {
+        preventOverflow: { boundariesElement: "viewport" },
+        arrow: { enabled: true, element: "[x-arrow]" },
+      },
       options.modifiers,
     ),
     placement,
@@ -555,16 +559,74 @@ const cssTooltip = styled("div", `
   z-index: ${vars.tooltipZIndex};      /* should be higher than a modal */
   background-color: ${theme.tooltipBg};
   border-radius: 3px;
-  box-shadow: 0 0 2px rgba(0,0,0,0.5);
+  /* drop-shadow follows the tip + arrow as one silhouette; box-shadow would not. */
+  filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.5));
   text-align: center;
   color: ${theme.tooltipFg};
   width: auto;
   font-family: sans-serif;
-  font-size: 10pt;
-  padding: 8px 16px;
-  margin: 4px;
+  font-size: ${tokens.mediumFontSize};
+  padding: 4px 8px;
+  margin: 12px;
   transition: opacity 0.2s;
   user-select: auto;
+`);
+
+const cssTooltipArrow = styled("div", `
+  position: absolute;
+  width: 12px;
+  height: 6px;
+  pointer-events: none;
+
+  &::before {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+  }
+
+  /* Border triangles sit outside the body, so they share its color with no overlap. */
+  [x-placement^="bottom"] > & {
+    top: -6px;
+  }
+  [x-placement^="bottom"] > &::before {
+    left: 0;
+    top: 0;
+    border-width: 0 6px 6px 6px;
+    border-color: transparent transparent ${theme.tooltipBg} transparent;
+  }
+  [x-placement^="top"] > & {
+    bottom: -6px;
+  }
+  [x-placement^="top"] > &::before {
+    left: 0;
+    top: 0;
+    border-width: 6px 6px 0 6px;
+    border-color: ${theme.tooltipBg} transparent transparent transparent;
+  }
+  [x-placement^="left"] > & {
+    right: -6px;
+    width: 6px;
+    height: 12px;
+  }
+  [x-placement^="left"] > &::before {
+    left: 0;
+    top: 0;
+    border-width: 6px 0 6px 6px;
+    border-color: transparent transparent transparent ${theme.tooltipBg};
+  }
+  [x-placement^="right"] > & {
+    left: -6px;
+    width: 6px;
+    height: 12px;
+  }
+  [x-placement^="right"] > &::before {
+    left: 0;
+    top: 0;
+    border-width: 6px 6px 6px 0;
+    border-color: transparent ${theme.tooltipBg} transparent transparent;
+  }
 `);
 
 const cssDisableSelectOnAll = styled("div", `
