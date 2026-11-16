@@ -40,6 +40,12 @@ export interface ITipOptions {
 
   /** Optional CSS class to add to the tooltip element, to override its default appearance. */
   cssClass?: string;
+
+  /**
+   * Show the tooltip at full opacity instead of fading it in.
+   * Left unset by hover tooltips, which keep their fade.
+   */
+  skipFade?: boolean;
 }
 
 export interface ITransientTipOptions extends ITipOptions {
@@ -172,7 +178,7 @@ export function showTooltip(
   dom.onDisposeElem(refElem, close);
 
   // If we're not replacing the tooltip, fade in the content using transitions.
-  if (!hasKey) {
+  if (!hasKey && !options.skipFade) {
     prepareForTransition(content, () => { content.style.opacity = "0"; });
     content.style.opacity = "";
   }
