@@ -466,8 +466,9 @@
         "Tutorial": "教程",
         "Grist Resources": "Grist 资源",
         "Terms of service": "服务条款",
-        "context menu - {{- workspaceName }}": "上下文菜单{{- workspaceName }}",
-        "Import from Airtable": "从 Airtable 导入"
+        "Context menu - {{- workspaceName }}": "上下文菜单{{- workspaceName }}",
+        "Import from Airtable": "从 Airtable 导入",
+        "Context menu": "上下文菜单"
     },
     "MakeCopyMenu": {
         "Cancel": "取消",
@@ -1149,12 +1150,13 @@
         "Validate Data": "验证数据",
         "Settings": "设置",
         "API console": "API 控制台",
-        "context menu - Access Rules": "上下文菜单 - 访问规则",
+        "Context menu - Access Rules": "上下文菜单 - 访问规则",
         "Delete document tour": "删除文档导览",
         "Preview the tutorial": "预览教程",
         "Proposed changes": "拟议变更",
         "Suggest changes": "建议修改",
-        "Suggestions": "建议"
+        "Suggestions": "建议",
+        "Context menu": "上下文菜单"
     },
     "TopBar": {
         "Manage team": "管理团队",
@@ -1289,8 +1291,9 @@
         "Expand {{maybeDefault}}": "展开{{maybeDefault}}",
         "Set default: Collapse": "设置默认：折叠",
         "Set default: Expand": "设置默认：扩展",
-        "context menu - {{- pageName }}": "上下文菜单{{- pageName }}",
-        "Collapse {{maybeDefault}}": "崩溃{{maybeDefault}}"
+        "Context menu - {{- pageName }}": "上下文菜单{{- pageName }}",
+        "Collapse {{maybeDefault}}": "崩溃{{maybeDefault}}",
+        "Context menu": "上下文菜单"
     },
     "search": {
         "Find Next ": "找下一个 ",
@@ -2299,10 +2302,11 @@
         "Sort by name": "按名称排序",
         "Unpin": "取消置顶",
         "Workspace": "工作区",
-        "context menu - {{- documentName }}": "上下文菜单 - {{- documentName }}",
+        "Context menu - {{- documentName }}": "上下文菜单 - {{- documentName }}",
         "Documents list": "文档列表",
         "Download document...": "下载文档...",
-        "Deleted {{at}}": "删除于 {{at}}"
+        "Deleted {{at}}": "删除于 {{at}}",
+        "Context menu": "上下文菜单"
     },
     "RenameDocModal": {
         "Choose color": "选择颜色",

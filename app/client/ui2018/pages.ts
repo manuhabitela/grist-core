@@ -171,8 +171,8 @@ export function buildPageDom(name: Observable<string>, options: PageOptions, ...
             ),
             cssPageMenuTrigger(
               altWithTooltip(
-                use => t("context menu - {{- pageName }}", { pageName: use(name) }),
-                { tooltipText: t("Context menu") },
+                use => t("Context menu - {{- pageName }}", { pageName: use(name) }),
+                { tooltipText: t("Context menu"), tooltipPlacement: "right" },
               ),
               cssPageMenuIcon("Dots"),
               menu(pageMenu, { placement: "bottom-start", parentSelectorToMark: "." + itemHeader.className }),

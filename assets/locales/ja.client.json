@@ -37,8 +37,9 @@
         "Delete": "削除",
         "Terms of service": "利用規約",
         "Grist Resources": "Gristリソース",
-        "context menu - {{- workspaceName }}": "コンテキストメニュー - {{- workspaceName }}",
-        "Import from Airtable": "Airtableからインポート"
+        "Context menu - {{- workspaceName }}": "コンテキストメニュー - {{- workspaceName }}",
+        "Import from Airtable": "Airtableからインポート",
+        "Context menu": "コンテキストメニュー"
     },
     "RowContextMenu": {
         "Insert row": "行を挿入",
@@ -705,12 +706,13 @@
         "Raw data": "生データ",
         "Document history": "ドキュメントの履歴",
         "API console": "APIコンソール",
-        "context menu - Access Rules": "コンテキストメニュー - アクセスルール",
+        "Context menu - Access Rules": "コンテキストメニュー - アクセスルール",
         "Delete document tour": "ドキュメントツアーを削除",
         "Preview the tutorial": "チュートリアルをプレビュー",
         "Proposed changes": "提案された変更",
         "Suggest changes": "変更を提案",
-        "Suggestions": "提案"
+        "Suggestions": "提案",
+        "Context menu": "コンテキストメニュー"
     },
     "menus": {
         "Reference List": "参照リスト",
@@ -1519,7 +1521,8 @@
         "Expand {{maybeDefault}}": "展開する {{maybeDefault}}",
         "Set default: Collapse": "既定に設定：折りたたむ",
         "Set default: Expand": "既定に設定：展開する",
-        "context menu - {{- pageName }}": "コンテキストメニュー - {{- pageName }}"
+        "Context menu - {{- pageName }}": "コンテキストメニュー - {{- pageName }}",
+        "Context menu": "コンテキストメニュー"
     },
     "ColumnEditor": {
         "COLUMN DESCRIPTION": "列の説明",
@@ -2253,10 +2256,11 @@
         "Sort by name": "名前でソート",
         "Unpin": "ピン留めを解除",
         "Workspace": "ワークスペース",
-        "context menu - {{- documentName }}": "コンテキストメニュー - {{- documentName }}",
+        "Context menu - {{- documentName }}": "コンテキストメニュー - {{- documentName }}",
         "Documents list": "ドキュメント一覧",
         "Download document...": "ドキュメントをダウンロード...",
-        "Deleted {{at}}": "{{at}}に削除"
+        "Deleted {{at}}": "{{at}}に削除",
+        "Context menu": "コンテキストメニュー"
     },
     "RenameDocModal": {
         "Choose color": "色を選択",

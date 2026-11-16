@@ -735,10 +735,11 @@
         "Tutorial": "Tutorial",
         "Terms of service": "Nutzungsbedingungen",
         "Grist Resources": "Grist Ressourcen",
-        "context menu - {{- workspaceName }}": "Kontextmenü - {{- workspaceName }}",
+        "Context menu - {{- workspaceName }}": "Kontextmenü - {{- workspaceName }}",
         "Import from Airtable": "Aus Airtable importieren",
         "Import from {{importSource}}": "Aus {{importSource}} importieren",
-        "Import from...": "Importieren aus..."
+        "Import from...": "Importieren aus...",
+        "Context menu": "Kontextmenü"
     },
     "Importer": {
         "Merge rows that match these fields:": "Zeilen zusammenführen, die mit diesen Feldern übereinstimmen:",
@@ -1038,12 +1039,13 @@
         "Validate Data": "Daten validieren",
         "Settings": "Einstellungen",
         "API console": "API-Konsole",
-        "context menu - Access Rules": "Kontextmenü - Zugriffsregeln",
+        "Context menu - Access Rules": "Kontextmenü - Zugriffsregeln",
         "Delete document tour": "Dokumententour löschen",
         "Preview the tutorial": "Vorschau des Tutorials",
         "Proposed changes": "Vorgeschlagene Änderungen",
         "Suggest changes": "Änderungen vorschlagen",
-        "Suggestions": "Vorschläge"
+        "Suggestions": "Vorschläge",
+        "Context menu": "Kontextmenü"
     },
     "TopBar": {
         "Manage team": "Team verwalten",
@@ -1250,7 +1252,8 @@
         "Expand {{maybeDefault}}": "Erweitern {{maybeDefault}}",
         "Set default: Collapse": "Standard festlegen: Zusammenklappen",
         "Set default: Expand": "Standard festlegen: Erweitern",
-        "context menu - {{- pageName }}": "Kontextmenü - {{- pageName }}"
+        "Context menu - {{- pageName }}": "Kontextmenü - {{- pageName }}",
+        "Context menu": "Kontextmenü"
     },
     "search": {
         "Find Next ": "Nächstes finden ",
@@ -2268,10 +2271,11 @@
         "Delete": "Löschen",
         "Edited {{at}}": "Bearbeitet {{at}}",
         "Manage users": "Benutzer verwalten",
-        "context menu - {{- documentName }}": "Kontextmenü - {{- documentName }}",
+        "Context menu - {{- documentName }}": "Kontextmenü - {{- documentName }}",
         "Documents list": "Liste der Dokumente",
         "Download document...": "Dokument herunterladen...",
-        "Deleted {{at}}": "{{at}} gelöscht"
+        "Deleted {{at}}": "{{at}} gelöscht",
+        "Context menu": "Kontextmenü"
     },
     "RenameDocModal": {
         "Enter document name": "Geben Sie den Dokumentnamen ein",

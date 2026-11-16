@@ -971,11 +971,12 @@
         "Tutorial": "Instruktionsguide",
         "Terms of service": "Användarvillkor",
         "Grist Resources": "Grist resurser",
-        "context menu - {{- workspaceName }}": "snabbmeny - {{- workspaceName }}",
+        "Context menu - {{- workspaceName }}": "snabbmeny - {{- workspaceName }}",
         "Import from Airtable": "Importera från Airtable",
         "Airtable": "Airtable",
         "Import from {{importSource}}": "Importera från {{importSource}}",
-        "Import from...": "Importera från..."
+        "Import from...": "Importera från...",
+        "Context menu": "snabbmeny"
     },
     "Importer": {
         "Merge rows that match these fields:": "Slå ihop rader som där dessa fällt matchar:",
@@ -1170,12 +1171,13 @@
         "Validate Data": "Validera data",
         "Settings": "Inställningar",
         "API console": "API-konsol",
-        "context menu - Access Rules": "snabbmeny - Behörighetsregler",
+        "Context menu - Access Rules": "snabbmeny - Behörighetsregler",
         "Delete document tour": "Radera dokumentrundtur",
         "Preview the tutorial": "Förhandsvisa instruktionsguide",
         "Proposed changes": "Föreslagna ändringar",
         "Suggest changes": "Föreslå ändringar",
-        "Suggestions": "Förslag"
+        "Suggestions": "Förslag",
+        "Context menu": "snabbmeny"
     },
     "TopBar": {
         "Manage team": "Hantera arbetslag",
@@ -1360,7 +1362,8 @@
         "Expand {{maybeDefault}}": "Expandera {{maybeDefault}}",
         "Set default: Collapse": "Välj standard: Komprimera",
         "Set default: Expand": "Välj standard: Expandera",
-        "context menu - {{- pageName }}": "snabbmeny - {{- pageName }}"
+        "Context menu - {{- pageName }}": "snabbmeny - {{- pageName }}",
+        "Context menu": "snabbmeny"
     },
     "search": {
         "Find Next ": "Hitta nästa ",
@@ -2361,10 +2364,11 @@
         "Sort by name": "Sortera efter namn",
         "Unpin": "Lossa",
         "Workspace": "Arbetsyta",
-        "context menu - {{- documentName }}": "snabbmeny - {{- documentName }}",
+        "Context menu - {{- documentName }}": "snabbmeny - {{- documentName }}",
         "Documents list": "Dokumentlista",
         "Download document...": "Ladda ner dokument...",
-        "Deleted {{at}}": "Raderad {{at}}"
+        "Deleted {{at}}": "Raderad {{at}}",
+        "Context menu": "snabbmeny"
     },
     "RenameDocModal": {
         "Choose color": "Välj färg",

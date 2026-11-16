@@ -622,8 +622,9 @@
         "Delete {{workspace}} and all included documents?": "{{workspace}} eta barne dituen dokumentu guztiak ezabatu?",
         "Tutorial": "Tutoriala",
         "Grist Resources": "Gristen baliabideak",
-        "context menu - {{- workspaceName }}": "laster-menua - {{- workspaceName }}",
-        "Import from Airtable": "Inportatu Airtable-tik"
+        "Context menu - {{- workspaceName }}": "laster-menua - {{- workspaceName }}",
+        "Import from Airtable": "Inportatu Airtable-tik",
+        "Context menu": "laster-menua"
     },
     "LeftPanelCommon": {
         "Help Center": "Laguntza-gunea",
@@ -867,9 +868,10 @@
         "Proposed Changes": "Proposatutako aldaketak",
         "Suggest Changes": "Iradokitutako aldaketak",
         "Suggestions": "Iradokizunak",
-        "context menu - Access Rules": "laster-menua - Sarbide arauak",
+        "Context menu - Access Rules": "laster-menua - Sarbide arauak",
         "Proposed changes": "Iradokitutako aldaketak",
-        "Suggest changes": "Iradoki aldaketak"
+        "Suggest changes": "Iradoki aldaketak",
+        "Context menu": "laster-menua"
     },
     "TopBar": {
         "Manage team": "Kudeatu taldea",
@@ -1058,7 +1060,8 @@
         "Expand {{maybeDefault}}": "Hedatu {{maybeDefault}}",
         "Set default: Collapse": "Ezarri defektuzkoa: Tolestu",
         "Set default: Expand": "Ezarri defektuzkoa: Hedatu",
-        "context menu - {{- pageName }}": "laster-menua - {{- pageName }}"
+        "Context menu - {{- pageName }}": "laster-menua - {{- pageName }}",
+        "Context menu": "laster-menua"
     },
     "search": {
         "Find Previous ": "Bilatu aurrekoa ",
@@ -2233,7 +2236,8 @@
         "Documents list": "Dokumentuen zerrenda",
         "Download document...": "Deskargatu dokumentua…",
         "Deleted {{at}}": "{{at}}(e)an ezabatua",
-        "context menu - {{- documentName }}": "laster-menua - {{- documentName }}"
+        "Context menu - {{- documentName }}": "laster-menua - {{- documentName }}",
+        "Context menu": "laster-menua"
     },
     "RenameDocModal": {
         "Enter document name": "Sartu dokumentuaren izena",

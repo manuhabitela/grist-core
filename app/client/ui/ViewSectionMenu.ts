@@ -160,7 +160,10 @@ export function viewSectionMenu(
       dom.hide(viewSection.isRecordCard),
     ),
     cssMenu(
-      altWithTooltip(use => t("context menu - {{title}} widget", { title: use(viewSection.titleDef) })),
+      altWithTooltip(
+        use => t("Context menu - {{title}} widget", { title: use(viewSection.titleDef) }),
+        { tooltipText: t("Context menu") },
+      ),
       dom.hide(viewSection.hideViewMenu),
       testId("viewLayout"),
       cssDotsIconWrapper(cssIcon("Dots")),

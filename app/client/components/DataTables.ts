@@ -122,8 +122,8 @@ export class DataTables extends Disposable {
                     const name = [
                       use(tableRec.tableNameDef), use(tableRec.summarySourceTable) !== 0 ? use(tableRec.groupDesc) : "",
                     ].filter(p => Boolean(p?.trim())).join(" ");
-                    return t("context menu - {{- tableName }}", { tableName: `"${name}"` });
-                  }),
+                    return t("Context menu - {{- tableName }}", { tableName: `"${name}"` });
+                  }, { tooltipText: t("Context menu") }),
                 ),
               ),
               dom.on("click", () => {

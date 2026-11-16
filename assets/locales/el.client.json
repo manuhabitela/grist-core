@@ -686,8 +686,9 @@
         "Grist Resources": "Πόροι Grist",
         "Delete {{workspace}} and all included documents?": "Διαγραφή του {{workspace}} και όλων των εγγράφων που περιλαμβάνονται;",
         "Trash": "Κάδος Απορριμμάτων",
-        "context menu - {{- workspaceName }}": "μενού περιβάλλοντος - {{- workspaceName }}",
-        "Import from Airtable": "Εισαγωγή από Airtable"
+        "Context menu - {{- workspaceName }}": "μενού περιβάλλοντος - {{- workspaceName }}",
+        "Import from Airtable": "Εισαγωγή από Airtable",
+        "Context menu": "μενού περιβάλλοντος"
     },
     "Importer": {
         "{{count}} unmatched field in import_one": "{{count}} μη αντιστοιχισμένο πεδίο στην εισαγωγή",
@@ -970,12 +971,13 @@
         "Tour of this Document": "Περιήγηση σε αυτό το Εγγραφο",
         "Settings": "Ρυθμίσεις",
         "Code view": "Προβολή Κώδικα",
-        "context menu - Access Rules": "μενού περιβάλλοντος - Κανόνες πρόσβασης",
+        "Context menu - Access Rules": "μενού περιβάλλοντος - Κανόνες πρόσβασης",
         "Delete document tour": "Διαγραφή περιήγησης εγγράφου",
         "Preview the tutorial": "Προεπισκόπηση του οδηγού εκμάθησης",
         "Proposed changes": "Προτεινόμενες αλλαγές",
         "Suggest changes": "Προτείνετε αλλαγές",
-        "Suggestions": "Προτάσεις"
+        "Suggestions": "Προτάσεις",
+        "Context menu": "μενού περιβάλλοντος"
     },
     "TopBar": {
         "Manage team": "Διαχείριση ομάδας",
@@ -1176,7 +1178,8 @@
         "Expand {{maybeDefault}}": "Ανάπτυξη {{maybeDefault}}",
         "Set default: Collapse": "Ορισμός προεπιλογής: Σύμπτυξη",
         "Set default: Expand": "Ορισμός προεπιλογής: Ανάπτυξη",
-        "context menu - {{- pageName }}": "μενού περιβάλλοντος - {{- pageName }}"
+        "Context menu - {{- pageName }}": "μενού περιβάλλοντος - {{- pageName }}",
+        "Context menu": "μενού περιβάλλοντος"
     },
     "NTextBox": {
         "true": "αληθής",
@@ -1926,10 +1929,11 @@
         "Sort by name": "Ταξινόμηση κατά όνομα",
         "Unpin": "Ξεκαρφίτσωμα",
         "Workspace": "Χώρος εργασίας",
-        "context menu - {{- documentName }}": "μενού περιβάλλοντος - {{- documentName }}",
+        "Context menu - {{- documentName }}": "μενού περιβάλλοντος - {{- documentName }}",
         "Documents list": "Λίστα εγγράφων",
         "Download document...": "Λήψη εγγράφου...",
-        "Deleted {{at}}": "Διαγράφηκε {{at}}"
+        "Deleted {{at}}": "Διαγράφηκε {{at}}",
+        "Context menu": "μενού περιβάλλοντος"
     },
     "RightPanelUtils": {
         "series_one": "Σειρές",

@@ -456,12 +456,13 @@
         "Validate Data": "Проверка данных",
         "Settings": "Настройки",
         "API console": "API-консоль",
-        "context menu - Access Rules": "контекстное меню - Правила доступа",
+        "Context menu - Access Rules": "контекстное меню - Правила доступа",
         "Delete document tour": "Удалить тур по документу",
         "Preview the tutorial": "Предварительный просмотр учебника",
         "Proposed changes": "Предлагаемые изменения",
         "Suggest changes": "Предложить изменения",
-        "Suggestions": "Предложения"
+        "Suggestions": "Предложения",
+        "Context menu": "контекстное меню"
     },
     "TypeTransformation": {
         "Cancel": "Отмена",
@@ -753,8 +754,9 @@
         "Tutorial": "Обучение",
         "Terms of service": "Условия использования",
         "Grist Resources": "Ресурсы Grist",
-        "context menu - {{- workspaceName }}": "контекстное меню - {{- workspaceName }}",
-        "Import from Airtable": "Загрузить из Airtable"
+        "Context menu - {{- workspaceName }}": "контекстное меню - {{- workspaceName }}",
+        "Import from Airtable": "Загрузить из Airtable",
+        "Context menu": "контекстное меню"
     },
     "GridViewMenus": {
         "Add to sort": "Добавить в сортировку",
@@ -1333,7 +1335,8 @@
         "Expand {{maybeDefault}}": "Развернуть {{maybeDefault}}",
         "Set default: Collapse": "Установить по умолчанию: Свернуть",
         "Set default: Expand": "Установить по умолчанию: Развернуть",
-        "context menu - {{- pageName }}": "контекстное меню - {{- pageName }}"
+        "Context menu - {{- pageName }}": "контекстное меню - {{- pageName }}",
+        "Context menu": "контекстное меню"
     },
     "ACLUsers": {
         "Example Users": "Пользователи для примера",
@@ -2255,10 +2258,11 @@
         "Document will be moved to Trash.": "Документ будет перемещен в корзину.",
         "Name": "Наименование",
         "No documents to show.": "Нет документов для отображения.",
-        "context menu - {{- documentName }}": "контекстное меню - {{- documentName }}",
+        "Context menu - {{- documentName }}": "контекстное меню - {{- documentName }}",
         "Documents list": "Список документов",
         "Download document...": "Загрузка документа...",
-        "Deleted {{at}}": "Удалено {{at}}"
+        "Deleted {{at}}": "Удалено {{at}}",
+        "Context menu": "контекстное меню"
     },
     "RightPanelUtils": {
         "fields_one": "Поля",

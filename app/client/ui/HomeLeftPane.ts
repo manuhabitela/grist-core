@@ -121,7 +121,10 @@ export function createHomeLeftPane(leftPanelOpen: Observable<boolean>, home: Hom
 
                 // Clicks on the menu trigger shouldn't follow the link that it's contained in.
                 dom.on("click", (ev) => { ev.stopPropagation(); ev.preventDefault(); }),
-                altWithTooltip(t("context menu - {{- workspaceName }}", { workspaceName: `"${ws.name}"` })),
+                altWithTooltip(
+                  t("Context menu - {{- workspaceName }}", { workspaceName: `"${ws.name}"` }),
+                  { tooltipText: t("Context menu"), tooltipPlacement: "right" },
+                ),
                 testId("dm-workspace-options"),
               ),
               testId("dm-workspace"),

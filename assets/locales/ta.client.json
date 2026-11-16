@@ -511,8 +511,9 @@
         "Workspaces": "பணியிடங்கள்",
         "Tutorial": "பயிற்சி",
         "Terms of service": "பணி விதிமுறைகள்",
-        "context menu - {{- workspaceName }}": "சூழல் பட்டியல் - {{- workspaceName }}",
-        "Import from Airtable": "Airtable இலிருந்து இறக்குமதி செய்யவும்"
+        "Context menu - {{- workspaceName }}": "சூழல் பட்டியல் - {{- workspaceName }}",
+        "Import from Airtable": "Airtable இலிருந்து இறக்குமதி செய்யவும்",
+        "Context menu": "சூழல் பட்டியல்"
     },
     "Importer": {
         "Revert": "திரும்பவும்",
@@ -694,12 +695,13 @@
         "Validate Data": "தரவை சரிபார்க்கவும்",
         "Settings": "அமைப்புகள்",
         "API console": "பநிஇ கன்சோல்",
-        "context menu - Access Rules": "சூழல் பட்டியல் - அணுகல் விதிகள்",
+        "Context menu - Access Rules": "சூழல் பட்டியல் - அணுகல் விதிகள்",
         "Delete document tour": "ஆவணப் பயணத்தை நீக்கு",
         "Preview the tutorial": "டுடோரியலை முன்னோட்டமிடுங்கள்",
         "Proposed changes": "முன்மொழியப்பட்ட மாற்றங்கள்",
         "Suggest changes": "மாற்றங்களை பரிந்துரைக்கவும்",
-        "Suggestions": "பரிந்துரைகள்"
+        "Suggestions": "பரிந்துரைகள்",
+        "Context menu": "சூழல் பட்டியல்"
     },
     "ViewConfigTab": {
         "Form": "வடிவம்",
@@ -1854,7 +1856,8 @@
         "Expand {{maybeDefault}}": "{{maybeDefault}}ஐ விரிவாக்கு",
         "Set default: Collapse": "இயல்புநிலையை அமைக்கவும்: சுருக்கவும்",
         "Set default: Expand": "இயல்புநிலையை அமைக்கவும்: விரிவாக்கு",
-        "context menu - {{- pageName }}": "சூழல் பட்டியல் - {{- pageName }}"
+        "Context menu - {{- pageName }}": "சூழல் பட்டியல் - {{- pageName }}",
+        "Context menu": "சூழல் பட்டியல்"
     },
     "search": {
         "Find Next ": "அடுத்து கண்டுபிடிக்கவும் ",
@@ -2181,10 +2184,11 @@
         "Sort by name": "பெயரால் வரிசைப்படுத்துங்கள்",
         "Unpin": "மூள்நீக்கு",
         "Workspace": "பணியிடம்",
-        "context menu - {{- documentName }}": "சூழல் பட்டியல் - {{- documentName }}",
+        "Context menu - {{- documentName }}": "சூழல் பட்டியல் - {{- documentName }}",
         "Documents list": "ஆவணங்களின் பட்டியல்",
         "Download document...": "ஆவணத்தைப் பதிவிறக்கு...",
-        "Deleted {{at}}": "{{at}} நீக்கப்பட்டது"
+        "Deleted {{at}}": "{{at}} நீக்கப்பட்டது",
+        "Context menu": "சூழல் பட்டியல்"
     },
     "RenameDocModal": {
         "Choose color": "வண்ணத்தைத் தேர்வுசெய்க",

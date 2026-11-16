@@ -386,7 +386,8 @@
         "Remove table": "Remove table",
         "Rename table": "Rename table",
         "{{action}} Record Card": "{{action}} Record Card",
-        "context menu - {{- tableName }}": "context menu - {{- tableName }}"
+        "Context menu - {{- tableName }}": "Context menu - {{- tableName }}",
+        "Context menu": "Context menu"
     },
     "DocHistory": {
         "Activity": "Activity",
@@ -446,7 +447,8 @@
         "You have read-only access to this site. Currently there are no documents.": "You have read-only access to this site. Currently there are no documents.",
         "personal site": "personal site",
         "Documents": "Documents",
-        "context menu - {{- documentName }}": "context menu - {{- documentName }}"
+        "Context menu - {{- documentName }}": "Context menu - {{- documentName }}",
+        "Context menu": "Context menu"
     },
     "DocPageModel": {
         "Add empty table": "Add empty table",
@@ -787,11 +789,12 @@
         "Tutorial": "Tutorial",
         "Terms of service": "Terms of service",
         "Grist Resources": "Grist Resources",
-        "context menu - {{- workspaceName }}": "context menu - {{- workspaceName }}",
+        "Context menu - {{- workspaceName }}": "Context menu - {{- workspaceName }}",
         "Import from Airtable": "Import from Airtable",
         "Airtable": "Airtable",
         "Import from {{importSource}}": "Import from {{importSource}}",
-        "Import from...": "Import from..."
+        "Import from...": "Import from...",
+        "Context menu": "Context menu"
     },
     "Importer": {
         "Merge rows that match these fields:": "Merge rows that match these fields:",
@@ -1093,12 +1096,13 @@
         "Validate Data": "Validate Data",
         "Settings": "Settings",
         "API console": "API console",
-        "context menu - Access Rules": "context menu - Access Rules",
+        "Context menu - Access Rules": "Context menu - Access Rules",
         "Delete document tour": "Delete document tour",
         "Preview the tutorial": "Preview the tutorial",
         "Proposed changes": "Proposed changes",
         "Suggest changes": "Suggest changes",
-        "Suggestions": "Suggestions"
+        "Suggestions": "Suggestions",
+        "Context menu": "Context menu"
     },
     "TopBar": {
         "Comments": "Comments",
@@ -1189,7 +1193,7 @@
         "Sort and filter": "Sort and filter",
         "Calendar view": "Calendar view",
         "Remove custom options": "Remove custom options",
-        "context menu - {{title}} widget": "context menu - {{title}} widget",
+        "Context menu - {{title}} widget": "Context menu - {{title}} widget",
         "Context menu": "Context menu",
         "Expand section": "Expand section",
         "Revert sort & filter settings": "Revert sort & filter settings",
@@ -1321,7 +1325,8 @@
         "Expand {{maybeDefault}}": "Expand {{maybeDefault}}",
         "Set default: Collapse": "Set default: Collapse",
         "Set default: Expand": "Set default: Expand",
-        "context menu - {{- pageName }}": "context menu - {{- pageName }}"
+        "Context menu - {{- pageName }}": "Context menu - {{- pageName }}",
+        "Context menu": "Context menu"
     },
     "search": {
         "Find Next ": "Find Next ",
@@ -1818,7 +1823,8 @@
         "No row selected in {{title}}": "No row selected in {{title}}",
         "Not all data is shown": "Not all data is shown",
         "{{title}} widget header": "{{title}} widget header",
-        "context menu - {{title}} widget": "context menu - {{title}} widget"
+        "Context menu - {{title}} widget": "Context menu - {{title}} widget",
+        "Context menu": "Context menu"
     },
     "FloatingEditor": {
         "Collapse Editor": "Collapse Editor"
@@ -2449,10 +2455,11 @@
         "Sort by name": "Sort by name",
         "Unpin": "Unpin",
         "Workspace": "Workspace",
-        "context menu - {{- documentName }}": "context menu - {{- documentName }}",
+        "Context menu - {{- documentName }}": "Context menu - {{- documentName }}",
         "Documents list": "Documents list",
         "Download document...": "Download document...",
-        "Deleted {{at}}": "Deleted {{at}}"
+        "Deleted {{at}}": "Deleted {{at}}",
+        "Context menu": "Context menu"
     },
     "RenameDocModal": {
         "Choose color": "Choose color",
@@ -3804,7 +3811,8 @@
         "{{ask}}, or {{write}}": "{{ask}}, or {{write}}"
     },
     "PinnedDocs": {
-        "context menu - {{- documentName }}": "context menu - {{- documentName }}"
+        "Context menu - {{- documentName }}": "Context menu - {{- documentName }}",
+        "Context menu": "Context menu"
     },
     "ExampleCard": {
         "Close": "Close"

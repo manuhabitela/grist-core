@@ -231,7 +231,10 @@ export class DocList extends Disposable {
                         parentSelectorToMark: "." + cssDocRow.className,
                       }),
                       dom.on("click", ev => stopEvent(ev)),
-                      altWithTooltip(t("context menu - {{- documentName }}", { documentName: `"${doc.name}"` })),
+                      altWithTooltip(
+                        t("Context menu - {{- documentName }}", { documentName: `"${doc.name}"` }),
+                        { tooltipText: t("Context menu"), tooltipPlacement: "left" },
+                      ),
                       testId("doc-options"),
                     ),
                     contextMenu(() => makeDocOptionsMenu(this._home, doc), {

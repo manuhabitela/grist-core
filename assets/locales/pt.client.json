@@ -600,12 +600,13 @@
         "Validate Data": "Validar dados",
         "Settings": "Configurações",
         "API console": "Consola API",
-        "context menu - Access Rules": "Menu de contexto - Regras de acesso",
+        "Context menu - Access Rules": "Menu de contexto - Regras de acesso",
         "Delete document tour": "Apagar o tour do documento",
         "Preview the tutorial": "Visualizar o tutorial",
         "Proposed changes": "Alterações propostas",
         "Suggest changes": "Sugerir alterações",
-        "Suggestions": "Sugestões"
+        "Suggestions": "Sugestões",
+        "Context menu": "Menu de contexto"
     },
     "TopBar": {
         "Manage team": "Gerir a equipa",
@@ -1323,8 +1324,9 @@
         "Tutorial": "Tutorial",
         "Terms of service": "Termos de serviço",
         "Grist Resources": "Recursos do Grist",
-        "context menu - {{- workspaceName }}": "menu de contexto - {{- workspaceName }}",
-        "Import from Airtable": "Importar de Airtable"
+        "Context menu - {{- workspaceName }}": "menu de contexto - {{- workspaceName }}",
+        "Import from Airtable": "Importar de Airtable",
+        "Context menu": "menu de contexto"
     },
     "Importer": {
         "Merge rows that match these fields:": "Mesclar linhas que correspondem a estes campos:",
@@ -1442,7 +1444,8 @@
         "Set default: Collapse": "Definir predefinição: colapso",
         "Set default: Expand": "Definir predefinição: Expandir",
         "Collapse {{maybeDefault}}": "Recolher {{maybeDefault}}",
-        "context menu - {{- pageName }}": "menu de contexto - {{- pageName }}"
+        "Context menu - {{- pageName }}": "menu de contexto - {{- pageName }}",
+        "Context menu": "menu de contexto"
     },
     "search": {
         "Find Next ": "Encontrar Próximo ",
@@ -2192,10 +2195,11 @@
         "No documents to show.": "Não há documentos para mostrar.",
         "Workspace": "Área de Trabalho",
         "Pin": "Fixar",
-        "context menu - {{- documentName }}": "menu de contexto - {{- documentName }}",
+        "Context menu - {{- documentName }}": "menu de contexto - {{- documentName }}",
         "Documents list": "Lista de documentos",
         "Download document...": "Descarregar documento...",
-        "Deleted {{at}}": "{{at}} apagado"
+        "Deleted {{at}}": "{{at}} apagado",
+        "Context menu": "menu de contexto"
     },
     "RightPanelUtils": {
         "fields_one": "Campos",

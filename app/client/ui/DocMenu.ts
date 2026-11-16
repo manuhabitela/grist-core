@@ -325,7 +325,10 @@ function buildWorkspaceDocBlock(
               { placement: "bottom-start", parentSelectorToMark: "." + css.docRowWrapper.className }),
             dom.on("click", (ev) => { ev.stopPropagation(); ev.preventDefault(); }),
             { type: "button" },
-            altWithTooltip(t("context menu - {{- documentName }}", { documentName: `"${doc.name}"` })),
+            altWithTooltip(
+              t("Context menu - {{- documentName }}", { documentName: `"${doc.name}"` }),
+              { tooltipText: t("Context menu") },
+            ),
             testId("doc-options"),
           ),
         ];

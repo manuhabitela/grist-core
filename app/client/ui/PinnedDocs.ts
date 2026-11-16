@@ -78,7 +78,10 @@ export function buildPinnedDoc(home: HomeModel, doc: Document, workspace: Worksp
       ] :
       pinnedDocOptions(
         { type: "button" },
-        altWithTooltip(t("context menu - {{- documentName }}", { documentName: `"${doc.name}"` })),
+        altWithTooltip(
+          t("Context menu - {{- documentName }}", { documentName: `"${doc.name}"` }),
+          { tooltipText: t("Context menu") },
+        ),
         icon("Dots"),
         menu(() => makeDocOptionsMenu(home, doc),
           { placement: "bottom-start" }),

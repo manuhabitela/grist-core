@@ -337,7 +337,8 @@
         "Record Card": "Vue fiche",
         "Remove table": "Supprimer la table",
         "Record Card Disabled": "Vue fiche désactivée",
-        "context menu - {{- tableName }}": "menu contextuel - {{- tableName }}"
+        "Context menu - {{- tableName }}": "menu contextuel - {{- tableName }}",
+        "Context menu": "menu contextuel"
     },
     "DocHistory": {
         "Activity": "Activité",
@@ -397,7 +398,8 @@
         "Grid view": "Vue icônes",
         "List view": "Vue liste",
         "Documents": "Documents",
-        "context menu - {{- documentName }}": "menu contextuel - {{- documentName }}"
+        "Context menu - {{- documentName }}": "menu contextuel - {{- documentName }}",
+        "Context menu": "menu contextuel"
     },
     "DocPageModel": {
         "Error accessing document": "Erreur lors de l'accès au document",
@@ -735,11 +737,12 @@
         "Tutorial": "Tutoriel",
         "Terms of service": "CGU",
         "Grist Resources": "Ressources Grist",
-        "context menu - {{- workspaceName }}": "menu contextuel - {{- workspaceName }}",
+        "Context menu - {{- workspaceName }}": "menu contextuel - {{- workspaceName }}",
         "Import from Airtable": "Importer depuis Airtable",
         "Airtable": "Airtable",
         "Import from {{importSource}}": "Importer depuis {{importSource}}",
-        "Import from...": "Importer depuis ..."
+        "Import from...": "Importer depuis ...",
+        "Context menu": "menu contextuel"
     },
     "Importer": {
         "Update existing records": "Mettre à jour les enregistrements existants",
@@ -1035,12 +1038,13 @@
         "Raw data": "Données source",
         "Settings": "Paramètres",
         "API console": "Console de l'API",
-        "context menu - Access Rules": "menu contextuel - Règles d'Accès",
+        "Context menu - Access Rules": "menu contextuel - Règles d'Accès",
         "Delete document tour": "Supprimer la visite de document",
         "Preview the tutorial": "Prévisualiser le tutoriel",
         "Proposed changes": "Suggestions de modifications",
         "Suggest changes": "Suggérer des modifications",
-        "Suggestions": "Suggestions"
+        "Suggestions": "Suggestions",
+        "Context menu": "menu contextuel"
     },
     "TopBar": {
         "Comments": "Commentaires",
@@ -1125,7 +1129,8 @@
         "Sort and filter": "Trier et filtrer",
         "Calendar view": "Vue Calendrier",
         "Remove custom options": "Supprimer les options personnalisées",
-        "context menu - {{title}} widget": "menu contextuel - vue {{title}}"
+        "Context menu - {{title}} widget": "menu contextuel - vue {{title}}",
+        "Context menu": "menu contextuel"
     },
     "VisibleFieldsConfig": {
         "Hidden Fields cannot be reordered": "Les champs masqués ne peuvent pas être réordonnés",
@@ -1266,7 +1271,8 @@
         "Expand {{maybeDefault}}": "Ouvrir {{maybeDefault}}",
         "Set default: Collapse": "Définir par défaut : Fermer",
         "Set default: Expand": "Définir par défaut : Ouvrir",
-        "context menu - {{- pageName }}": "menu contextuel - {{- pageName }}"
+        "Context menu - {{- pageName }}": "menu contextuel - {{- pageName }}",
+        "Context menu": "menu contextuel"
     },
     "search": {
         "Search in document": "Rechercher dans le document",
@@ -1695,7 +1701,8 @@
         "No row selected in {{title}}": "Aucune ligne sélectionnée dans {{title}}",
         "Not all data is shown": "Toute la donnée n'est pas visible",
         "{{title}} widget header": "En-tête de la vue {{title}}",
-        "context menu - {{title}} widget": "menu contextuel - vue {{title}}"
+        "Context menu - {{title}} widget": "menu contextuel - vue {{title}}",
+        "Context menu": "menu contextuel"
     },
     "UserManager": {
         "Allow anyone with the link to open.": "Permettre à toute personne possédant le lien de l'ouvrir.",
@@ -2406,10 +2413,11 @@
         "Requires edit permissions": "Nécessite des autorisations de modification",
         "Move {{name}} to workspace": "Déplacer {{name}} vers le dossier",
         "Workspace": "Dossier",
-        "context menu - {{- documentName }}": "menu contextuel - {{- documentName }}",
+        "Context menu - {{- documentName }}": "menu contextuel - {{- documentName }}",
         "Documents list": "Liste des documents",
         "Download document...": "Télécharger le document...",
-        "Deleted {{at}}": "Supprimé {{at}}"
+        "Deleted {{at}}": "Supprimé {{at}}",
+        "Context menu": "menu contextuel"
     },
     "RenameDocModal": {
         "Icon": "Icône",
@@ -3819,7 +3827,8 @@
         "Dismiss": "Ignorer"
     },
     "PinnedDocs": {
-        "context menu - {{- documentName }}": "menu contextuel - {{- documentName }}"
+        "Context menu - {{- documentName }}": "menu contextuel - {{- documentName }}",
+        "Context menu": "menu contextuel"
     },
     "ExampleCard": {
         "Close": "Fermer"

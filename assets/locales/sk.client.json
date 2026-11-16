@@ -743,7 +743,8 @@
         "Terms of service": "Podmienky služby",
         "Tutorial": "Návod",
         "Grist Resources": "Zdroje Grist",
-        "context menu - {{- workspaceName }}": "kontextové menu - {{- workspaceName }}"
+        "Context menu - {{- workspaceName }}": "kontextové menu - {{- workspaceName }}",
+        "Context menu": "kontextové menu"
     },
     "LeftPanelCommon": {
         "Help Center": "Centrum Pomoci",
@@ -919,12 +920,13 @@
         "Raw data": "Surové údaje",
         "Return to viewing as yourself": "Vráťiť sa ku svojmu zobrazeniu",
         "TOOLS": "NÁSTROJE",
-        "context menu - Access Rules": "kontextové menu - Pravidlá prístupu",
+        "Context menu - Access Rules": "kontextové menu - Pravidlá prístupu",
         "Delete document tour": "Vymazať prehliadku dokumentov",
         "Preview the tutorial": "Náhľad tutoriálu",
         "Proposed changes": "Navrhované Zmeny",
         "Suggest changes": "Navrhnúť Zmeny",
-        "Suggestions": "Návrhy"
+        "Suggestions": "Návrhy",
+        "Context menu": "kontextové menu"
     },
     "TopBar": {
         "Manage team": "Riadiť tím"
@@ -1764,7 +1766,8 @@
         "Expand {{maybeDefault}}": "Rozbaliť {{maybeDefault}}",
         "Set default: Collapse": "Predvolené: Zložiť",
         "Set default: Expand": "Predvolené: Rozbaliť",
-        "context menu - {{- pageName }}": "kontextové menu - {{- pageName }}"
+        "Context menu - {{- pageName }}": "kontextové menu - {{- pageName }}",
+        "Context menu": "kontextové menu"
     },
     "SelectionSummary": {
         "Copied to clipboard": "Skopírované do schránky"
@@ -2166,10 +2169,11 @@
         "Delete": "Odstrániť",
         "Document will be moved to Trash.": "Dokument bude presunutý do Koša.",
         "Edited {{at}}": "Upravené {{at}}",
-        "context menu - {{- documentName }}": "kontextové menu - {{- documentName }}",
+        "Context menu - {{- documentName }}": "kontextové menu - {{- documentName }}",
         "Documents list": "Zoznam dokumentov",
         "Download document...": "Stiahnuť dokument...",
-        "Deleted {{at}}": "Zmazaný {{at}}"
+        "Deleted {{at}}": "Zmazaný {{at}}",
+        "Context menu": "kontextové menu"
     },
     "RenameDocModal": {
         "Choose color": "Vybrať farbu",

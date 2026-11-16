@@ -679,7 +679,8 @@
         "Tutorial": "Samouczek",
         "Terms of service": "Warunki usługi",
         "Grist Resources": "Zasoby Grist",
-        "context menu - {{- workspaceName }}": "menu kontekstowe - {{- workspaceName }}"
+        "Context menu - {{- workspaceName }}": "menu kontekstowe - {{- workspaceName }}",
+        "Context menu": "menu kontekstowe"
     },
     "Importer": {
         "Select fields to match on": "Wybierz pola do dopasowania",
@@ -929,12 +930,13 @@
         "How-to Tutorial": "Samouczek",
         "Tour of this Document": "Przewodnik po tym dokumencie",
         "API console": "Konsola API",
-        "context menu - Access Rules": "menu kontekstowe - Reguły dostępu",
+        "Context menu - Access Rules": "menu kontekstowe - Reguły dostępu",
         "Preview the tutorial": "Podejrzyj samouczek",
         "Proposed changes": "Zaproponowane zmiany",
         "Suggest changes": "Zasugeruj zmiany",
         "Suggestions": "Sugestie",
-        "Delete document tour": "Usuń przewodnik po dokumecie"
+        "Delete document tour": "Usuń przewodnik po dokumecie",
+        "Context menu": "menu kontekstowe"
     },
     "TriggerFormulas": {
         "Apply on changes to:": "Zastosuj w przypadku zmian do:",
@@ -1135,7 +1137,8 @@
         "Expand {{maybeDefault}}": "Rozwiń {{maybeDefault}}",
         "Set default: Collapse": "Ustaw domyślnie: Zwiń",
         "Set default: Expand": "Ustaw domyślnie: Rozwiń",
-        "context menu - {{- pageName }}": "menu kontekstowe - {{- pageName }}"
+        "Context menu - {{- pageName }}": "menu kontekstowe - {{- pageName }}",
+        "Context menu": "menu kontekstowe"
     },
     "search": {
         "Search in document": "Szukaj w dokumencie",
@@ -2165,10 +2168,11 @@
         "Sort by name": "Sortuj według nazwy",
         "Unpin": "Odepnij",
         "Workspace": "Obszar roboczy",
-        "context menu - {{- documentName }}": "menu kontekstowe - {{- documentName }}",
+        "Context menu - {{- documentName }}": "menu kontekstowe - {{- documentName }}",
         "Documents list": "Lista dokumentów",
         "Download document...": "Pobierz dokument...",
-        "Deleted {{at}}": "Usunięto {{at}}"
+        "Deleted {{at}}": "Usunięto {{at}}",
+        "Context menu": "menu kontekstowe"
     },
     "RenameDocModal": {
         "Choose color": "Wybierz kolor",

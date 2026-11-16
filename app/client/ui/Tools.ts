@@ -93,7 +93,10 @@ export function tools(owner: Disposable, gristDoc: GristDoc, leftPanelOpen: Obse
               placement: "bottom-start",
               parentSelectorToMark: "." + cssPageEntry.className,
             }),
-            altWithTooltip(t("context menu - Access Rules")),
+            altWithTooltip(
+              t("Context menu - Access Rules"),
+              { tooltipText: t("Context menu") },
+            ),
             testId("access-rules-trigger"),
             dom.show(use => use(aclUsers.isInitialized) && _canViewAccessRules),
           ),

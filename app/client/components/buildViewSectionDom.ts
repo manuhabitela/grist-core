@@ -46,7 +46,10 @@ export function buildCollapsedSectionDom(options: {
       ),
     ),
     cssMenu(
-      altWithTooltip(use => t("context menu - {{title}} widget", { title: use(vs.titleDef) })),
+      altWithTooltip(
+        use => t("Context menu - {{title}} widget", { title: use(vs.titleDef) }),
+        { tooltipText: t("Context menu") },
+      ),
       testId("section-menu-viewLayout"),
       cssDotsIconWrapper(cssIcon("Dots")),
       menu(_ctl => makeCollapsedLayoutMenu(vs, gristDoc), {

@@ -717,11 +717,12 @@
         "Tutorial": "Tutorial",
         "Terms of service": "Ketentuan Layanan",
         "Grist Resources": "Sumber Daya Grist",
-        "context menu - {{- workspaceName }}": "menu konteks - {{- workspaceName }}",
+        "Context menu - {{- workspaceName }}": "menu konteks - {{- workspaceName }}",
         "Import from Airtable": "Impor dari Airtable",
         "Airtable": "Airtable",
         "Import from {{importSource}}": "Impor dari {{importSource}}",
-        "Import from...": "Impor dari..."
+        "Import from...": "Impor dari...",
+        "Context menu": "menu konteks"
     },
     "Importer": {
         "Merge rows that match these fields:": "Gabungkan baris yang cocok dengan bidang ini:",
@@ -1007,12 +1008,13 @@
         "Validate Data": "Validasi Data",
         "Settings": "Pengaturan",
         "API console": "Konsol API",
-        "context menu - Access Rules": "menu konteks - Aturan Akses",
+        "Context menu - Access Rules": "menu konteks - Aturan Akses",
         "Delete document tour": "Hapus tur dokumen",
         "Preview the tutorial": "Pratinjau tutorial",
         "Proposed changes": "Perubahan yang Diusulkan",
         "Suggest changes": "Sarankan perubahan",
-        "Suggestions": "Saran"
+        "Suggestions": "Saran",
+        "Context menu": "menu konteks"
     },
     "TopBar": {
         "Manage team": "Kelola tim",
@@ -1230,7 +1232,8 @@
         "Expand {{maybeDefault}}": "Perluas {{maybeDefault}}",
         "Set default: Collapse": "Tetapkan default: Ciutkan",
         "Set default: Expand": "Tetapkan default: Perluas",
-        "context menu - {{- pageName }}": "menu konteks - {{- pageName }}"
+        "Context menu - {{- pageName }}": "menu konteks - {{- pageName }}",
+        "Context menu": "menu konteks"
     },
     "search": {
         "Find Next ": "Temukan Berikutnya ",
@@ -2507,10 +2510,11 @@
         "Sort by name": "Urut berdasarkan nama",
         "Unpin": "Lepas sematan",
         "Workspace": "Ruang kerja",
-        "context menu - {{- documentName }}": "menu konteks - {{- documentName }}",
+        "Context menu - {{- documentName }}": "menu konteks - {{- documentName }}",
         "Documents list": "Daftar dokumen",
         "Download document...": "Unduh dokumen...",
-        "Deleted {{at}}": "Dihapus {{at}}"
+        "Deleted {{at}}": "Dihapus {{at}}",
+        "Context menu": "menu konteks"
     },
     "RightPanelUtils": {
         "columns_one": "kolom",

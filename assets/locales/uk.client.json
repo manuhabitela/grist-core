@@ -829,7 +829,8 @@
         "Tutorial": "Туторіал",
         "Terms of service": "Умови надання послуг",
         "Grist Resources": "Ресурси Grist",
-        "context menu - {{- workspaceName }}": "контекстне меню - {{- workspaceName }}"
+        "Context menu - {{- workspaceName }}": "контекстне меню - {{- workspaceName }}",
+        "Context menu": "контекстне меню"
     },
     "Importer": {
         "Merge rows that match these fields:": "Об'єднати рядки, які відповідають цим полям:",
@@ -994,12 +995,13 @@
         "Validate Data": "Перевірити дані",
         "Settings": "Налаштування",
         "API console": "Консоль API",
-        "context menu - Access Rules": "контекстне меню - Правила доступу",
+        "Context menu - Access Rules": "контекстне меню - Правила доступу",
         "Delete document tour": "Видалити огляд документа",
         "Preview the tutorial": "Попередній перегляд посібника",
         "Proposed changes": "Запропоновані зміни",
         "Suggest changes": "Запропонувати зміни",
-        "Suggestions": "Пропозиції"
+        "Suggestions": "Пропозиції",
+        "Context menu": "контекстне меню"
     },
     "TopBar": {
         "Manage team": "Керування командою"
@@ -1171,7 +1173,8 @@
         "Expand {{maybeDefault}}": "Розгорнути {{maybeDefault}}",
         "Set default: Collapse": "Встановити за замовчуванням: Згорнути",
         "Set default: Expand": "Встановити за замовчуванням: Розгорнути",
-        "context menu - {{- pageName }}": "контекстне меню - {{- pageName }}"
+        "Context menu - {{- pageName }}": "контекстне меню - {{- pageName }}",
+        "Context menu": "контекстне меню"
     },
     "search": {
         "Find Next ": "Знайти наступне ",
@@ -2168,10 +2171,11 @@
         "Sort by name": "Сортувати за назвою",
         "Unpin": "Відкріпити",
         "Workspace": "Робочий простір",
-        "context menu - {{- documentName }}": "контекстне меню - {{- documentName }}",
+        "Context menu - {{- documentName }}": "контекстне меню - {{- documentName }}",
         "Documents list": "Список документів",
         "Download document...": "Завантажити документ...",
-        "Deleted {{at}}": "Видалено {{at}}"
+        "Deleted {{at}}": "Видалено {{at}}",
+        "Context menu": "контекстне меню"
     },
     "RenameDocModal": {
         "Choose color": "Виберіть колір",

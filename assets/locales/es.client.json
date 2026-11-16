@@ -548,7 +548,8 @@
         "Tutorial": "Tutorial",
         "Terms of service": "Términos del servicio",
         "Grist Resources": "Recursos de Grist",
-        "context menu - {{- workspaceName }}": "menú contextual - {{- workspaceName }}"
+        "Context menu - {{- workspaceName }}": "menú contextual - {{- workspaceName }}",
+        "Context menu": "menú contextual"
     },
     "LeftPanelCommon": {
         "Help Center": "Centro de ayuda"
@@ -784,9 +785,10 @@
         "Validate Data": "Validar datos",
         "Settings": "Ajustes",
         "API console": "Consola de la API",
-        "context menu - Access Rules": "menú contextual - Reglas de acceso",
+        "Context menu - Access Rules": "menú contextual - Reglas de acceso",
         "Delete document tour": "Borrar el recorrido del documento",
-        "Preview the tutorial": "Vista previa del tutorial"
+        "Preview the tutorial": "Vista previa del tutorial",
+        "Context menu": "menú contextual"
     },
     "TopBar": {
         "Manage team": "Administrar equipo"
@@ -1157,7 +1159,8 @@
         "Expand {{maybeDefault}}": "Expandir {{maybeDefault}}",
         "Set default: Collapse": "Establecer predeterminado: Contraer",
         "Set default: Expand": "Establecer predeterminado: Expandir",
-        "context menu - {{- pageName }}": "menú contextual - {{- pageName }}"
+        "Context menu - {{- pageName }}": "menú contextual - {{- pageName }}",
+        "Context menu": "menú contextual"
     },
     "search": {
         "Find Next ": "Buscar siguiente ",
@@ -2109,8 +2112,9 @@
         "Unpin": "Liberar",
         "Workspace": "Espacios de trabajo",
         "Manage users": "Gestionar usuarios",
-        "context menu - {{- documentName }}": "menú contextual - {{- documentName }}",
-        "Documents list": "Lista de documentos"
+        "Context menu - {{- documentName }}": "menú contextual - {{- documentName }}",
+        "Documents list": "Lista de documentos",
+        "Context menu": "menú contextual"
     },
     "RenameDocModal": {
         "Choose icon": "Elegir icono",

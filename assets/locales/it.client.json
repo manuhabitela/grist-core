@@ -45,7 +45,8 @@
         "Tutorial": "Tutorial",
         "Terms of service": "Condizioni di servizio",
         "Grist Resources": "Risorse Grist",
-        "context menu - {{- workspaceName }}": "menu contestuale - {{- workspaceName }}"
+        "Context menu - {{- workspaceName }}": "menu contestuale - {{- workspaceName }}",
+        "Context menu": "menu contestuale"
     },
     "MakeCopyMenu": {
         "However, it appears to be already identical.": "Tuttavia, sembra essere già identico.",

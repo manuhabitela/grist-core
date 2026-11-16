@@ -720,11 +720,12 @@
         "Tutorial": "Gyakorlat",
         "Terms of service": "Szolgáltatási feltételek",
         "Grist Resources": "Grist eszközök és tudástár",
-        "context menu - {{- workspaceName }}": "kontextus-menü - {{- workspaceName }}",
+        "Context menu - {{- workspaceName }}": "kontextus-menü - {{- workspaceName }}",
         "Import from Airtable": "Importálás Airtable-ből",
         "Airtable": "Airtable",
         "Import from {{importSource}}": "Importálás innen: {{importSource}}",
-        "Import from...": "Importálás..."
+        "Import from...": "Importálás...",
+        "Context menu": "kontextus-menü"
     },
     "Importer": {
         "Column Mapping": "Oszlopok megfeleltetése",
@@ -1010,12 +1011,13 @@
         "Validate Data": "Adatok validálása",
         "Settings": "Beállítások",
         "API console": "API konzol",
-        "context menu - Access Rules": "kontextus-menü - Hozzáférési szabályok",
+        "Context menu - Access Rules": "kontextus-menü - Hozzáférési szabályok",
         "Delete document tour": "Dokumentum-bemutató törlése",
         "Preview the tutorial": "Bemutató előnézete",
         "Proposed changes": "Javasolt változtatások",
         "Suggest changes": "Javasolt változtatást",
-        "Suggestions": "Javaslatok"
+        "Suggestions": "Javaslatok",
+        "Context menu": "kontextus-menü"
     },
     "TopBar": {
         "Manage team": "Csapat kezelése",
@@ -1237,7 +1239,8 @@
         "Expand {{maybeDefault}}": "Kibont {{maybeDefault}}",
         "Set default: Collapse": "Alapértelmezetten összezár",
         "Set default: Expand": "Alapértelmezetten kibont",
-        "context menu - {{- pageName }}": "kontextus-menü - {{- pageName }}"
+        "Context menu - {{- pageName }}": "kontextus-menü - {{- pageName }}",
+        "Context menu": "kontextus-menü"
     },
     "search": {
         "Find Next ": "Következő keresése ",
@@ -2364,10 +2367,11 @@
         "Sort by name": "Rendezés név szerint",
         "Unpin": "Rögzítés feloldása",
         "Workspace": "Munkaterület",
-        "context menu - {{- documentName }}": "helyi menü - {{- documentName }}",
+        "Context menu - {{- documentName }}": "helyi menü - {{- documentName }}",
         "Documents list": "Dokumentumok listája",
         "Download document...": "Dokumentum letöltése...",
-        "Deleted {{at}}": "Törölve {{at}}-kor"
+        "Deleted {{at}}": "Törölve {{at}}-kor",
+        "Context menu": "helyi menü"
     },
     "RenameDocModal": {
         "Choose color": "Válassz színt",
