@@ -5,6 +5,8 @@
  * - to be shown briefly, as a transient notification next to some action element.
  */
 
+import { FocusLayer } from "app/client/lib/FocusLayer";
+import { enableTabTrap, kbFocusHighlighterClass } from "app/client/lib/focusUtils";
 import { makeT } from "app/client/lib/localization";
 import { logTelemetryEvent } from "app/client/lib/telemetry";
 import { altWithTooltip } from "app/client/ui/altText";
@@ -385,6 +387,7 @@ function buildClickableInfoTooltip(
   const { popupOptions } = options;
   return dom.domComputed(tooltip, tip =>
     cssInfoTooltipButton("?",
+      altWithTooltip(t("Info (?)"), { tooltipText: t("Info") }),
       (elem) => {
         setPopupToCreateDom(
           elem,
@@ -405,11 +408,19 @@ function buildClickableInfoTooltip(
               ),
               dom.cls(menuCssClass),
               dom.cls(cssMenu.className),
+              dom.cls(kbFocusHighlighterClass),
               dom.onKeyDown({
                 Enter: () => ctl.close(),
                 Escape: () => ctl.close(),
               }),
-              (popup) => { setTimeout(() => popup.focus(), 0); },
+              { "role": "dialog", "aria-modal": "true", "aria-label": t("Info") },
+              (popupEl) => {
+                enableTabTrap(popupEl);
+                FocusLayer.create(ctl, {
+                  defaultFocusElem: popupEl,
+                  pauseMousetrap: true,
+                });
+              },
               testId("info-tooltip-popup"),
             );
           },
@@ -635,7 +646,7 @@ const cssDisableSelectOnAll = styled("div", `
   }
 `);
 
-const cssTooltipCloseButton = styled("div", `
+const cssTooltipCloseButton = styled(unstyledButton, `
   cursor: pointer;
   user-select: none;
   width: 16px;
@@ -652,7 +663,7 @@ const cssTooltipCloseButton = styled("div", `
   }
 `);
 
-const cssInfoTooltipIcon = styled("div", `
+const cssInfoTooltipIcon = styled(unstyledButton, `
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -673,6 +684,7 @@ const cssInfoTooltipIcon = styled("div", `
 
 export const cssInfoTooltipButton = styled(cssInfoTooltipIcon, `
   cursor: pointer;
+  outline-offset: 2px;
 
   &:hover {
     border: 1px solid ${theme.controlSecondaryHoverFg};
@@ -702,7 +714,7 @@ const cssInfoTooltipPopup = styled("div", `
 const cssInfoTooltipPopupBody = styled("div", `
   color: ${theme.text};
   text-align: left;
-  padding: 0px 16px 16px 16px;
+  padding: 20px;
 `);
 
 const cssInfoTooltipPopupCloseButton = styled(unstyledButton, `
@@ -710,9 +722,13 @@ const cssInfoTooltipPopupCloseButton = styled(unstyledButton, `
   align-self: flex-end;
   cursor: pointer;
   --icon-color: ${theme.controlSecondaryFg};
-  margin: 8px 8px 4px 0px;
+  margin: 2px;
   padding: 2px;
   border-radius: 4px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  outline-offset: -1px;
 
   &:hover {
     background-color: ${theme.hover};
