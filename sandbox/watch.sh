@@ -13,19 +13,25 @@ PROJECT=""
 if [[ -e ext/app ]]; then
   PROJECT="tsconfig-ext.json"
 fi
-WEBPACK_CONFIG=buildtools/webpack.config.js
-if [[ -e ext/buildtools/webpack.config.js ]]; then
-  WEBPACK_CONFIG=ext/buildtools/webpack.config.js
+ROLLDOWN_CONFIG=buildtools/rolldown.config.mjs
+if [[ -e ext/buildtools/rolldown.config.mjs ]]; then
+  ROLLDOWN_CONFIG=ext/buildtools/rolldown.config.mjs
+elif [[ -e ext/buildtools/webpack.config.js ]]; then
+  echo "ERROR: ext/buildtools/webpack.config.js is no longer used." >&2
+  echo "Provide ext/buildtools/rolldown.config.mjs instead." >&2
+  exit 1
 fi
 
 if [ ! -e _build ]; then
   buildtools/build.sh
 fi
 
+export NODE_ENV=development
+export GRIST_BUNDLE_MINIFY=0
 tsc --build -w --preserveWatchOutput $PROJECT &
 css_files="app/client/**/*.css"
 chokidar "${css_files}" -c "bash -O globstar -c 'cat ${css_files} > static/bundle.css'" &
-webpack --config $WEBPACK_CONFIG --mode development --watch &
+rolldown --config "$ROLLDOWN_CONFIG" --watch &
 # Show debug-level logs while developing.
 : "${GRIST_LOG_LEVEL:=debug}"
 export GRIST_LOG_LEVEL

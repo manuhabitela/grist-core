@@ -9,7 +9,7 @@
 #   ext/               - compiled extension code (from the image's /grist/_build/ext)
 #   ext/assets/        - extension assets (from the image's /grist/ext/assets)
 #   ext/node_modules/  - extension dependencies (from the image's root /node_modules)
-#   static/            - static assets and webpack bundles (from /grist/static)
+#   static/            - static assets and client bundles (from /grist/static)
 #
 # The tarball is pushed to the following S3 path:
 #   ${PREFIX}/${CHANNEL}/${YYYYMMDD}.${NNNN}/ext-${LABEL}.tar.gz

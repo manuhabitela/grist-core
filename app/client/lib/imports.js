@@ -1,8 +1,11 @@
 /**
  *
- * Dynamic imports from js work fine with webpack; from typescript we need to upgrade
+ * Dynamic imports from js work with the client bundler; from typescript we need to upgrade
  * our "module" setting, which has a lot of knock-on effects.  To work around that for
  * the moment, importing can be done from this js file.
+ *
+ * The webpackChunkName comments are historical names. Rolldown names each async
+ * chunk from the imported module.
  *
  */
 /* global document */

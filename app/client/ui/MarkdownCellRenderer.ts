@@ -36,12 +36,13 @@ const markedAsync = new AsyncCreate<Marked>(async () => {
     buildCodeHighlighter({ maxLines: 60 }),
     loadMarkedKatex(),
   ]);
+  // Cast: marked's dual CJS/ESM type entries are distinct under moduleResolution bundler.
   return new Marked(
     markedHighlight({
       highlight: code => highlight(code),
-    }),
-    markedLinkifyIt(),
-    markedKatex({ nonStandard: false, throwOnError: false }),
+    }) as import("marked").MarkedExtension,
+    markedLinkifyIt() as import("marked").MarkedExtension,
+    markedKatex({ nonStandard: false, throwOnError: false }) as import("marked").MarkedExtension,
   );
 });
 

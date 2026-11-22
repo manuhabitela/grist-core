@@ -429,10 +429,11 @@ class AssistantConversation extends Disposable {
     if (!AssistantConversation._marked) {
       AssistantConversation._marked = new AsyncCreate(async () => {
         const highlight = await buildCodeHighlighter({ maxLines: 60 });
+        // Cast: marked's dual CJS/ESM type entries are distinct under moduleResolution bundler.
         return new Marked(
           markedHighlight({
             highlight: code => highlight(code),
-          }),
+          }) as import("marked").MarkedExtension,
         );
       });
     }

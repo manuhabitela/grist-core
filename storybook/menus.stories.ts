@@ -3,7 +3,7 @@ import {
   searchableMenu, select,
 } from "app/client/ui2018/menus";
 
-import { action } from "@storybook/addon-actions";
+import { action } from "storybook/actions";
 import { dom, Observable, styled } from "grainjs";
 
 export default {

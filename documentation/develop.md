@@ -113,9 +113,11 @@ And start using your nodejs debugger client (like the Chrome Devtools). See http
 
 ## Coding Rules
 
-The coding rules are enforced by the Eslint tool. You can run it using the
-`yarn lint` command and you may run `yarn lint:fix` to make eslint try to
-fix them for you (most of them can be fixed this way).
+The coding rules are enforced by Oxlint, including the `@stylistic` rules.
+You can run it using the `yarn lint` command and you may run `yarn lint:fix`
+to apply the automatic fixes (most of the rules can be fixed this way).
+Type-aware TypeScript rules are not enabled: the type checker Oxlint uses
+rejects this repo's `baseUrl` and `moduleResolution` settings.
 
 
 ## Run tests
@@ -173,7 +175,7 @@ When you discover flakiness on the CI, these options are offered to you (which a
 # Example below for nbrowser tests
 for i in {1..20}; do GREP_TESTS="^yourTestSuiteHere\b" yarn test:nbrowser:ci -- -- --bail || break; echo "✅ Step $i 🎉"; done
 ```
-  - NB: You can also change the code to add a for-loop around a `describe()` section in tests, that's recommended for `projects` tests due to the build of the webpack assets
+  - NB: You can also change the code to add a for-loop around a `describe()` section in tests, that's recommended for `projects` tests due to the build of the client bundles
 2. Download the assets, check the snapshots when the errors occurred
 3. On Linux: Use [systemd-run](https://manpages.debian.org/trixie/systemd/systemd-run.1.en.html) on Linux to make nodejs and the browser run slower
 ```bash

@@ -45,10 +45,17 @@ export interface Currency {
 
 export let currencies: readonly Currency[];
 
-// locale-currency package doesn't have South Sudanese pound currency or a default value for Kosovo
-LocaleCurrencyMap.SS = "SSP";
-LocaleCurrencyMap.XK = "EUR";
-const currenciesCodes = Object.values(LocaleCurrencyMap);
+// locale-currency package doesn't have South Sudanese pound currency or a default value for Kosovo.
+// Copy the map: the package exports a CJS object, and ESM namespace imports cannot be assigned to.
+const currencyByCountry: Record<string, string> = {};
+for (const [code, currency] of Object.entries(LocaleCurrencyMap)) {
+  if (code !== "default" && typeof currency === "string") {
+    currencyByCountry[code] = currency;
+  }
+}
+currencyByCountry.SS = "SSP";
+currencyByCountry.XK = "EUR";
+const currenciesCodes = Object.values(currencyByCountry);
 export function getCurrency(code: string) {
   const currency = LocaleCurrency.getCurrency(code ?? "en-US");
   // Fallback to USD

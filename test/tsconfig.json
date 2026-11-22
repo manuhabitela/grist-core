@@ -14,6 +14,12 @@
   "files": [
     "chai-as-promised.js"
   ],
+  "exclude": [
+    "**/node_modules",
+    "**/bower_components",
+    "**/jspm_packages",
+    "fixtures/projects/*.mjs"
+  ],
   "references": [
     { "path": "../app" },
     { "path": "../stubs/app" }

@@ -9,6 +9,13 @@ import { Disposable, makeTestId, styled } from "grainjs";
 import type Calendar from "@toast-ui/calendar";
 import type { EventObject, Options, TZDate } from "@toast-ui/calendar";
 
+// toast-ui's ExternalEventTypes includes `[eventName: string]: AnyFunc`, so `calendar.on(...)`
+// loses contextual typing under TypeScript 7. Spell the event payloads out explicitly.
+interface ClickEventInfo { event: EventObject }
+interface SelectDateTimeInfo { start: Date; end: Date; isAllday: boolean }
+interface UpdatedEventInfo { event: EventObject; changes: EventObject }
+interface TemplateNow { time: TZDate }
+
 const t = makeT("CalendarWrapper");
 // Same prefix CalendarView uses, so tests reach the whole widget through one namespace.
 const testId = makeTestId("test-calendar-");
@@ -304,7 +311,7 @@ export class CalendarWrapper extends Disposable {
   private _wireEvents() {
     const cal = this._calendar;
 
-    cal.on("clickEvent", ({ event }) => {
+    cal.on("clickEvent", ({ event }: ClickEventInfo) => {
       const rowId = Number(event.id);
       if (!rowId || Number.isNaN(rowId)) { return; }
       this._host.onSelect(rowId);
@@ -329,7 +336,7 @@ export class CalendarWrapper extends Disposable {
     // With the form popup off, TUI fires `selectDateTime` (not `beforeCreateEvent`, which only comes
     // from that popup's Save button) when a grid drag completes; it carries the dragged start/end
     // and all-day flag, which is all we need to seed the new row.
-    cal.on("selectDateTime", async ({ start, end, isAllday }) => {
+    cal.on("selectDateTime", async ({ start, end, isAllday }: SelectDateTimeInfo) => {
       // selectDateTime hands back plain Dates; makeGristDateTime needs a TZDate (it calls .tz()),
       // so wrap them the same way _getAdjustedDate does.
       const rowId = await this._host.onCreate(this.tzDate(start), this.tzDate(end), isAllday);
@@ -339,9 +346,9 @@ export class CalendarWrapper extends Disposable {
       cal.clearGridSelections();
       if (rowId) { this._host.onOpen(rowId); }
     });
-    cal.on("beforeUpdateEvent", ({ event, changes }) =>
+    cal.on("beforeUpdateEvent", ({ event, changes }: UpdatedEventInfo) =>
       this._host.onUpdate(Number(event.id), changes));
-    cal.on("beforeDeleteEvent", event => this._host.onDelete(Number(event.id)));
+    cal.on("beforeDeleteEvent", (event: EventObject) => this._host.onDelete(Number(event.id)));
 
     // Clear leftover grid selections, mirroring the upstream workaround for nhn/tui.calendar#1300.
     // The old widget also called v1's `cancelDrag()` for a bug where a too-fast mouseup left a drag
@@ -424,8 +431,8 @@ export class CalendarWrapper extends Disposable {
   // an overlay in _syncSelectionOverlay to match.
   private _timeTemplates(): NonNullable<Options["template"]> {
     return {
-      timegridDisplayPrimaryTime: ({ time }) => formatHourMinute(time, this._timeFormat),
-      timegridNowIndicatorLabel: ({ time }) => formatHourMinute(time, this._timeFormat),
+      timegridDisplayPrimaryTime: ({ time }: TemplateNow) => formatHourMinute(time, this._timeFormat),
+      timegridNowIndicatorLabel: ({ time }: TemplateNow) => formatHourMinute(time, this._timeFormat),
     };
   }
 

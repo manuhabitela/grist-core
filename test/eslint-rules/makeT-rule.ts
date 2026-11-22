@@ -1,37 +1,52 @@
-import { RuleTester } from "eslint";
-import localRules from "eslint-rules/local-rules";
+import { spawnSync } from "child_process";
+import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
 
-const ruleTester = new RuleTester();
+const repoRoot = process.cwd();
+const plugin = path.join(repoRoot, "eslint-rules/local-rules.js");
 
-// Throws error if the tests in ruleTester.run() do not pass
-ruleTester.run(
-  "makeT-filename", // rule name
-  localRules.rules["makeT-filename"] as any, // rule code.
-  {
-    // 'valid' checks cases that should pass
-    valid: [
-      {
-        name: "passes when makeT() is called with a scope corresponding to the filename",
-        filename: "app/client/ui/App.ts",
-        code: `const t = makeT("App");`,
-      },
-      {
-        name: "passes when makeT() is assigned to a variable not named `t`",
-        filename: "app/client/ui/Foo.ts",
-        code: `const t = makeT("Foo"); const appT = makeT("App");`,
-      },
-    ],
-    // 'invalid' checks cases that should not pass
-    invalid: [
-      {
-        name: "fails when makeT() is called with a scope differing with the filename",
-        filename: "app/client/ui/App.ts",
-        code: `const t = makeT("Foo");`,
-        output: `const t = makeT("App");`,
-        errors: 1,
-      },
-    ],
-  },
+function lint(filename: string, code: string, fix: boolean): { status: number | null, stdout: string, file: string } {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "maket-"));
+  const file = path.join(dir, filename);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, code);
+  fs.writeFileSync(path.join(dir, ".oxlintrc.json"), JSON.stringify({
+    jsPlugins: [{ name: "local", specifier: plugin }],
+    rules: { "local/makeT-filename": "error" },
+    categories: { correctness: "off" },
+  }));
+  const args = ["oxlint", "--config", path.join(dir, ".oxlintrc.json"), file];
+  if (fix) { args.splice(1, 0, "--fix"); }
+  const result = spawnSync(path.join(repoRoot, "node_modules/.bin/oxlint"), args.slice(1), {
+    encoding: "utf8",
+  });
+  return {
+    status: result.status,
+    stdout: `${result.stdout ?? ""}${result.stderr ?? ""}`,
+    file,
+  };
+}
+
+function assert(condition: boolean, message: string) {
+  if (!condition) { throw new Error(message); }
+}
+
+const valid = lint("app/client/ui/App.ts", `const t = makeT("App");\n`, false);
+assert(valid.status === 0, `expected a matching makeT() call to pass:\n${valid.stdout}`);
+
+const otherName = lint(
+  "app/client/ui/Foo.ts",
+  `const t = makeT("Foo"); const appT = makeT("App");\n`,
+  false,
+);
+assert(otherName.status === 0, `expected makeT() assigned to a name other than t to pass:\n${otherName.stdout}`);
+
+const invalid = lint("app/client/ui/App.ts", `const t = makeT("Foo");\n`, true);
+assert(invalid.status === 0, `expected --fix to correct a mismatched makeT() call:\n${invalid.stdout}`);
+assert(
+  fs.readFileSync(invalid.file, "utf8").includes(`makeT("App")`),
+  `expected the fixer to write makeT("App"), got:\n${fs.readFileSync(invalid.file, "utf8")}`,
 );
 
 console.info("✅ makeT-rule: All tests passed!");

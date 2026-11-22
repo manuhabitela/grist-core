@@ -259,6 +259,25 @@ declare module "app/client/lib/koUtil" {
 declare module "bowser/bundled";
 declare module "randomcolor";
 
+// These packages ship a top-level "types" field but omit a "types" condition in
+// "exports", which moduleResolution bundler (required by TypeScript 7) ignores.
+declare module "@toast-ui/calendar" {
+  export { default, Day, Month, TZDate, Week } from "../../node_modules/@toast-ui/calendar/types/index";
+  export type { EventObject, ExternalEventTypes, Options } from "../../node_modules/@toast-ui/calendar/types/index";
+}
+
+declare module "marked-linkify-it" {
+  import type LinkifyIt from "linkify-it";
+  import type { MarkedExtension } from "marked";
+  export default function markedLinkifyIt(
+    schemas?: LinkifyIt.SchemaRules,
+    options?: LinkifyIt.Options & {
+      tlds?: string | string[];
+      tldsKeepOld?: boolean;
+    },
+  ): MarkedExtension;
+}
+
 interface Location {
   // We use reload(true) in places, which has an effect in Firefox, but may be more of a
   // historical accident than an intentional choice.

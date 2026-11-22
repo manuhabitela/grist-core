@@ -1,7 +1,8 @@
 import { ApiError, ApiErrorDetails } from "app/common/ApiError";
 import { tbind } from "app/common/tbind";
 
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios from "axios";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
 
 export interface IOptions {
   headers?: Record<string, string>;

@@ -6,17 +6,19 @@
 
 /* global document */
 
+var Mousetrap;
+
 if (typeof window === "undefined") {
   // We can't require('mousetrap') in a browserless environment (specifically for unittests)
   // because it uses global variables right on require, which are not available with jsdom.
   // So to use mousetrap in unittests, we need to stub it out.
-  module.exports = {
+  Mousetrap = {
     bind: function() {},
     unbind: function() {},
   };
 } else {
 
-  var Mousetrap = require("mousetrap");
+  Mousetrap = require("mousetrap");
 
   // Minus is different on Gecko:
   // see https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode
@@ -97,6 +99,6 @@ if (typeof window === "undefined") {
   Mousetrap.markAlwaysOnShortcut = function(combo) {
     alwaysOnCallbacks[combo] = true;
   };
-
-  module.exports = Mousetrap;
 }
+
+module.exports = Mousetrap;

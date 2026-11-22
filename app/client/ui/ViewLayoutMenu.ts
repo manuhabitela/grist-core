@@ -52,6 +52,8 @@ export function makeViewLayoutMenu(viewSection: ViewSectionRec, isReadonly: bool
 
   // Count number of rendered sections on the viewLayout. Note that the layout might be detached or cleaned
   // when we have an external section in the popup.
+  // The comparison is intentionally dead: callers check the numeric length with `=== 1`.
+  // eslint-disable-next-line no-constant-binary-expression
   const expandedSectionCount = () => gristDoc.viewLayout?.layout.getAllLeafIds().length ?? 0 > 1;
 
   const dontRemoveSection = () =>

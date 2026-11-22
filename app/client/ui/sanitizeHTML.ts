@@ -1,4 +1,4 @@
-import createDOMPurifier, { Config } from "dompurify";
+import createDOMPurifier, { Config, UponSanitizeElementHookEvent } from "dompurify";
 
 export function sanitizeHTML(source: string | Node): string {
   return defaultPurifier.sanitize(source);
@@ -55,7 +55,7 @@ function handleAfterSanitizeAttributes(node: Element) {
   }
 }
 
-function handleSanitizeTutorialElement(node: Node, data: createDOMPurifier.UponSanitizeElementHookEvent) {
+function handleSanitizeTutorialElement(node: Node, data: UponSanitizeElementHookEvent) {
   if (data.tagName !== "iframe") { return; }
 
   const src = (node as Element).getAttribute("src");

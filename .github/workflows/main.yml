@@ -94,7 +94,7 @@ jobs:
           sudo docker cp temp-runsc:/runsc /usr/bin/runsc
           docker rm temp-runsc
 
-      - name: Run eslint
+      - name: Run oxlint
         if: contains(matrix.tests, ':lint:')
         run: yarn run lint:ci
 
@@ -249,9 +249,9 @@ jobs:
           TESTDIR: ${{ runner.temp }}/test-logs
           MOCHA_WEBDRIVER_HEADLESS: 1
 
-      - name: Run eslint unit tests for custom rules
+      - name: Run oxlint unit tests for custom rules
         if: contains(matrix.tests, ':eslint-unit:')
-        run: yarn run test:eslint
+        run: yarn run test:lint-rules
 
       - name: Prepare for saving artifact
         if: failure()

@@ -2,7 +2,7 @@ import { cssButtonIconAndText, cssButtonText } from "app/client/ui/AdminTogglesC
 import * as buttons from "app/client/ui2018/buttons";
 import { cssIconButton, icon } from "app/client/ui2018/icons";
 
-import { action } from "@storybook/addon-actions";
+import { action } from "storybook/actions";
 import { dom, Observable, styled } from "grainjs";
 
 export default {

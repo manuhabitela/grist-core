@@ -42,8 +42,21 @@ declare module "winston/lib/winston/common" {
   export function serialize(meta: any): string;
 }
 
-declare module "file-type" {
-  export * from "file-type/source/index";
+// engine.io's package "exports" only expose the package root; deep imports still
+// exist on disk and are used by GristSocketServer.
+declare module "engine.io/build/transport" {
+  import type { IncomingMessage, ServerResponse } from "http";
+  import type { WebSocket } from "ws";
+  export type EngineRequest = IncomingMessage & {
+    _query: Record<string, string>;
+    res?: ServerResponse;
+    cleanup?: Function;
+    websocket?: WebSocket & {
+      _socket?: {
+        remoteAddress: string;
+      };
+    };
+  };
 }
 
 /**

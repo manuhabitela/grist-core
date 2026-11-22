@@ -1,6 +1,9 @@
 const path = require("path");
 
 module.exports = {
+  meta: {
+    name: "local",
+  },
   rules: {
     "makeT-filename": {
       meta: {

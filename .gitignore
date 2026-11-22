@@ -6,6 +6,7 @@
 /static/grist-plugin-api*
 /static/bundle.css
 /static/browser-check.js
+/test/fixtures/projects/build/
 /static/locales
 /static/*.bundle.js.*.txt
 /grist-sessions.db

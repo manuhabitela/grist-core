@@ -2378,6 +2378,8 @@ namespace gristUtils {
 
   // All users ('user1', etc.) that can be logged in using Session.user().
   export enum TestUserEnum {
+    // Same login as owner below. Oxlint reports the first duplicate, ESLint the later one.
+    // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values, typescript/no-duplicate-enum-values
     user1 = "chimpy",
     user2 = "charon",
     user3 = "kiwi",

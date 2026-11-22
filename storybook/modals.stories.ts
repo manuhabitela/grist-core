@@ -3,7 +3,7 @@ import {
   confirmModal, cssModalBody, cssModalButtons, cssModalTitle, modal, saveModal,
 } from "app/client/ui2018/modals";
 
-import { action } from "@storybook/addon-actions";
+import { action } from "storybook/actions";
 import { Computed, dom, Observable, styled } from "grainjs";
 
 export default {

@@ -13,7 +13,7 @@ if ! ./buildtools/checkout-ext-directory.sh grist-ee; then
 fi
 
 # Ext's dependencies go to ext/node_modules, resolved after the main
-# node_modules (see webpack.config.js); duplicate @types must be removed
+# node_modules (see buildtools/bundle-options.mjs); duplicate @types must be removed
 # (see dedupe-ext-types.sh).
 if [[ -e ext/package.json ]]; then
   yarn install --cwd ext --frozen-lockfile

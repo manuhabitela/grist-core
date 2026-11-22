@@ -12,25 +12,21 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "allowJs": true,
-    "baseUrl": "..",
     "rootDir": "..",
     "outDir": "../_build",
     "paths": {
       "*": [
-        "*",
-        "grist-core/*",
-        "stubs/*",
-        "ext/*"
-      ],
+        "../*",
+        "../grist-core/*",
+        "../stubs/*",
+        "../ext/*"
+      ]
     },
     "composite": true,
-    "types" : [],
-    "plugins": [{
-      "name": "typescript-eslint-language-service"
-    }],
+    "types": [],
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "jsx": "react-jsx"

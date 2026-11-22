@@ -715,8 +715,10 @@ export function sanitizeIdent(ident: string, prefix?: string) {
  *
  * As with all micro-optimizations, only do this when the optimization matters.
  */
-export function cloneFunc(fn: Function): Function {      /* jshint evil:true */  // suppress eval warning.
-  return eval("(" + fn.toString() + ")");
+export function cloneFunc(fn: Function): Function {
+  // Indirect eval: avoids Rolldown's EVAL warning about direct eval (scope/minify issues).
+  // Same intentional use as before — clone a function body into a fresh function object.
+  return (0, eval)("(" + fn.toString() + ")");
 }
 
 /**

@@ -3758,6 +3758,7 @@ describe("GranularAccess", function() {
       assert.isAbove(msg?.data?.docActions.length, 10);
       // Make sure everything we saw was metadata, and the Private2 AddTable
       // action itself did not slip through.
+      // eslint-disable-next-line no-unsafe-optional-chaining
       assert.equal((msg?.data?.docActions as DocAction[])
         .every(a => a[1].startsWith("_grist")), true);
     });

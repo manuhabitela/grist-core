@@ -3,7 +3,8 @@
 set -eEu -o pipefail
 
 PROJECT=""
-WEBPACK_MODE="--mode production"
+export NODE_ENV=production
+export GRIST_BUNDLE_MINIFY=1
 MODE="${1:-}"
 if [[ -e ext/app ]]; then
   PROJECT="tsconfig-ext.json"
@@ -12,15 +13,19 @@ elif [[ "${MODE}" == "prod" ]]; then
   PROJECT="tsconfig-prod.json"
   echo "Building for production"
 else
-  WEBPACK_MODE="--mode development"
+  export NODE_ENV=development
+  export GRIST_BUNDLE_MINIFY=0
   echo "No extra app directory found"
 fi
 
-WEBPACK_CONFIG=buildtools/webpack.config.js
-if [[ -e ext/buildtools/webpack.config.js ]]; then
-  # Allow webpack config file to be replaced (useful
-  # for grist-static)
-  WEBPACK_CONFIG=ext/buildtools/webpack.config.js
+ROLLDOWN_CONFIG=buildtools/rolldown.config.mjs
+if [[ -e ext/buildtools/rolldown.config.mjs ]]; then
+  # Allow the client bundle config to be replaced (useful for grist-static).
+  ROLLDOWN_CONFIG=ext/buildtools/rolldown.config.mjs
+elif [[ -e ext/buildtools/webpack.config.js ]]; then
+  echo "ERROR: ext/buildtools/webpack.config.js is no longer used." >&2
+  echo "Provide ext/buildtools/rolldown.config.mjs instead." >&2
+  exit 1
 fi
 
 # Records the build's version, channel, and git commit in app/common/version.ts, overriding the
@@ -64,7 +69,7 @@ fi
 tsc --build $PROJECT
 node buildtools/write_static_locales.js assets/locales ext/assets/locales
 buildtools/update_type_info.sh app
-webpack --config $WEBPACK_CONFIG $WEBPACK_MODE
-webpack --config buildtools/webpack.check.js $WEBPACK_MODE
-webpack --config buildtools/webpack.api.config.js $WEBPACK_MODE
+rolldown --config "$ROLLDOWN_CONFIG"
+rolldown --config buildtools/rolldown.check.mjs
+rolldown --config buildtools/rolldown.api.config.mjs
 cat app/client/*.css app/client/*/*.css > static/bundle.css

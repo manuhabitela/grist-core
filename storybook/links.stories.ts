@@ -1,7 +1,7 @@
 import * as buttons from "app/client/ui2018/buttons";
 import { cssLink } from "app/client/ui2018/links";
 
-import { action } from "@storybook/addon-actions";
+import { action } from "storybook/actions";
 import { dom, styled } from "grainjs";
 
 export default {
