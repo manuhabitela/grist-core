@@ -1,12 +1,12 @@
 import { makeTestId } from "app/client/lib/domUtils";
-import { urlState } from "app/client/models/gristUrlState";
+import { ariaTabs } from "app/client/ui2018/ariaTabs";
 import { isNarrowScreenObs, theme } from "app/client/ui2018/cssVars";
 import { IconName } from "app/client/ui2018/IconList";
 import { icon as cssIcon } from "app/client/ui2018/icons";
-import { IGristUrlState } from "app/common/gristUrls";
+import { unstyledButton } from "app/client/ui2018/unstyled";
 import { useBindable } from "app/common/gutil";
 
-import { BindableValue, dom, IDomArgs, MaybeObsArray, styled, UseCBOwner } from "grainjs";
+import { dom, IDomArgs, MaybeObsArray, Observable, styled, UseCBOwner } from "grainjs";
 
 const testId = makeTestId("test-component-tabs-");
 
@@ -19,33 +19,45 @@ export interface TabProps {
   icon?: IconName;
   /** Function to call when tab is clicked */
   onClick?: () => void;
-  /** Grist Link state to switch to when tab is clicked. */
-  link?: IGristUrlState;
 }
 
+/**
+ * Builds a tablist following the ARIA Tabs pattern.
+ *
+ * Pair with `ariaTabs(tabListId, selected).tabPanel(...)` for each tab's content.
+ *
+ * @param tabListId - Unique id shared with matching `ariaTabs` / `tabPanel` calls.
+ * @param tabs - Tab definitions to render as tab buttons.
+ * @param selected - Observable holding the active tab id; updated on click / arrow keys.
+ */
 export function buildTabs(
+  tabListId: string,
   tabs: MaybeObsArray<TabProps>,
-  selected: BindableValue<string | null | undefined>,
+  selected: Observable<string>,
   ...args: IDomArgs<HTMLDivElement>
 ) {
+  const { tabList, tab: ariaTab } = ariaTabs(tabListId, selected);
   const isSelected = (tab: TabProps) => (use: UseCBOwner) => useBindable(use, selected) === (tab.id ?? tab.label);
   return cssTabs(
-    dom.forEach(tabs, tab => cssTab(
-      cssIconAndLabel(!tab.icon ? null : cssTabIcon(tab.icon, dom.hide(isNarrowScreenObs())),
+    tabList(),
+    dom.forEach(tabs, (tab) => {
+      const tabId = tab.id ?? tab.label;
+      return cssTab(
+        ariaTab(tabId),
+        cssIconAndLabel(!tab.icon ? null : cssTabIcon(tab.icon, dom.hide(isNarrowScreenObs())),
 
-        // The combination with space makes the label as wide as its bold version,
-        // to avoid slight shifts of other labels when switching tabs.
-        dom("div", tab.label, cssBoldLabelSpacer(tab.label))),
+          // The combination with space makes the label as wide as its bold version,
+          // to avoid slight shifts of other labels when switching tabs.
+          dom("div", tab.label, cssBoldLabelSpacer(tab.label))),
 
-      cssTab.cls("-selected", isSelected(tab)),
+        cssTab.cls("-selected", isSelected(tab)),
 
-      tab.onClick && dom.on("click", tab.onClick.bind(tab)),
+        tab.onClick && dom.on("click", tab.onClick.bind(tab)),
 
-      tab.link && urlState().setLinkUrl(tab.link, { replace: true }),
-
-      testId("tab"),
-      testId("tab-selected", isSelected(tab)),
-    )),
+        testId("tab"),
+        testId("tab-selected", isSelected(tab)),
+      );
+    }),
     testId("list"),
     ...args,
   );
@@ -58,7 +70,7 @@ export const cssTabs = styled("div", `
   user-select: none;
 `);
 
-export const cssTab = styled("a", `
+export const cssTab = styled(unstyledButton, `
   display: block;
   padding: 8px 16px;
   color: ${theme.mediumText};
@@ -73,7 +85,7 @@ export const cssTab = styled("a", `
     text-decoration: none;
   }
 
-  &-selected {
+  &-selected, &[aria-selected="true"] {
     --icon-color: ${theme.controlFg};
     font-weight: 700;
     border-bottom: 2px solid ${theme.controlFg};

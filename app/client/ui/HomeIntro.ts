@@ -128,7 +128,7 @@ function buildPreferencesMenu(homeModel: HomeModel) {
   const { onlyShowDocuments } = homeModel;
 
   return cssDotsMenu(
-    altWithTooltip(t("Welcome menu")),
+    altWithTooltip(t("Context menu - Homepage"), { tooltipText: t("Context menu") }),
     cssDots(icon("Dots")),
     menu(
       () => [

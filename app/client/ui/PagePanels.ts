@@ -12,6 +12,7 @@ import { cssHideForNarrowScreen, isScreenResizing, mediaNotSmall, mediaSmall, th
 import { isNarrowScreenObs } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
 import { unstyledButton } from "app/client/ui2018/unstyled";
+import { IGristUrlState } from "app/common/gristUrls";
 import { useBindable } from "app/common/gutil";
 
 import {
@@ -29,6 +30,7 @@ import {
   TestId,
 } from "grainjs";
 import debounce from "lodash/debounce";
+import isEqual from "lodash/isEqual";
 import noop from "lodash/noop";
 import once from "lodash/once";
 
@@ -137,8 +139,9 @@ export function pagePanels(page: PageContents) {
   //   - close the left panel since if it were open, it was the likely cause of the navigation
   //     (e.g. switch to another page or workspace).
   //   - reset the focus switcher to behave like a normal browser navigation (lose focus).
-  const sub2 = subscribe(isNarrowScreenObs(), urlState().state, (use, narrow, state) => {
-    if (narrow) {
+  const sub2 = urlState().state.addListener((state, prev) => {
+    if (!isActualPageChange(prev, state)) { return; }
+    if (isNarrowScreenObs().get()) {
       left?.panelOpen.set(false);
     }
     regionFocusSwitcher?.reset();
@@ -587,6 +590,13 @@ export function pagePanels(page: PageContents) {
 
 function toggleObs(boolObs: Observable<boolean>) {
   boolObs.set(!boolObs.get());
+}
+
+function isActualPageChange(prev: IGristUrlState, next: IGristUrlState) {
+  return !isEqual(
+    { ...prev, homePageTab: undefined },
+    { ...next, homePageTab: undefined },
+  );
 }
 
 const bottomFooterHeightPx = 48;

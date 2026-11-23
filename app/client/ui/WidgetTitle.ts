@@ -1,8 +1,7 @@
-import * as commands from "app/client/components/commands";
-import { FocusLayer } from "app/client/lib/FocusLayer";
+import { ariaDisabled } from "app/client/lib/domUtils";
+import { focusAdjacentFocusable, lockFocusUntilRemoved } from "app/client/lib/focusUtils";
 import { makeT } from "app/client/lib/localization";
 import { ViewSectionRec } from "app/client/models/entities/ViewSectionRec";
-import { altWithTooltip } from "app/client/ui/altText";
 import { autoGrow } from "app/client/ui/forms";
 import { cssInput, cssLabel, cssRenamePopup, cssTextArea } from "app/client/ui/RenamePopupStyles";
 import { descriptionInfoTooltip } from "app/client/ui/tooltips";
@@ -199,24 +198,6 @@ function buildRenameTitlePopup(ctrl: IOpenController, vs: ViewSectionRec, option
     saveWidgetDesc(),
   ]);
 
-  function initialFocus() {
-    const isRawView = !widgetInput;
-    const isWidgetTitleEmpty = !vs.title.peek();
-    function focus(inputEl?: HTMLInputElement) {
-      inputEl?.focus();
-      inputEl?.select();
-    }
-    if (isSummary) {
-      focus(widgetInput);
-    } else if (isRawView) {
-      focus(tableInput);
-    } else if (isWidgetTitleEmpty) {
-      focus(tableInput);
-    } else {
-      focus(widgetInput);
-    }
-  }
-
   // When the popup is closing we will save everything, unless the user has pressed the cancel button.
   let cancelled = false;
 
@@ -233,87 +214,48 @@ function buildRenameTitlePopup(ctrl: IOpenController, vs: ViewSectionRec, option
     }
   };
 
-  // User interface for the popup.
-  const myCommands = {
-    // Escape key: just close the popup.
-    cancel,
-    // Enter key: save and close the popup, unless the description input is focused.
-    // There is also a variant for Ctrl+Enter which will always save.
-    accept: () => {
-      // Enters are ignored in the description input (unless ctrl is pressed)
-      if (document.activeElement === descInput) { return true; }
-      close();
-    },
-    // ArrowUp
-    cursorUp: () => {
-      // moves focus to the widget title input if it is already at the top of widget description
-      if (document.activeElement === descInput && descInput?.selectionStart === 0) {
-        widgetInput?.focus();
-        widgetInput?.select();
-      } else if (document.activeElement === widgetInput) {
-        tableInput?.focus();
-        tableInput?.select();
-      } else {
-        return true;
-      }
-    },
-    // ArrowDown
-    cursorDown: () => {
-      if (document.activeElement === tableInput) {
-        widgetInput?.focus();
-        widgetInput?.select();
-      } else if (document.activeElement === widgetInput) {
-        descInput?.focus();
-        descInput?.select();
-      } else {
-        return true;
-      }
-    },
-  };
-
-  // Create this group and attach it to the popup and all inputs.
-  const commandGroup = commands.createGroup({ ...myCommands }, ctrl, true);
-
-  let tableInput: HTMLInputElement | undefined;
-  let widgetInput: HTMLInputElement | undefined;
   let descInput: HTMLTextAreaElement | undefined;
   return cssRenamePopup(
-    // Create a FocusLayer to keep focus in this popup while it's active, and prevent keyboard
-    // shortcuts from being seen by the view underneath.
-    (elem) => { FocusLayer.create(ctrl, { defaultFocusElem: elem, pauseMousetrap: false }); },
+    // Keep focus in this popup, pause Grist shortcuts (so Tab can move between fields),
+    // and trap Tab inside the popup.
+    lockFocusUntilRemoved(ctrl),
+    (el) => {
+      // Focus the first focusable input on open
+      setTimeout(() => focusAdjacentFocusable(el, 1), 0);
+    },
     dom.onDispose(onClose),
-    dom.autoDispose(commandGroup),
     testId("popup"),
     dom.cls(menuCssClass),
-    dom.maybe(!options.tableNameHidden, () => [
-      cssLabel(t("DATA TABLE NAME")),
-      // Update tableName on key stroke - this will show the default widget name as we type.
-      // above this modal.
-      tableInput = cssInput(
-        inputTableName,
-        updateOnKey,
-        { disabled: isSummary, placeholder: t("Provide a table name") },
-        testId("table-name-input"),
-        commandGroup.attach(),
-      ),
-    ]),
     dom.maybe(!options.widgetNameHidden, () => [
-      cssLabel(t("WIDGET TITLE")),
-      widgetInput = cssInput(inputWidgetTitle, updateOnKey, { placeholder: inputWidgetPlaceholder },
+      cssLabel(t("WIDGET TITLE"), { for: "widget-title-widget-title-input" }),
+      cssInput(inputWidgetTitle, updateOnKey, { placeholder: inputWidgetPlaceholder },
         testId("section-name-input"),
-        commandGroup.attach(),
+        { id: "widget-title-widget-title-input" },
       ),
     ]),
-    cssLabel(t("WIDGET DESCRIPTION")),
+    cssLabel(t("WIDGET DESCRIPTION"), { for: "widget-title-widget-description-input" }),
     descInput = cssTextArea(inputWidgetDesc, updateOnKey,
       testId("section-description-input"),
-      commandGroup.attach(),
+      { id: "widget-title-widget-description-input" },
       autoGrow(inputWidgetDesc),
     ),
+    dom.maybe(!options.tableNameHidden, () => [
+      cssLabel(t("DATA TABLE NAME"), { for: "widget-title-table-name-input" }),
+      // Update tableName on key stroke - this will show the default widget name as we type.
+      cssInput(
+        inputTableName,
+        updateOnKey,
+        { disabled: isSummary, placeholder: t("Provide a table name"), id: "widget-title-table-name-input" },
+        testId("table-name-input"),
+      ),
+    ]),
     cssButtons(
       primaryButton(t("Save"),
-        dom.on("click", close),
-        dom.boolAttr("disabled", use => use(disableSave) || use(modalCtl.workInProgress)),
+        dom.on("click", () => {
+          if (disableSave.get() || modalCtl.workInProgress.get()) { return; }
+          close();
+        }),
+        ariaDisabled(use => use(disableSave) || use(modalCtl.workInProgress)),
         testId("save"),
       ),
       basicButton(t("Cancel"),
@@ -321,15 +263,26 @@ function buildRenameTitlePopup(ctrl: IOpenController, vs: ViewSectionRec, option
         dom.on("click", cancel),
       ),
     ),
+    // Mousetrap is paused (via lockFocusUntilRemoved), so handle Enter/Escape here.
+    // Previously these were the `accept` / `cancel` Grist commands; Up/Down field
+    // navigation is replaced by normal Tab.
     dom.onKeyDown({
       Enter$: (e) => {
         if (e.ctrlKey || e.metaKey) {
           close();
           return false;
         }
+        // Native newline in the description; native button activation for Save/Cancel.
+        if (document.activeElement === descInput) { return; }
+        if (document.activeElement instanceof HTMLButtonElement) { return; }
+        close();
+        return false;
+      },
+      Escape$: () => {
+        cancel();
+        return false;
       },
     }),
-    (elem) => { setTimeout(initialFocus, 0); },
   );
 }
 

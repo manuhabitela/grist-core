@@ -14,6 +14,7 @@ import { downloadDocModal } from "app/client/ui/MakeCopyMenu";
 import { showRenameDocModal } from "app/client/ui/RenameDocModal";
 import { shadowScroll } from "app/client/ui/shadowScroll";
 import { makeShareDocUrl } from "app/client/ui/ShareMenu";
+import { ariaTabs } from "app/client/ui2018/ariaTabs";
 import {
   isNarrowScreenObs,
   mediaMedium,
@@ -42,12 +43,16 @@ import {
   MaybeObsArray,
   Observable,
   styled,
+  subscribe,
 } from "grainjs";
 import sortBy from "lodash/sortBy";
 
 const t = makeT("DocList");
 
 const testId = makeTestId("test-dm-");
+
+const DOC_LIST_TABLIST_ID = "docList";
+const DOC_LIST_HEADING_ID = "doc-list-heading";
 
 interface DocListOptions {
   home: HomeModel;
@@ -75,21 +80,19 @@ export class DocList extends Disposable {
       id: tab,
       label: this._tabIconsAndLabels[tab].label,
       icon: this._tabIconsAndLabels[tab].icon,
-      link: { homePageTab: tab },
-    }),
-    ));
+    })),
+  );
 
   private readonly _viewSettings =
     this._options.viewSettings ?? this._options.home;
 
-  private readonly _tab = Computed.create(
+  /** Active tab; kept in sync with the URL hash (`homePageTab`). */
+  private readonly _tab: Observable<HomePageTab> = Observable.create(
     this,
-    this._tabNames,
-    urlState().state,
-    (_use, tabs, { homePageTab }) => {
-      return homePageTab && tabs.includes(homePageTab) ? homePageTab : tabs[0];
-    },
+    this._resolveTab(this._tabNames.get(), urlState().state.get().homePageTab),
   );
+
+  private readonly _tabComponents = ariaTabs(DOC_LIST_TABLIST_ID, this._tab);
 
   private readonly _showWorkspace = Computed.create(
     this,
@@ -99,18 +102,48 @@ export class DocList extends Disposable {
     },
   );
 
+  private _syncingTabFromUrl = false;
+
   constructor(private _options: DocListOptions) {
     super();
+
+    // URL / available tabs -> local tab state (e.g. browser back, page change).
+    this.autoDispose(subscribe(this._tabNames, urlState().state, (_use, tabs, { homePageTab }) => {
+      const next = this._resolveTab(tabs, homePageTab);
+      if (this._tab.get() === next) { return; }
+      this._syncingTabFromUrl = true;
+      try {
+        this._tab.set(next);
+      } finally {
+        this._syncingTabFromUrl = false;
+      }
+    }));
+
+    // Local tab state -> URL (user click / arrow keys via ariaTabs).
+    this.autoDispose(this._tab.addListener((tab) => {
+      if (this._syncingTabFromUrl) { return; }
+      if (urlState().state.get().homePageTab === tab) { return; }
+      urlState().pushUrl({ homePageTab: tab }, { replace: true }).catch(reportError);
+    }));
   }
 
   public buildDom() {
     return dom("div", this._buildHeader(), this._buildBody());
   }
 
+  private _resolveTab(tabs: HomePageTab[], homePageTab?: HomePageTab): HomePageTab {
+    return homePageTab && tabs.includes(homePageTab) ? homePageTab : tabs[0];
+  }
+
   private _buildHeader() {
     return cssHeader(
-      visuallyHidden(unstyledH2(t("Documents list"))),
-      buildTabs(this._tabs, this._tab),
+      visuallyHidden(unstyledH2(t("Documents list"), { id: DOC_LIST_HEADING_ID })),
+      buildTabs(
+        DOC_LIST_TABLIST_ID,
+        this._tabs,
+        this._tab,
+        { "aria-labelledby": DOC_LIST_HEADING_ID },
+      ),
       this._buildViewSettings(),
     );
   }
@@ -136,120 +169,125 @@ export class DocList extends Disposable {
   }
 
   private _buildBody() {
-    const { currentSort } = this._viewSettings;
-    return [
-      dom.domComputed(
-        use => ({
-          docs: use(this._home.currentWSDocs),
-          sort: use(currentSort),
-          tab: use(this._tab),
-        }),
-        ({ docs, sort, tab }) => {
-          docs = sortAndFilterDocs(docs, { sort, tab });
-          if (docs.length === 0) {
-            return cssNoDocsMessage(
-              cssNoDocsImage({ alt: "", width: "150", height: "140", src: "img/create-document.svg" }),
-              dom("div", cssParagraph(t("No documents to show."))),
-              testId("no-docs-message"),
-            );
-          }
+    return dom.forEach(this._tabNames, tab =>
+      dom("div",
+        this._tabComponents.tabPanel(tab, this._buildDocsList(tab)),
+      ),
+    );
+  }
 
-          return [
-            // the aria-hidden attributes are there to prevent screen reader annoucements,
-            // as they are not relevant in that case
-            cssDocHeaderRow(
-              dom.hide(isNarrowScreenObs()),
-              cssNameColumn(t("Name"), { "aria-hidden": "true" }),
-              cssWorkspaceColumn(t("Workspace"), dom.show(this._showWorkspace), { "aria-hidden": "true" }),
-              cssEditedAtColumn(t("Last edited"), { "aria-hidden": "true" }),
-              cssOptionsColumn(),
-            ),
-            unstyledUl(
-              dom.forEach(docs, (doc, index) => {
-                return cssDocRow(
-                  cssDoc(
-                    cssDoc.cls("-no-access", doc.disabledAt !== undefined || !roles.canView(doc.access)),
-                    cssDocIconAndName(
-                      buildDocIcon(
-                        {
-                          docId: doc.id,
-                          docName: doc.name,
-                          icon: doc.options?.appearance?.icon,
-                        },
-                        testId("doc-icon"),
-                        { "aria-hidden": "true" },
-                      ),
-                      cssDocNameAndBadges(
-                        cssDocName(
-                          urlState().setLinkUrl(docUrl(doc)),
-                          stripIconFromName(doc.name, Boolean(doc.options?.appearance?.icon?.emoji)),
-                          testId("doc-name"),
-                          index % 10 === 0 || index === docs.length - 1 ? kbJumperAnchor : null,
-                        ),
-                        cssDocBadges(
-                          doc.isPinned ?
-                            cssPinIcon("Pin2", testId("doc-pinned")) :
-                            null,
-                          doc.public ?
-                            cssWorldIcon("World", testId("doc-public")) :
-                            null,
-                        ),
-                      ),
+  private _buildDocsList(tab: HomePageTab) {
+    const { currentSort } = this._viewSettings;
+    return dom.domComputed(
+      use => ({
+        docs: use(this._home.currentWSDocs),
+        sort: use(currentSort),
+      }),
+      ({ docs, sort }) => {
+        docs = sortAndFilterDocs(docs, { sort, tab });
+        if (docs.length === 0) {
+          return cssNoDocsMessage(
+            cssNoDocsImage({ alt: "", width: "150", height: "140", src: "img/create-document.svg" }),
+            dom("div", cssParagraph(t("No documents to show."))),
+            testId("no-docs-message"),
+          );
+        }
+
+        return [
+          // the aria-hidden attributes are there to prevent screen reader annoucements,
+          // as they are not relevant in that case
+          cssDocHeaderRow(
+            dom.hide(isNarrowScreenObs()),
+            cssNameColumn(t("Name"), { "aria-hidden": "true" }),
+            cssWorkspaceColumn(t("Workspace"), dom.show(this._showWorkspace), { "aria-hidden": "true" }),
+            cssEditedAtColumn(t("Last edited"), { "aria-hidden": "true" }),
+            cssOptionsColumn(),
+          ),
+          unstyledUl(
+            dom.forEach(docs, (doc, index) => {
+              return cssDocRow(
+                cssDoc(
+                  cssDoc.cls("-no-access", doc.disabledAt !== undefined || !roles.canView(doc.access)),
+                  cssDocIconAndName(
+                    buildDocIcon(
+                      {
+                        docId: doc.id,
+                        docName: doc.name,
+                        icon: doc.options?.appearance?.icon,
+                      },
+                      testId("doc-icon"),
+                      { "aria-hidden": "true" },
                     ),
-                    cssDocWorkspace(
-                      dom.show(this._showWorkspace),
-                      dom("span",
-                        visuallyHidden(t("Workspace")),
-                        workspaceName(this._home.app, doc.workspace),
-                      ),
-                      testId("doc-workspace"),
-                    ),
-                    cssDocEditedAt(
-                      getUpdatedAt(doc),
-                      testId("doc-edited-at"),
-                    ),
-                    cssDocDetailsCompact(
+                    cssDocNameAndBadges(
                       cssDocName(
                         urlState().setLinkUrl(docUrl(doc)),
                         stripIconFromName(doc.name, Boolean(doc.options?.appearance?.icon?.emoji)),
+                        testId("doc-name"),
+                        index % 10 === 0 || index === docs.length - 1 ? kbJumperAnchor : null,
                       ),
-                      cssDocEditedAt(getUpdatedAt(doc)),
                       cssDocBadges(
-                        !doc.isPinned ?
-                          null :
-                          cssPinIcon("Pin2"),
-                        !doc.public ?
-                          null :
-                          cssWorldIcon("World"),
+                        doc.isPinned ?
+                          cssPinIcon("Pin2", testId("doc-pinned")) :
+                          null,
+                        doc.public ?
+                          cssWorldIcon("World", testId("doc-public")) :
+                          null,
                       ),
                     ),
-                    cssDocOptions(
-                      cssDotsIcon("Dots"),
-                      menu(() => makeDocOptionsMenu(this._home, doc), {
-                        placement: "bottom-start",
-                        // Keep the document highlighted while the menu is open.
-                        parentSelectorToMark: "." + cssDocRow.className,
-                      }),
-                      dom.on("click", ev => stopEvent(ev)),
-                      altWithTooltip(
-                        t("Context menu - {{- documentName }}", { documentName: `"${doc.name}"` }),
-                        { tooltipText: t("Context menu"), tooltipPlacement: "left" },
-                      ),
-                      testId("doc-options"),
+                  ),
+                  cssDocWorkspace(
+                    dom.show(this._showWorkspace),
+                    dom("span",
+                      visuallyHidden(t("Workspace")),
+                      workspaceName(this._home.app, doc.workspace),
                     ),
-                    contextMenu(() => makeDocOptionsMenu(this._home, doc), {
+                    testId("doc-workspace"),
+                  ),
+                  cssDocEditedAt(
+                    getUpdatedAt(doc),
+                    testId("doc-edited-at"),
+                  ),
+                  cssDocDetailsCompact(
+                    cssDocName(
+                      urlState().setLinkUrl(docUrl(doc)),
+                      stripIconFromName(doc.name, Boolean(doc.options?.appearance?.icon?.emoji)),
+                    ),
+                    cssDocEditedAt(getUpdatedAt(doc)),
+                    cssDocBadges(
+                      !doc.isPinned ?
+                        null :
+                        cssPinIcon("Pin2"),
+                      !doc.public ?
+                        null :
+                        cssWorldIcon("World"),
+                    ),
+                  ),
+                  cssDocOptions(
+                    cssDotsIcon("Dots"),
+                    menu(() => makeDocOptionsMenu(this._home, doc), {
+                      placement: "bottom-start",
                       // Keep the document highlighted while the menu is open.
                       parentSelectorToMark: "." + cssDocRow.className,
                     }),
-                    testId("doc"),
+                    dom.on("click", ev => stopEvent(ev)),
+                    altWithTooltip(
+                      t("Context menu - {{- documentName }}", { documentName: `"${doc.name}"` }),
+                      { tooltipText: t("Context menu"), tooltipPlacement: "left" },
+                    ),
+                    testId("doc-options"),
                   ),
-                );
-              }),
-            ),
-          ];
-        },
-      ),
-    ];
+                  contextMenu(() => makeDocOptionsMenu(this._home, doc), {
+                    // Keep the document highlighted while the menu is open.
+                    parentSelectorToMark: "." + cssDocRow.className,
+                  }),
+                  testId("doc"),
+                ),
+              );
+            }),
+          ),
+        ];
+      },
+    );
   }
 }
 

@@ -74,7 +74,7 @@ export const cssButton = styled("button", `
   &-danger:hover {
     filter: brightness(0.8);
   }
-  &:disabled {
+  &:disabled, &[aria-disabled="true"] {
     cursor: not-allowed;
     color:        ${theme.controlDisabledFg};
     --icon-color: ${theme.controlDisabledFg};

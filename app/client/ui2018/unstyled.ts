@@ -47,3 +47,4 @@ const unstyledHeadings = `
 `;
 
 export const unstyledH2 = styled("h2", unstyledHeadings);
+export const unstyledH3 = styled("h3", unstyledHeadings);

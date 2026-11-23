@@ -5,7 +5,7 @@ import { buildSectionHead, cssSectionBody, reveal, revealed } from "app/client/u
 import { openVideoTour } from "app/client/ui/OpenVideoTour";
 import { theme } from "app/client/ui2018/cssVars";
 import { icon } from "app/client/ui2018/icons";
-import { unstyledButton, unstyledH2, unstyledLink } from "app/client/ui2018/unstyled";
+import { unstyledButton, unstyledH3, unstyledLink } from "app/client/ui2018/unstyled";
 import { commonUrls, isFeatureEnabled } from "app/common/gristUrls";
 import { getGristConfig } from "app/common/urlUtils";
 
@@ -114,7 +114,6 @@ export function buildLearningResources(
   return [
     buildSectionHead("UseEducate", t("Learn Grist"), reveal(showIntro, 80)),
     cssCards(
-      { "aria-label": t("Learning resources") },
       resources.map((resource, index) =>
         buildCard(resource, reveal(showIntro, 320 + (index + 1) * 60))),
       testId("cards"),
@@ -241,7 +240,7 @@ const cssCardText = styled("div", `
   flex: 1 1 auto;
 `);
 
-const cssCardTitle = styled(unstyledH2, `
+const cssCardTitle = styled(unstyledH3, `
   font-size: 15px;
   font-weight: 500;
   line-height: 20px;

@@ -15,11 +15,13 @@
  * way. Escape (whether the trigger is focused or only hovered), click, Enter, and Space dismiss
  * it until the pointer leaves and re-enters, or focus leaves and returns.
  */
-import { type ITipOptions, type ITooltipContent, type ITooltipContentFunc,
-  showTooltip } from "app/client/ui/tooltips";
+import { type ITipOptions, showTooltip } from "app/client/ui/tooltips";
 
-import { BindableValue, ComputedCallback, dom, DomElementMethod, Observable, subscribeElem,
+import { BindableValue, ComputedCallback, dom, DomArg, DomElementMethod, Observable, subscribeElem,
   UseCBOwner } from "grainjs";
+
+/** Live text syncs into the tip; anything else is rendered as DOM content. */
+export type AltTooltipContent = BindableValue<string> | DomArg;
 
 export interface AltTextOptions {
   /** When false, set the accessible name and never open a tooltip. Defaults to true. */
@@ -28,12 +30,13 @@ export interface AltTextOptions {
    * Text shown in the tooltip instead of the alt.
    *
    * A string, observable, or `(use) => string` stays in sync while the tooltip is open,
-   * the same way as the accessible name. A DOM node is shown as-is.
+   * the same way as the accessible name. DOM content (nodes, arrays from e.g. makeLinks,
+   * etc.) is shown as-is.
    *
    * When this value is a prefix of the alt (e.g. alt "Close panel", tip "Close"), the tip is
    * aria-hidden. When it is not (e.g. tip "Click to hide"), aria-describedby points at it.
    */
-  tooltipText?: BindableValue<string> | Exclude<ITooltipContent, ITooltipContentFunc>;
+  tooltipText?: AltTooltipContent;
   /** Show the tooltip immediately on hover instead of waiting for a delay. Defaults to false. */
   instantTooltip?: boolean;
   /** Where to place the tooltip relative to the trigger. Defaults to "bottom". */
@@ -265,7 +268,7 @@ export function altWithTooltip(text: BindableValue<string>, options: AltTextOpti
 
 function renderTip(
   text: BindableValue<string>,
-  tooltipText: BindableValue<string> | Exclude<ITooltipContent, ITooltipContentFunc> | undefined,
+  tooltipText: AltTooltipContent | undefined,
 ) {
   if (tooltipText === undefined) {
     return dom("span", dom.text(text));
@@ -273,14 +276,14 @@ function renderTip(
   if (isLiveText(tooltipText)) {
     return dom("span", dom.text(tooltipText));
   }
-  return tooltipText;
+  return dom("span", tooltipText);
 }
 
 function syncTipAria(
   trigger: Element,
   tipDom: HTMLElement,
   text: BindableValue<string>,
-  tooltipText: BindableValue<string> | Exclude<ITooltipContent, ITooltipContentFunc> | undefined,
+  tooltipText: AltTooltipContent | undefined,
   forceAriaHiddenTooltip: boolean,
 ) {
   if (forceAriaHiddenTooltip || tooltipText === undefined) {
@@ -327,9 +330,7 @@ function readBindable(use: UseCBOwner, value: BindableValue<string>): string {
   return value as string;
 }
 
-function isLiveText(
-  value: BindableValue<string> | Exclude<ITooltipContent, ITooltipContentFunc>,
-): value is BindableValue<string> {
+function isLiveText(value: AltTooltipContent): value is BindableValue<string> {
   return typeof value === "string" || typeof value === "function" || isObservable(value);
 }
 

@@ -499,25 +499,12 @@ export function descriptionInfoTooltip(
   content: string,
   testPrefix: string,
   ...domArgs: DomElementArg[]) {
-  const body = makeLinks(content);
-  const options = {
-    closeDelay: 200,
-    key: "columnDescription",
-    openOnClick: true,
-  };
-  const builder = () => cssInfoTooltipTransientPopup(
-    body,
-    // Used id test to find the origin of the tooltip regardless webdriver implementation (some of them start)
-    cssTooltipCorner(testId("tooltip-origin")),
-    testId(`${testPrefix}-info-tooltip-popup`),
-    { tabIndex: "-1" },
-  );
   return cssDescriptionInfoTooltipButton(
     icon("Info", dom.cls("info_toggle_icon")),
     testId(`${testPrefix}-info-tooltip`),
     dom.on("mousedown", e => e.stopPropagation()),
     dom.on("click", e => e.stopPropagation()),
-    hoverTooltip(builder, options),
+    altWithTooltip(t("Widget description"), { tooltipText: makeLinks(content) }),
     dom.cls("info_toggle_icon_wrapper"),
     ...domArgs,
   );
@@ -549,12 +536,12 @@ const cssInfoTooltipTransientPopup = styled("div", `
   max-width: min(500px, calc(100vw - 80px)); /* can't use 100%, 500px and 80px are picked by hand */
 `);
 
-const cssDescriptionInfoTooltipButton = styled("div", `
+const cssDescriptionInfoTooltipButton = styled(unstyledButton, `
   cursor: pointer;
   --icon-color: ${theme.infoButtonFg};
   border-radius: 50%;
   display: inline-block;
-  padding-left: 5px;
+  margin-left: 5px;
   line-height: 0px;
 
   &:hover  {
