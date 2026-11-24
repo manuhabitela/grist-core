@@ -5,6 +5,14 @@ const t = makeT("commandList");
 export type CommandName =
   | "accessibility" |
   "toggleScreenReaderMode" |
+  "verbalizeRowHeader" |
+  "verbalizeColumnHeader" |
+  "verbalizeWidgetTitle" |
+  "verbalizeRowUntilActiveCell" |
+  "verbalizeRowFromActiveCell" |
+  "verbalizeColumnUntilActiveCell" |
+  "verbalizeColumnFromActiveCell" |
+  "verbalizeCurrentCell" |
   "shortcuts" |
   "help" |
   "undo" |
@@ -183,6 +191,46 @@ export const groups: CommendGroupDef[] = [{
       name: "toggleScreenReaderMode",
       keys: ["Shift+F4"],
       desc: () => t("Toggle the screen reader improvements"),
+    },
+    {
+      name: "verbalizeRowHeader",
+      keys: ["Ctrl+Alt+Shift+T"],
+      desc: () => t("Read the current row header"),
+    },
+    {
+      name: "verbalizeColumnHeader",
+      keys: ["Ctrl+Alt+Shift+H"],
+      desc: () => t("Read the current column header"),
+    },
+    {
+      name: "verbalizeWidgetTitle",
+      keys: ["Ctrl+Alt+Shift+W"],
+      desc: () => t("Read the active widget title"),
+    },
+    {
+      name: "verbalizeRowUntilActiveCell",
+      keys: ["Ctrl+Alt+Shift+Home"],
+      desc: () => t("Read the current row from the first column until the active cell"),
+    },
+    {
+      name: "verbalizeRowFromActiveCell",
+      keys: ["Ctrl+Alt+Shift+End"],
+      desc: () => t("Read the current row from the active cell to the last column"),
+    },
+    {
+      name: "verbalizeColumnUntilActiveCell",
+      keys: ["Ctrl+Alt+Shift+PageUp"],
+      desc: () => t("Read the current column from the first row until the active cell"),
+    },
+    {
+      name: "verbalizeColumnFromActiveCell",
+      keys: ["Ctrl+Alt+Shift+PageDown"],
+      desc: () => t("Read the current column from the active cell to the last row"),
+    },
+    {
+      name: "verbalizeCurrentCell",
+      keys: ["Ctrl+Alt+Shift+C"],
+      desc: () => t("Read the active cell"),
     },
   ],
 }, {

@@ -111,6 +111,6 @@ export class ScreenReaderAnnouncer extends Disposable {
     // The "clean up" is done through *removing all children*, and not another way, on purpose. Changing content of an
     // `aria-live` region is rather sensitive, and doing it wrong can lead to major announcement issues from some SRs.
     // You should test the behavior manually with NVDA, JAWS and VoiceOver if you change this.
-    this._container.innerHTML = "";
+    // this._container.innerHTML = "";
   }
 }

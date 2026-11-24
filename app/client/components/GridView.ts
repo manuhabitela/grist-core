@@ -47,7 +47,6 @@ import { mouseDragMatchElem } from "app/client/ui/mouseDrag";
 import { IRowContextMenu, RowContextMenu } from "app/client/ui/RowContextMenu";
 import { applyRowHeightLimit } from "app/client/ui/RowHeightConfig";
 import { rowNumbersMenu } from "app/client/ui/RowNumbersMenu";
-import { formatForScreenReader } from "app/client/ui/ScreenReaderFormatters";
 import { ITooltipControl, showTooltip } from "app/client/ui/tooltips";
 import { isNarrowScreen, testId, zIndexes } from "app/client/ui2018/cssVars";
 import { closeRegisteredMenu, menu } from "app/client/ui2018/menus";
@@ -2509,34 +2508,6 @@ export default class GridView extends BaseView {
         field.width(maxWidth + 20);
       });
     });
-  }
-
-  public announceCurrentItem() {
-    this.gristDoc.appModel.screenReaderAnnouncer.announce(() => {
-      if (this.isDisposed()) {
-        return [];
-      }
-      const position = this.currentPosition.get();
-      if (position.rowIndex === null) {
-        return [];
-      }
-      const rowId = this.viewData.getRowId(position.rowIndex);
-      const field = this.viewSection.viewFields().at(position.fieldIndex);
-      if (!field) {
-        return [];
-      }
-      const rowNum = position.rowIndex + 1;
-      const colName = field.label();
-      if (rowId === "new") {
-        return t("row {{rowNum}} {{colName}} (new row)", { rowNum, colName });
-      }
-      const value = this.tableModel.tableData.getValue(rowId, field.displayColModel().colId());
-      const content = formatForScreenReader(field, value, {
-        screenReaderMode: this.gristDoc.appModel.screenReaderMode.get(),
-      });
-
-      return [content, t("row {{rowNum}} {{colName}}", { rowNum, colName })];
-    }, "view-current-item");
   }
 }
 

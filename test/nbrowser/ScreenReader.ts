@@ -170,6 +170,80 @@ describe("ScreenReader", function() {
     await gu.sendKeys(Key.chord(Key.SHIFT, Key.F4));
   });
 
+  it("reads headers, widget title and active cell on demand", async function() {
+    await gu.sendKeys(Key.HOME);
+    await gu.assertScreenReaderAnnouncement("row 1 Any");
+
+    await gu.sendKeys(Key.chord(Key.CONTROL, Key.ALT, Key.SHIFT, "t"));
+    await gu.assertScreenReaderAnnouncement("1");
+
+    await gu.sendKeys(Key.chord(Key.CONTROL, Key.ALT, Key.SHIFT, "h"));
+    await gu.assertScreenReaderAnnouncement("Any");
+
+    await gu.sendKeys(Key.chord(Key.CONTROL, Key.ALT, Key.SHIFT, "w"));
+    await gu.assertScreenReaderAnnouncement("table1");
+
+    await gu.sendKeys(Key.chord(Key.CONTROL, Key.ALT, Key.SHIFT, "c"));
+    await gu.assertScreenReaderAnnouncement("any text");
+    await gu.assertScreenReaderAnnouncement("row 1 Any");
+  });
+
+  it("reads row and column ranges on demand", async function() {
+    // Move to TextBox on row 2 so range shortcuts cover more than one cell.
+    await gu.sendKeys(Key.RIGHT);
+    await gu.sendKeys(Key.DOWN);
+    await gu.assertScreenReaderAnnouncement("row 2 TextBox");
+
+    await gu.sendKeys(Key.chord(Key.CONTROL, Key.ALT, Key.SHIFT, Key.HOME));
+    await gu.assertScreenReaderAnnouncement("Any");
+    await gu.assertScreenReaderAnnouncement("TextBox");
+
+    await gu.sendKeys(Key.chord(Key.CONTROL, Key.ALT, Key.SHIFT, Key.END));
+    await gu.assertScreenReaderAnnouncement("TextBox");
+
+    await gu.sendKeys(Key.chord(Key.CONTROL, Key.ALT, Key.SHIFT, Key.PAGE_UP));
+    await gu.assertScreenReaderAnnouncement("row 1");
+    await gu.assertScreenReaderAnnouncement("row 2");
+
+    await gu.sendKeys(Key.chord(Key.CONTROL, Key.ALT, Key.SHIFT, Key.PAGE_DOWN));
+    await gu.assertScreenReaderAnnouncement("row 2");
+
+    // Return to first cell for later tests.
+    await gu.sendKeys(Key.HOME);
+    await gu.sendKeys(Key.PAGE_UP);
+  });
+
+  it("announces card fields when navigating with the keyboard", async function() {
+    await gu.changeWidget("Card");
+    await gu.assertScreenReaderAnnouncement("widget", false);
+    await gu.assertScreenReaderAnnouncement("row 1 Any");
+
+    // In card widgets, Up/Down move between fields.
+    await gu.sendKeys(Key.DOWN);
+    await gu.assertScreenReaderAnnouncement("row 1 TextBox");
+    await gu.assertScreenReaderAnnouncement("textbox text");
+
+    await gu.sendKeys(Key.chord(Key.CONTROL, Key.ALT, Key.SHIFT, "c"));
+    await gu.assertScreenReaderAnnouncement("textbox text");
+    await gu.assertScreenReaderAnnouncement("row 1 TextBox");
+
+    await gu.sendKeys(Key.chord(Key.CONTROL, Key.ALT, Key.SHIFT, Key.HOME));
+    await gu.assertScreenReaderAnnouncement("any text, Any");
+  });
+
+  it("announces card list records when navigating with the keyboard", async function() {
+    await gu.changeWidget("Card List");
+    await gu.assertScreenReaderAnnouncement("widget", false);
+    await gu.assertScreenReaderAnnouncement("row 1");
+
+    // PageDown moves to the next record in card list.
+    await gu.sendKeys(Key.PAGE_DOWN);
+    await gu.assertScreenReaderAnnouncement("row 2");
+
+    await gu.sendKeys(Key.chord(Key.CONTROL, Key.ALT, Key.SHIFT, "t"));
+    await gu.assertScreenReaderAnnouncement("2");
+  });
+
   it("has cleaned up the announcements DOM on the fly", async function() {
     // After all this navigation, we announced a lot of things, but the announcer should not keep everything in the DOM.
     // This test is strongly tied to the implementation but we can't really test actual SRs behavior,

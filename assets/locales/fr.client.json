@@ -1637,10 +1637,14 @@
         "Admin Panel": "Panneau d'administration",
         "Thank you! Your trust and support is greatly appreciated. Opt out any time from the {{link}} in the user menu.": "Nous vous remercions ! Votre confiance et votre soutien sont très appréciés. Vous pouvez vous désinscrire à tout moment en cliquant sur le {{link}} dans le menu utilisateur."
     },
+    "BaseView": {
+        "row {{rowNum}} {{- colName}}": "ligne {{rowNum}} {{- colName}}",
+        "row {{rowNum}} {{- colName}} (new row)": "ligne {{rowNum}} {{- colName}} (nouvelle ligne)",
+        "{{- content}}, {{- colName}}": "{{- content}}, {{- colName}}",
+        "{{- content}}, row {{rowNum}}": "{{- content}}, ligne {{rowNum}}"
+    },
     "GridView": {
         "Click to insert": "Cliquer pour insérer",
-        "row {{rowNum}} {{colName}}": "ligne {{rowNum}} {{colName}}",
-        "row {{rowNum}} {{colName}} (new row)": "ligne {{rowNum}} {{colName}} (nouvelle ligne)",
         "ID": "ID"
     },
     "SupportGristPage": {
@@ -2739,6 +2743,14 @@
         "Filter this column by just this cell's value": "Filtrer cette colonne par la valeur de cette cellule uniquement",
         "Open the context menu": "Ouvrir le menu contextuel",
         "Toggle the screen reader improvements": "Activer ou désactiver les améliorations pour lecteurs d'écran",
+        "Read the active cell": "Lire la cellule active",
+        "Read the active widget title": "Lire le titre du widget actif",
+        "Read the current column from the active cell to the last row": "Lire la colonne courante depuis la cellule active jusqu'à la dernière ligne",
+        "Read the current column from the first row until the active cell": "Lire la colonne courante depuis la première ligne jusqu'à la cellule active",
+        "Read the current column header": "Lire l'en-tête de la colonne courante",
+        "Read the current row from the active cell to the last column": "Lire la ligne courante depuis la cellule active jusqu'à la dernière colonne",
+        "Read the current row from the first column until the active cell": "Lire la ligne courante depuis la première colonne jusqu'à la cellule active",
+        "Read the current row header": "Lire l'en-tête de la ligne courante",
         "Open the current column menu": "Ouvrir le menu de la colonne actuelle",
         "Open the current row menu": "Ouvrir le menu de la ligne actuelle",
         "When focused on a page panel, focus next landmark": "Quand le focus est dans un panneau, placer le focus sur le prochain repère",

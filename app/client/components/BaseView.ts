@@ -8,6 +8,7 @@ import { buildConfirmDelete, reportUndo } from "app/client/components/modals";
 import { viewCommands } from "app/client/components/RegionFocusSwitcher";
 import { SelectionSummary } from "app/client/components/SelectionSummary";
 import { KoArray } from "app/client/lib/koArray";
+import { makeT } from "app/client/lib/localization";
 import * as tableUtil from "app/client/lib/tableUtil";
 import { testPendingViewLoads } from "app/client/lib/testPendingOps";
 import BaseRowModel from "app/client/models/BaseRowModel";
@@ -30,6 +31,7 @@ import { UnionRowSource } from "app/client/models/UnionRowSource";
 import { markAsSeen } from "app/client/models/UserPrefs";
 import { buildReassignModal } from "app/client/ui/buildReassignModal";
 import { createFilterMenu, IColumnFilterMenuOptions } from "app/client/ui/ColumnFilterMenu";
+import { formatForScreenReader } from "app/client/ui/ScreenReaderFormatters";
 import { closeRegisteredMenu } from "app/client/ui2018/menus";
 import { BuildEditorOptions, createAllFieldWidgets, FieldBuilder } from "app/client/widgets/FieldBuilder";
 import { DisposableWithEvents } from "app/common/DisposableWithEvents";
@@ -51,6 +53,8 @@ import { IOpenController } from "popweasel";
 
 import type { LazyArrayModel } from "app/client/models/DataTableModel";
 import type { CommentWithMentions } from "app/client/widgets/MentionTextBox";
+
+const t = makeT("BaseView");
 
 // Disable member-ordering linting temporarily, so that it's easier to review the conversion to
 // typescript. It would be reasonable to reorder methods and re-enable this lint check.
@@ -392,6 +396,15 @@ export default class BaseView extends DisposableWithEvents {
        * This is still needed so that <space> doesn't trigger the `input` command
        * if a subclass doesn't support opening the current record as a card. */
     },
+
+    verbalizeRowHeader: function() { this.announceRowHeader(); },
+    verbalizeColumnHeader: function() { this.announceColumnHeader(); },
+    verbalizeWidgetTitle: function() { this.announceWidgetTitle(); },
+    verbalizeRowUntilActiveCell: function() { this.announceRowUntilActiveCell(); },
+    verbalizeRowFromActiveCell: function() { this.announceRowFromActiveCell(); },
+    verbalizeColumnUntilActiveCell: function() { this.announceColumnUntilActiveCell(); },
+    verbalizeColumnFromActiveCell: function() { this.announceColumnFromActiveCell(); },
+    verbalizeCurrentCell: function() { this.announceCurrentItem(); },
   };
 
   /**
@@ -889,11 +902,179 @@ export default class BaseView extends DisposableWithEvents {
   }
 
   /**
-   * Announces the currently focused item in the view to screen readers.
-   * This is called by the grist document when the view becomes the focused one.
-   * Derived views may override.
+   * Announces the currently focused cell/field in the view to screen readers.
+   * Called when the view becomes focused, on cursor moves (in Grid/Detail), and via shortcut.
    */
   public announceCurrentItem(): void {
+    this.gristDoc.appModel.screenReaderAnnouncer.announce(() => {
+      if (this.isDisposed()) {
+        return [];
+      }
+      const rowIndex = this.cursor.rowIndex();
+      if (rowIndex === null) {
+        return [];
+      }
+      const rowId = this.viewData.getRowId(rowIndex);
+      const field = this.viewSection.viewFields().at(this.cursor.fieldIndex());
+      if (!field) {
+        return [];
+      }
+      const rowNum = rowIndex + 1;
+      const colName = field.label();
+      if (rowId === "new") {
+        return t("row {{rowNum}} {{- colName}} (new row)", { rowNum, colName });
+      }
+      const value = this.tableModel.tableData.getValue(rowId, field.displayColModel().colId());
+      const content = formatForScreenReader(field, value, {
+        screenReaderMode: this.gristDoc.appModel.screenReaderMode.get(),
+      });
+
+      return [content, t("row {{rowNum}} {{- colName}}", { rowNum, colName })];
+    }, "view-current-item");
+  }
+
+  /** Announces the current row number (row header). */
+  public announceRowHeader(): void {
+    this.gristDoc.appModel.screenReaderAnnouncer.announce(() => {
+      if (this.isDisposed()) {
+        return [];
+      }
+      const rowIndex = this.cursor.rowIndex();
+      if (rowIndex === null) {
+        return [];
+      }
+      return String(rowIndex + 1);
+    }, "view-row-header");
+  }
+
+  /** Announces the current column/field label (column header). */
+  public announceColumnHeader(): void {
+    this.gristDoc.appModel.screenReaderAnnouncer.announce(() => {
+      if (this.isDisposed()) {
+        return [];
+      }
+      const field = this.viewSection.viewFields().at(this.cursor.fieldIndex());
+      return field ? field.label() : [];
+    }, "view-column-header");
+  }
+
+  /** Announces the active widget title. */
+  public announceWidgetTitle(): void {
+    this.gristDoc.appModel.screenReaderAnnouncer.announce(() => {
+      if (this.isDisposed()) {
+        return [];
+      }
+      return this.viewSection.titleDef();
+    }, "view-widget-title");
+  }
+
+  /**
+   * Announces the current row from the first column through the active cell:
+   * "[value], [colName]. [value], [colName]. …"
+   */
+  public announceRowUntilActiveCell(): void {
+    this._announceRowFieldsRange(0, this.cursor.fieldIndex(), "view-row-until");
+  }
+
+  /**
+   * Announces the current row from the active cell through the last column:
+   * "[value], [colName]. [value], [colName]. …"
+   */
+  public announceRowFromActiveCell(): void {
+    const lastFieldIndex = this.viewSection.viewFields().peekLength - 1;
+    this._announceRowFieldsRange(this.cursor.fieldIndex(), lastFieldIndex, "view-row-from");
+  }
+
+  /**
+   * Announces the current column from the first row through the active cell:
+   * "[value], row [rowNum]. [value], row [rowNum]. …"
+   */
+  public announceColumnUntilActiveCell(): void {
+    const rowIndex = this.cursor.rowIndex();
+    if (rowIndex === null) {
+      return;
+    }
+    this._announceColumnRowsRange(0, rowIndex, "view-column-until");
+  }
+
+  /**
+   * Announces the current column from the active cell through the last row:
+   * "[value], row [rowNum]. [value], row [rowNum]. …"
+   */
+  public announceColumnFromActiveCell(): void {
+    const rowIndex = this.cursor.rowIndex();
+    if (rowIndex === null) {
+      return;
+    }
+    this._announceColumnRowsRange(rowIndex, this.viewData.peekLength - 1, "view-column-from");
+  }
+
+  private _announceColumnRowsRange(fromRowIndex: number, toRowIndex: number, key: string): void {
+    this.gristDoc.appModel.screenReaderAnnouncer.announce(() => {
+      if (this.isDisposed()) {
+        return [];
+      }
+      const field = this.viewSection.viewFields().at(this.cursor.fieldIndex());
+      if (!field || toRowIndex < fromRowIndex) {
+        return [];
+      }
+      const screenReaderMode = this.gristDoc.appModel.screenReaderMode.get();
+      const colId = field.displayColModel().colId();
+      const parts: string[] = [];
+      for (let i = fromRowIndex; i <= toRowIndex; i++) {
+        const rowId = this.viewData.getRowId(i);
+        // Skip the add-new row for range announcements.
+        if (rowId === "new") {
+          continue;
+        }
+        const value = this.tableModel.tableData.getValue(rowId, colId);
+        // Skip empty cells for range announcements (unlike cursor-move / Ctrl+Alt+Shift+C).
+        if (gristTypes.isBlankValue(value)) {
+          continue;
+        }
+        const content = formatForScreenReader(field, value, { screenReaderMode });
+        // Use unescaped interpolation: cell values often contain characters like "/" that i18next
+        // would otherwise turn into HTML entities (e.g. &#x2F;), which SRs then read aloud.
+        parts.push(t("{{- content}}, row {{rowNum}}", { content, rowNum: i + 1 }));
+      }
+      return parts.length ? parts.join(". ") : [];
+    }, key);
+  }
+
+  private _announceRowFieldsRange(fromFieldIndex: number, toFieldIndex: number, key: string): void {
+    this.gristDoc.appModel.screenReaderAnnouncer.announce(() => {
+      if (this.isDisposed()) {
+        return [];
+      }
+      const rowIndex = this.cursor.rowIndex();
+      if (rowIndex === null) {
+        return [];
+      }
+      const rowId = this.viewData.getRowId(rowIndex);
+      // Skip the add-new row for range announcements.
+      if (rowId === "new") {
+        return [];
+      }
+
+      const screenReaderMode = this.gristDoc.appModel.screenReaderMode.get();
+      const fields = this.viewSection.viewFields().all()
+        .slice(Math.max(0, fromFieldIndex), toFieldIndex + 1);
+      if (!fields.length) {
+        return [];
+      }
+      const parts: string[] = [];
+      for (const field of fields) {
+        const value = this.tableModel.tableData.getValue(rowId, field.displayColModel().colId());
+        // Skip empty cells for range announcements (unlike cursor-move / Ctrl+Alt+Shift+C).
+        if (gristTypes.isBlankValue(value)) {
+          continue;
+        }
+        const content = formatForScreenReader(field, value, { screenReaderMode });
+        parts.push(t("{{- content}}, {{- colName}}", { content, colName: field.label() }));
+      }
+
+      return parts.length ? parts.join(". ") : [];
+    }, key);
   }
 
   /**

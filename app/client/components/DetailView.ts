@@ -28,7 +28,7 @@ import { icon } from "app/client/ui2018/icons";
 import { indexOf } from "app/common/gutil";
 import { UIRowId } from "app/plugin/GristAPI";
 
-import { dom } from "grainjs";
+import { Computed, dom } from "grainjs";
 import ko from "knockout";
 import _ from "underscore";
 
@@ -122,6 +122,25 @@ export default class DetailView extends BaseView {
           testPendingScrolls.end();
         }
       }, 0);
+    }));
+
+    // Announce the current field to screen readers when the cursor moves or an editor closes,
+    // matching GridView behavior.
+    const currentPosition = Computed.create(this, use => ({
+      rowIndex: use(this.cursor.rowIndex),
+      fieldIndex: use(this.cursor.fieldIndex),
+    }));
+    this.autoDispose(currentPosition.addListener((cur, prev) => {
+      if (cur.rowIndex !== prev.rowIndex || cur.fieldIndex !== prev.fieldIndex) {
+        if (this.viewSection.hasRegionFocus()) {
+          this.announceCurrentItem();
+        }
+      }
+    }));
+    this.autoDispose(this.gristDoc.activeEditor.addListener((editor, prevEditor) => {
+      if (editor === null && prevEditor !== null && this.viewSection.hasRegionFocus()) {
+        this.announceCurrentItem();
+      }
     }));
 
     // --------------------------------------------------

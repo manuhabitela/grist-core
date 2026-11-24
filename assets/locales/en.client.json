@@ -1649,11 +1649,15 @@
         "When you talk to me, your questions and your document structure (visible in {{codeView}}) are sent to OpenAI. {{learnMore}}.": "When you talk to me, your questions and your document structure (visible in {{codeView}}) are sent to OpenAI. {{learnMore}}.",
         "Talk to me like a person. No need to specify tables and column names. For example, you can ask \"Please calculate the total invoice amount.\"": "Talk to me like a person. No need to specify tables and column names. For example, you can ask \"Please calculate the total invoice amount.\""
     },
+    "BaseView": {
+        "row {{rowNum}} {{- colName}}": "row {{rowNum}} {{- colName}}",
+        "row {{rowNum}} {{- colName}} (new row)": "row {{rowNum}} {{- colName}} (new row)",
+        "{{- content}}, {{- colName}}": "{{- content}}, {{- colName}}",
+        "{{- content}}, row {{rowNum}}": "{{- content}}, row {{rowNum}}"
+    },
     "GridView": {
         "Click to insert": "Click to insert",
-        "ID": "ID",
-        "row {{rowNum}} {{colName}}": "row {{rowNum}} {{colName}}",
-        "row {{rowNum}} {{colName}} (new row)": "row {{rowNum}} {{colName}} (new row)"
+        "ID": "ID"
     },
     "WelcomeSitePicker": {
         "Welcome back": "Welcome back",
@@ -2759,6 +2763,14 @@
         "Filter this column by just this cell's value": "Filter this column by just this cell's value",
         "Open the context menu": "Open the context menu",
         "Toggle the screen reader improvements": "Toggle the screen reader improvements",
+        "Read the active cell": "Read the active cell",
+        "Read the active widget title": "Read the active widget title",
+        "Read the current column from the active cell to the last row": "Read the current column from the active cell to the last row",
+        "Read the current column from the first row until the active cell": "Read the current column from the first row until the active cell",
+        "Read the current column header": "Read the current column header",
+        "Read the current row from the active cell to the last column": "Read the current row from the active cell to the last column",
+        "Read the current row from the first column until the active cell": "Read the current row from the first column until the active cell",
+        "Read the current row header": "Read the current row header",
         "Open the current column menu": "Open the current column menu",
         "Open the current row menu": "Open the current row menu",
         "When focused on a page panel, focus next landmark": "When focused on a page panel, focus next landmark",
